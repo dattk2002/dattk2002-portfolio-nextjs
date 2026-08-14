@@ -1,5 +1,31 @@
 const fallbackSiteUrl = "http://localhost:3000";
 
+function resolveSiteUrl() {
+  const candidates = [
+    process.env.NEXT_PUBLIC_SITE_URL,
+    process.env.VERCEL_PROJECT_PRODUCTION_URL,
+    process.env.VERCEL_URL,
+  ];
+
+  for (const candidate of candidates) {
+    const value = candidate?.trim();
+
+    if (!value) continue;
+
+    try {
+      return new URL(value).toString();
+    } catch {
+      try {
+        return new URL(`https://${value}`).toString();
+      } catch {
+        // Ignore malformed environment values and try the next candidate.
+      }
+    }
+  }
+
+  return fallbackSiteUrl;
+}
+
 export const siteConfig = {
   name: "Tran Kim Dat",
   role: "Full-stack Developer",
@@ -14,5 +40,5 @@ export const siteConfig = {
   portraitPath: "/images/tran-kim-dat-portrait-2026.webp",
   cvPath: "/documents/CV-Tran%20Kim%20Dat-Full-stack%20Developer.pdf",
   cvDownloadName: "CV-Tran Kim Dat-Full-stack Developer.pdf",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? fallbackSiteUrl,
+  url: resolveSiteUrl(),
 } as const;
