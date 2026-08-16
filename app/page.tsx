@@ -1,7 +1,9 @@
 import Image from "next/image";
-import { ArrowDownRight, ArrowUpRight, Download, Mail, MapPin, Phone } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, Download, Mail, Phone } from "lucide-react";
 
 import { ContactForm } from "@/components/contact-form";
+import { ExperienceTimeline } from "@/components/experience-timeline";
+import { GithubStats } from "@/components/github-stats";
 import { MotionReveal } from "@/components/motion-reveal";
 import { ProjectShowcase } from "@/components/project-showcase";
 import { SectionLink } from "@/components/section-link";
@@ -11,7 +13,6 @@ import { TechnologyMarquee } from "@/components/technology-marquee";
 import { Button } from "@/components/ui/button";
 import { WordReveal } from "@/components/word-reveal";
 import { capabilities } from "@/lib/capabilities";
-import { experiences } from "@/lib/experience";
 import { siteConfig } from "@/lib/site";
 
 const certifications = [
@@ -87,8 +88,8 @@ export default function HomePage() {
             <div className="relative mx-auto aspect-[4/5] max-h-[34rem] max-w-md overflow-hidden rounded-xl border border-border bg-surface">
               <Image src={siteConfig.portraitPath} alt="Portrait of Tran Kim Dat" fill preload quality={90} sizes="(max-width: 767px) 90vw, (max-width: 1023px) 40vw, 32vw" className="object-cover object-center grayscale-[12%] contrast-[1.02] transition-transform duration-1000 ease-out hover:scale-[1.025]" />
               <div className="absolute inset-0 bg-gradient-to-t from-background/75 via-transparent to-steel/5" />
-              <div className="absolute right-5 bottom-5 left-5 flex items-end justify-between border-t border-white/20 pt-4 font-mono text-[9px] uppercase tracking-[0.16em] text-white/70">
-                <span>Available for<br />the right team</span><MapPin className="size-4" aria-hidden="true" />
+              <div className="absolute right-4 bottom-4 left-4 sm:right-5 sm:bottom-5 sm:left-5">
+                <GithubStats profileUrl={siteConfig.github} />
               </div>
             </div>
           </MotionReveal>
@@ -107,7 +108,7 @@ export default function HomePage() {
                 <span className="hidden md:inline">Products carried from architecture to release.</span>
               </h2>
             </div>
-            <p className="hidden max-w-sm text-sm leading-6 text-muted md:block">Use the carousel controls, drag, or focus a project card to bring its full story forward.</p>
+            <p className="hidden max-w-sm text-sm leading-6 text-muted md:block">Drag the carousel or use the arrow keys. The first card in view brings its full story forward.</p>
           </MotionReveal>
           <ProjectShowcase />
         </div>
@@ -147,20 +148,10 @@ export default function HomePage() {
           <MotionReveal className="lg:sticky lg:top-32 lg:col-span-4 lg:self-start">
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-steel">Professional experience</p>
             <h2 className="mt-4 max-w-lg font-display text-[clamp(2.8rem,5vw,4.5rem)] leading-[0.92] tracking-[-0.06em]">Production work,<br />clearly owned.</h2>
-            <p className="mt-6 max-w-sm text-sm leading-6 text-muted lg:text-base lg:leading-7">Frontend leadership, full-stack delivery, and close collaboration across product, backend, and design teams.</p>
+            <p className="mt-6 max-w-sm text-sm leading-6 text-muted lg:text-base lg:leading-7">Frontend leadership, full-stack delivery, and independent product ownership across interface, application logic, data, and production systems.</p>
+            <p className="mt-5 max-w-sm font-mono text-[9px] uppercase leading-5 tracking-[0.13em] text-faint">Open a project to explore its scope, ownership, outcomes, and technology stack.</p>
           </MotionReveal>
-          <div className="relative border-l border-border pl-7 lg:col-span-8 lg:pl-12">
-            {experiences.map((experience, index) => (
-              <MotionReveal key={`${experience.organization}-${experience.period}`} delay={index * 0.05} className="relative grid gap-5 border-t border-border py-8 md:grid-cols-[10rem_1fr] md:py-12">
-                <span className="absolute top-9 -left-[2.05rem] size-2 rounded-full bg-accent ring-8 ring-background lg:-left-[3.3rem]" aria-hidden="true" />
-                <div className="font-mono text-[9px] uppercase leading-5 tracking-[0.15em] text-faint"><p className="text-steel">{experience.organization}</p><p>{experience.period}</p></div>
-                <div>
-                  <h3 className="font-display text-3xl tracking-[-0.045em]">{experience.projects.join(" · ")}</h3>
-                  <p className="mt-4 max-w-2xl text-sm leading-6 text-muted lg:text-base lg:leading-7">{experience.summary}</p>
-                </div>
-              </MotionReveal>
-            ))}
-          </div>
+          <ExperienceTimeline />
         </div>
       </section>
 

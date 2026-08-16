@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
+import type { EmblaCarouselType } from "embla-carousel";
+import useEmblaCarousel from "embla-carousel-react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowUpRight, ChevronLeft, ChevronRight, Code2, ExternalLink } from "lucide-react";
+import { ArrowUpRight, Code2, ExternalLink } from "lucide-react";
+import Link from "next/link";
 
 import { ProjectArtwork } from "@/components/project-artwork";
 import { projects, type Project, type ProjectSlug } from "@/lib/projects";
@@ -73,50 +75,42 @@ function CompactContent({ project, highlighted }: { project: Project; highlighte
   );
 }
 
-function visibleCardsForWidth(width: number) {
-  if (width >= 1024) return 3;
-  if (width >= 640) return 2;
-  return 1;
-}
-
 export function ProjectShowcase() {
   const [featuredSlug, setFeaturedSlug] = useState<ProjectSlug>(projects[0].slug);
-  const [visibleCount, setVisibleCount] = useState(3);
-  const [page, setPage] = useState(0);
-  const [direction, setDirection] = useState(1);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const reduceMotion = useReducedMotion();
   const featuredProject = getProject(featuredSlug);
-  const compactProjects = useMemo(() => projects.filter((project) => project.slug !== featuredSlug), [featuredSlug]);
-  const pageCount = Math.max(1, Math.ceil(compactProjects.length / visibleCount));
+  const [carouselRef, carouselApi] = useEmblaCarousel({
+    align: "start",
+    dragThreshold: 8,
+    duration: reduceMotion ? 0 : 28,
+    loop: true,
+    slidesToScroll: 1,
+  });
 
-  useEffect(() => {
-    const updateVisibleCount = () => {
-      const nextCount = visibleCardsForWidth(window.innerWidth);
-      setVisibleCount((current) => {
-        if (current !== nextCount) setPage(0);
-        return nextCount;
-      });
-    };
+  const syncSelection = useCallback((api: EmblaCarouselType) => {
+    const nextIndex = api.selectedScrollSnap();
+    const nextProject = projects[nextIndex];
 
-    updateVisibleCount();
-    window.addEventListener("resize", updateVisibleCount);
-    return () => window.removeEventListener("resize", updateVisibleCount);
+    if (!nextProject) return;
+    setSelectedIndex(nextIndex);
+    setFeaturedSlug(nextProject.slug);
   }, []);
 
-  const visibleProjects = Array.from(
-    { length: Math.min(visibleCount, compactProjects.length) },
-    (_, index) => compactProjects[(page * visibleCount + index) % compactProjects.length],
-  );
+  useEffect(() => {
+    if (!carouselApi) return;
 
-  const moveToPage = (nextPage: number, nextDirection: number) => {
-    setDirection(nextDirection);
-    setPage((nextPage + pageCount) % pageCount);
-  };
+    carouselApi.on("select", syncSelection).on("reInit", syncSelection);
 
-  const featureProject = (slug: ProjectSlug) => {
-    setFeaturedSlug(slug);
-    setDirection(1);
-    setPage(0);
+    return () => {
+      carouselApi.off("select", syncSelection).off("reInit", syncSelection);
+    };
+  }, [carouselApi, syncSelection]);
+
+  const featureProject = (index: number) => {
+    carouselApi?.scrollTo(index);
+    setSelectedIndex(index);
+    setFeaturedSlug(projects[index].slug);
   };
 
   return (
@@ -127,55 +121,41 @@ export function ProjectShowcase() {
       </article>
 
       <section className="mt-3" role="region" aria-roledescription="carousel" aria-label="Selected project carousel">
-        <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-          <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-faint">Browse all projects <span aria-hidden="true">·</span> Page {page + 1} of {pageCount}</p>
-          <div className="flex items-center gap-1">
-            <button type="button" onClick={() => moveToPage(page - 1, -1)} className="grid size-11 cursor-pointer touch-manipulation place-items-center rounded-full border border-border bg-surface text-muted transition-colors hover:border-accent/50 hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent" aria-label="Previous project cards">
-              <ChevronLeft className="size-5" aria-hidden="true" />
-            </button>
-            <button type="button" onClick={() => moveToPage(page + 1, 1)} className="grid size-11 cursor-pointer touch-manipulation place-items-center rounded-full border border-border bg-surface text-muted transition-colors hover:border-accent/50 hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent" aria-label="Next project cards">
-              <ChevronRight className="size-5" aria-hidden="true" />
-            </button>
+        <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.16em] text-faint">Drag to explore <span aria-hidden="true">·</span> Project {selectedIndex + 1} of {projects.length}</p>
+
+        <div
+          ref={carouselRef}
+          className="cursor-grab overflow-hidden focus-visible:rounded-xl active:cursor-grabbing"
+          tabIndex={0}
+          onKeyDown={(event) => {
+            if (event.key === "ArrowLeft") {
+              event.preventDefault();
+              carouselApi?.scrollPrev();
+            }
+            if (event.key === "ArrowRight") {
+              event.preventDefault();
+              carouselApi?.scrollNext();
+            }
+          }}
+          aria-label="Drag project cards, or use the left and right arrow keys"
+        >
+          <div className="flex touch-pan-y gap-3 select-none">
+            {projects.map((project, index) => {
+              const highlighted = index === selectedIndex;
+              return (
+                <article key={project.slug} className={`relative h-64 min-w-0 flex-[0_0_100%] overflow-hidden rounded-xl border transition-[border-color,background-color,color] duration-200 sm:flex-[0_0_calc(50%-0.375rem)] lg:flex-[0_0_calc(33.333333%-0.5rem)] ${highlighted ? "border-accent/40 bg-accent text-accent-foreground" : "border-border bg-surface-raised"}`}>
+                  <button type="button" className="h-full w-full cursor-pointer touch-manipulation outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent" onClick={() => featureProject(index)} aria-label={`Feature ${project.name}. Currently featuring ${featuredProject.name}.`} aria-current={highlighted ? "true" : undefined}>
+                    <CompactContent project={project} highlighted={highlighted} />
+                  </button>
+                </article>
+              );
+            })}
           </div>
         </div>
 
-        <div className="overflow-hidden">
-          <AnimatePresence mode="wait" initial={false} custom={direction}>
-            <motion.div
-              key={`${featuredSlug}-${page}-${visibleCount}`}
-              className="grid touch-pan-y grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
-              custom={direction}
-              initial={reduceMotion ? false : { opacity: 0.45, x: direction * 32 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={reduceMotion ? undefined : { opacity: 0.3, x: direction * -24 }}
-              transition={{ duration: reduceMotion ? 0 : 0.24, ease: "easeOut" }}
-              drag={reduceMotion ? false : "x"}
-              dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.12}
-              onDragEnd={(_, info) => {
-                if (info.offset.x < -60) moveToPage(page + 1, 1);
-                if (info.offset.x > 60) moveToPage(page - 1, -1);
-              }}
-            >
-              {visibleProjects.map((project, slotIndex) => {
-                const highlighted = slotIndex === 0;
-                return (
-                  <article key={project.slug} className={`relative h-64 overflow-hidden rounded-xl border ${highlighted ? "border-accent/40 bg-accent text-accent-foreground" : "border-border bg-surface-raised"}`}>
-                    <button type="button" className="h-full w-full cursor-pointer touch-manipulation outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent" onClick={() => featureProject(project.slug)} aria-label={`Feature ${project.name}. Currently featuring ${featuredProject.name}.`}>
-                      <CompactContent project={project} highlighted={highlighted} />
-                    </button>
-                  </article>
-                );
-              })}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        <div className="mt-3 flex justify-center" aria-label="Carousel pages">
-          {Array.from({ length: pageCount }, (_, index) => (
-            <button key={index} type="button" className="grid size-11 cursor-pointer touch-manipulation place-items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent" onClick={() => moveToPage(index, index >= page ? 1 : -1)} aria-label={`Go to project page ${index + 1}`} aria-current={index === page ? "page" : undefined}>
-              <span className={`block h-1.5 rounded-full transition-[width,background-color] duration-200 ${index === page ? "w-7 bg-accent" : "w-1.5 bg-border"}`} aria-hidden="true" />
-            </button>
+        <div className="mt-3 flex h-6 items-center justify-center gap-2" aria-hidden="true">
+          {projects.map((project, index) => (
+            <span key={project.slug} className={`block h-1.5 rounded-full transition-[width,background-color] duration-200 ${index === selectedIndex ? "w-7 bg-accent" : "w-1.5 bg-border"}`} />
           ))}
         </div>
       </section>

@@ -38,7 +38,7 @@ export const siteConfig = {
   github: "https://github.com/dattk2002",
   linkedin: "https://www.linkedin.com/in/kimdat0705/",
   portraitPath: "/images/tran-kim-dat-portrait-2026.webp",
-  cvPath: "/documents/CV-Tran%20Kim%20Dat-Full-stack%20Developer.pdf",
+  cvPath: "/api/cv",
   cvDownloadName: "CV-Tran Kim Dat-Full-stack Developer.pdf",
   url: resolveSiteUrl(),
 } as const;
