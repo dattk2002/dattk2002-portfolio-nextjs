@@ -122,7 +122,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             </MotionReveal>
             <div className="grid gap-5 lg:grid-cols-12">
               {project.gallery.map((image, imageIndex) => (
-                <MotionReveal key={image.src} delay={imageIndex * 0.05} className={imageIndex === 1 ? "group relative min-h-[34rem] overflow-hidden rounded-xl border border-border bg-surface lg:col-span-8" : "group relative min-h-[34rem] overflow-hidden rounded-xl border border-border bg-surface lg:col-span-4"}>
+                <MotionReveal key={image.src} delay={imageIndex * 0.05} className={project.slug === "vncaps" ? "group relative min-h-[34rem] overflow-hidden rounded-xl border border-border bg-surface lg:col-span-3 lg:min-h-[42rem]" : imageIndex === 1 ? "group relative min-h-[34rem] overflow-hidden rounded-xl border border-border bg-surface lg:col-span-8" : "group relative min-h-[34rem] overflow-hidden rounded-xl border border-border bg-surface lg:col-span-4"}>
                   <Image src={image.src} alt={image.alt} fill unoptimized sizes="(max-width: 1024px) 100vw, 66vw" className="object-contain object-center p-6 transition-transform duration-700 group-hover:scale-[1.025]" />
                 </MotionReveal>
               ))}

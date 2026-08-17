@@ -139,11 +139,11 @@ export function ProjectShowcase() {
           }}
           aria-label="Drag project cards, or use the left and right arrow keys"
         >
-          <div className="flex touch-pan-y gap-3 select-none">
+          <div className="flex touch-pan-y select-none">
             {projects.map((project, index) => {
               const highlighted = index === selectedIndex;
               return (
-                <article key={project.slug} className={`relative h-64 min-w-0 flex-[0_0_100%] overflow-hidden rounded-xl border transition-[border-color,background-color,color] duration-200 sm:flex-[0_0_calc(50%-0.375rem)] lg:flex-[0_0_calc(33.333333%-0.5rem)] ${highlighted ? "border-accent/40 bg-accent text-accent-foreground" : "border-border bg-surface-raised"}`}>
+                <article key={project.slug} className={`relative mr-3 h-64 min-w-0 flex-[0_0_100%] overflow-hidden rounded-xl border transition-[border-color,background-color,color] duration-200 sm:flex-[0_0_calc(50%-0.375rem)] lg:flex-[0_0_calc(33.333333%-0.5rem)] ${highlighted ? "border-accent/40 bg-accent text-accent-foreground" : "border-border bg-surface-raised"}`}>
                   <button type="button" className="h-full w-full cursor-pointer touch-manipulation outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent" onClick={() => featureProject(index)} aria-label={`Feature ${project.name}. Currently featuring ${featuredProject.name}.`} aria-current={highlighted ? "true" : undefined}>
                     <CompactContent project={project} highlighted={highlighted} />
                   </button>

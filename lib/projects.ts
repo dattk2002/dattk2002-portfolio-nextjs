@@ -326,9 +326,17 @@ export const projects: readonly Project[] = [
       "Role-based student, teacher, and administrator surfaces",
       "Expo Notifications and dynamic timetable flows",
     ],
-    gallery: [],
+    gallery: [
+      { src: "/images/projects/vncaps-home.webp", alt: "VNCaps parent home dashboard with school modules" },
+      { src: "/images/projects/vncaps-health.webp", alt: "VNCaps student health and daily activity screen" },
+      { src: "/images/projects/vncaps-login.webp", alt: "VNCaps parent login screen" },
+      { src: "/images/projects/vncaps-splash.webp", alt: "VNCaps application launch screen" },
+    ],
     accent: "violet",
-    liveUrls: [{ label: "VNCaps", href: "https://www.vncaps.edu.vn/" }],
+    liveUrls: [
+      { label: "VNCaps", href: "https://www.vncaps.edu.vn/" },
+      { label: "Google Play", href: "https://play.google.com/store/apps/details?id=com.edu.vncaps&hl=en&pli=1" },
+    ],
     featured: false,
   },
 ] as const;

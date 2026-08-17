@@ -12,7 +12,7 @@ import { SiteNavigation } from "@/components/site-navigation";
 import { TechnologyMarquee } from "@/components/technology-marquee";
 import { Button } from "@/components/ui/button";
 import { WordReveal } from "@/components/word-reveal";
-import { capabilities } from "@/lib/capabilities";
+import { deliveryPipeline } from "@/lib/capabilities";
 import { siteConfig } from "@/lib/site";
 
 const certifications = [
@@ -119,22 +119,25 @@ export default function HomePage() {
       <section id="capabilities" className="scroll-mt-24 bg-surface px-5 py-20 md:px-8 md:py-20 lg:px-12 lg:py-24">
         <div className="mx-auto max-w-[90rem]">
           <MotionReveal className="mb-10 grid gap-5 md:mb-12 lg:grid-cols-12">
-            <h2 className="max-w-3xl font-display text-[clamp(2.8rem,5.6vw,4.8rem)] leading-[0.92] tracking-[-0.06em] lg:col-span-8">One product.<br />Every critical layer.</h2>
-            <p className="max-w-md self-end text-sm leading-6 text-muted lg:col-span-4 lg:text-base lg:leading-7">Systems thinking across interface, application logic, data, real-time communication, quality, and production operations.</p>
+            <div className="lg:col-span-7">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-steel">How I ship products</p>
+              <h2 className="mt-4 max-w-3xl font-display text-[clamp(2.8rem,5.6vw,4.8rem)] leading-[0.92] tracking-[-0.06em]">Delivery pipeline.</h2>
+            </div>
+            <p className="max-w-lg self-end text-sm leading-6 text-muted lg:col-span-5 lg:justify-self-end lg:text-base lg:leading-7">Five connected stages, each grounded in measurable work from shipped products—not a generic list of technologies.</p>
           </MotionReveal>
 
-          <div className="grid grid-flow-dense gap-px bg-border md:h-[34rem] md:grid-cols-12 md:grid-rows-4 lg:h-[35.5rem]">
-            {capabilities.map((capability, index) => (
-              <MotionReveal
-                key={capability.title}
-                delay={index * 0.04}
-                className={index === 0 ? "bg-accent p-7 text-accent-foreground md:col-span-5 md:row-span-4 lg:p-10" : "bg-surface-raised p-6 md:col-span-7 md:p-5 lg:p-6"}
-              >
-                <div className={index === 0 ? "flex h-full min-h-56 flex-col" : "flex h-full min-h-32 flex-col justify-center md:min-h-0"}>
-                  <span className={`font-mono text-[9px] uppercase tracking-[0.16em] ${index === 0 ? "opacity-60" : "text-faint"}`}>{capability.technologies.slice(0, 2).join(" / ")}</span>
-                  <h3 className={index === 0 ? "mt-auto pt-12 font-display text-4xl tracking-[-0.05em]" : "mt-4 font-display text-2xl tracking-[-0.04em]"}>{capability.title}</h3>
-                  {index === 0 ? <p className="mt-4 max-w-md text-sm leading-6 opacity-75">{capability.description}</p> : null}
-                  <p className={`mt-4 font-mono text-[9px] uppercase leading-4 tracking-[0.1em] ${index === 0 ? "opacity-60" : "text-steel"}`}>{capability.technologies.join(" · ")}</p>
+          <div className="relative grid border-y border-border md:grid-cols-5">
+            <span className="absolute top-[3.05rem] right-[10%] left-[10%] hidden h-px bg-border md:block" aria-hidden="true" />
+            {deliveryPipeline.map((stage, index) => (
+              <MotionReveal key={stage.step} delay={index * 0.04} className="group relative border-b border-border py-7 last:border-b-0 md:border-r md:border-b-0 md:px-5 md:py-8 md:last:border-r-0 lg:px-7">
+                <div className="grid grid-cols-[3rem_minmax(0,1fr)] gap-4 md:block">
+                  <span className="relative z-10 grid size-9 place-items-center rounded-full border border-border bg-surface font-mono text-[9px] text-faint transition-colors duration-200 group-hover:border-accent group-hover:bg-accent group-hover:text-accent-foreground">{stage.step}</span>
+                  <div>
+                    <h3 className="font-display text-2xl tracking-[-0.04em] md:mt-10">{stage.title}</h3>
+                    <p className="mt-4 font-mono text-[9px] uppercase leading-4 tracking-[0.11em] text-steel">{stage.evidence}</p>
+                    <p className="mt-4 text-sm leading-6 text-muted">{stage.description}</p>
+                    <p className="mt-7 font-mono text-[9px] uppercase tracking-[0.14em] text-faint">Evidence · {stage.project}</p>
+                  </div>
                 </div>
               </MotionReveal>
             ))}

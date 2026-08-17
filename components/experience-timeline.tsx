@@ -73,7 +73,7 @@ function ProjectLinks({ project }: { project: TimelineProject }) {
   );
 }
 
-function ProjectAccordion({ project, expanded, onToggle }: { project: TimelineProject; expanded: boolean; onToggle: () => void }) {
+function ProjectAccordion({ project, expanded, onToggle, triggerRef }: { project: TimelineProject; expanded: boolean; onToggle: () => void; triggerRef: (node: HTMLButtonElement | null) => void }) {
   const reduceMotion = useReducedMotion();
   const triggerId = `experience-trigger-${project.id}`;
   const panelId = `experience-panel-${project.id}`;
@@ -81,6 +81,7 @@ function ProjectAccordion({ project, expanded, onToggle }: { project: TimelinePr
   return (
     <div className="border-b border-border last:border-b-0">
       <button
+        ref={triggerRef}
         id={triggerId}
         type="button"
         className="group flex min-h-20 w-full cursor-pointer touch-manipulation items-center justify-between gap-5 py-4 text-left"
@@ -146,7 +147,9 @@ export function ExperienceTimeline() {
   const [dragging, setDragging] = useState(false);
   const reduceMotion = useReducedMotion();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const triggerRefs = useRef(new Map<string, HTMLButtonElement>());
   const inertiaFrame = useRef<number | null>(null);
+  const autoScrollTimeout = useRef<number | null>(null);
   const suppressClick = useRef(false);
   const suppressClickTimeout = useRef<number | null>(null);
   const dragState = useRef({
@@ -165,6 +168,42 @@ export function ExperienceTimeline() {
     window.cancelAnimationFrame(inertiaFrame.current);
     inertiaFrame.current = null;
   };
+
+  useEffect(() => {
+    if (!openProjectId) return;
+
+    if (autoScrollTimeout.current !== null) window.clearTimeout(autoScrollTimeout.current);
+    autoScrollTimeout.current = window.setTimeout(() => {
+      const trigger = triggerRefs.current.get(openProjectId);
+      const scrollContainer = scrollRef.current;
+      if (!trigger || !scrollContainer) return;
+
+      if (inertiaFrame.current !== null) {
+        window.cancelAnimationFrame(inertiaFrame.current);
+        inertiaFrame.current = null;
+      }
+
+      const behavior: ScrollBehavior = reduceMotion ? "auto" : "smooth";
+      if (window.matchMedia("(min-width: 1024px)").matches) {
+        const containerTop = scrollContainer.getBoundingClientRect().top;
+        const triggerTop = trigger.getBoundingClientRect().top;
+        scrollContainer.scrollTo({ top: scrollContainer.scrollTop + triggerTop - containerTop, behavior });
+      } else {
+        const navigationBottom = document.querySelector("header")?.getBoundingClientRect().bottom ?? 80;
+        const top = window.scrollY + trigger.getBoundingClientRect().top - navigationBottom - 16;
+        window.scrollTo({ top: Math.max(0, top), behavior });
+      }
+
+      autoScrollTimeout.current = null;
+    }, reduceMotion ? 0 : 280);
+
+    return () => {
+      if (autoScrollTimeout.current !== null) {
+        window.clearTimeout(autoScrollTimeout.current);
+        autoScrollTimeout.current = null;
+      }
+    };
+  }, [openProjectId, reduceMotion]);
 
   const startInertia = (initialVelocity: number) => {
     const element = scrollRef.current;
@@ -195,6 +234,7 @@ export function ExperienceTimeline() {
 
   useEffect(() => () => {
     if (inertiaFrame.current !== null) window.cancelAnimationFrame(inertiaFrame.current);
+    if (autoScrollTimeout.current !== null) window.clearTimeout(autoScrollTimeout.current);
     if (suppressClickTimeout.current !== null) window.clearTimeout(suppressClickTimeout.current);
   }, []);
 
@@ -303,6 +343,10 @@ export function ExperienceTimeline() {
                       project={project}
                       expanded={openProjectId === project.id}
                       onToggle={() => setOpenProjectId((current) => current === project.id ? null : project.id)}
+                      triggerRef={(node) => {
+                        if (node) triggerRefs.current.set(project.id, node);
+                        else triggerRefs.current.delete(project.id);
+                      }}
                     />
                   ))}
                 </div>

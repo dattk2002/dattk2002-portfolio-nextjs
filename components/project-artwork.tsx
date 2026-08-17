@@ -19,7 +19,12 @@ export function ProjectArtwork({ project, priority = false, compact = false }: {
       <div className="absolute inset-0 opacity-25 [background-image:linear-gradient(var(--border)_1px,transparent_1px),linear-gradient(90deg,var(--border)_1px,transparent_1px)] [background-size:42px_42px]" />
 
       {image ? (
-        <div className="absolute inset-x-[5%] top-[13%] aspect-[16/10] overflow-hidden rounded-lg border border-white/10 bg-black/20 shadow-2xl md:inset-x-[7%]">
+        <div className={cn(
+          "absolute overflow-hidden border border-white/10 shadow-2xl",
+          project.slug === "vncaps"
+            ? "inset-y-[7%] left-1/2 w-[42%] max-w-[22rem] -translate-x-1/2 rounded-[1.75rem] bg-white"
+            : "inset-x-[5%] top-[13%] aspect-[16/10] rounded-lg bg-black/20 md:inset-x-[7%]",
+        )}>
           <Image
             src={image.src}
             alt={image.alt}
@@ -27,7 +32,10 @@ export function ProjectArtwork({ project, priority = false, compact = false }: {
             preload={priority}
             unoptimized
             sizes="(max-width: 768px) 90vw, 42vw"
-            className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.025]"
+            className={cn(
+              "transition-transform duration-700 ease-out group-hover:scale-[1.025]",
+              project.slug === "vncaps" ? "object-contain object-center" : "object-cover object-top",
+            )}
           />
         </div>
       ) : project.slug === "vncaps" ? (
