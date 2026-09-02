@@ -28,6 +28,7 @@ export function ProjectArtwork({ project, priority = false, compact = false }: {
           <Image
             src={image.src}
             alt={image.alt}
+            draggable={false}
             fill
             preload={priority}
             unoptimized

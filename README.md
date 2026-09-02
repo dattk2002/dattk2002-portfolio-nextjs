@@ -35,7 +35,7 @@ corepack yarn build
 
 All public configuration and service credentials are documented in `.env.example`. Keep real credentials in `.env.local` locally and in Vercel Environment Variables for deployment.
 
-The contact form uses Resend for delivery. Upstash Redis is optional; when its two REST variables are present, the server action also applies a fixed-window rate limit. The honeypot field remains active without Upstash.
+The contact form uses Resend to deliver the enquiry to the portfolio owner and a confirmation email to the visitor. `RESEND_FROM_EMAIL` must use a verified sending domain. Upstash Redis is optional; when its two REST variables are present, the server action also applies a fixed-window rate limit. The honeypot field remains active without Upstash.
 
 ## Content and routes
 
@@ -44,7 +44,7 @@ The contact form uses Resend for delivery. Upstash Redis is optional; when its t
 - `/projects/habistride`
 - `/projects/ngoaingungay`
 - `/projects/trivia-quiz`
-- `/documents/CV-Tran%20Kim%20Dat-Full-stack%20Developer.pdf` — downloadable CV
+- `/api/cv` — downloadable CV, refreshed from the source Google Doc with a static PDF fallback
 
 Portfolio content is maintained in `lib/projects.ts`, `lib/experience.ts`, `lib/site.ts`, and `lib/capabilities.ts`. Raster assets live under `public/images` and are stored as WebP.
 

@@ -84,17 +84,38 @@ export async function sendContactMessage(_previousState: ContactState, formData:
 
   const resend = new Resend(apiKey);
   const { name, email, subject, message } = parsed.data;
-  const { error } = await resend.emails.send({
-    from,
-    to: [to],
-    replyTo: email,
-    subject: `[Portfolio] ${subject}`,
-    text: [`New portfolio enquiry`, ``, `Name: ${name}`, `Email: ${email}`, `Subject: ${subject}`, ``, message].join("\n"),
-  });
+  const safeName = name.replace(/[\r\n]+/g, " ").trim();
+  const safeSubject = subject.replace(/[\r\n]+/g, " ").trim();
+  const { error } = await resend.batch.send([
+    {
+      from,
+      to: [to],
+      replyTo: email,
+      subject: `[Portfolio] ${safeSubject}`,
+      text: ["New portfolio enquiry", "", `Name: ${name}`, `Email: ${email}`, `Subject: ${safeSubject}`, "", message].join("\n"),
+    },
+    {
+      from,
+      to: [email],
+      replyTo: to,
+      subject: `Thanks for reaching out, ${safeName}`,
+      text: [
+        `Hi ${safeName},`,
+        "",
+        "Thanks for getting in touch through my portfolio. I have received your message and will reply as soon as I can.",
+        "",
+        `Subject: ${safeSubject}`,
+        "",
+        "Best,",
+        "Tran Kim Dat",
+        "Full-stack Developer",
+      ].join("\n"),
+    },
+  ]);
 
   if (error) {
     return { status: "error", message: "The message could not be sent. Please try again or email me directly." };
   }
 
-  return { status: "success", message: "Thanks — your message has been sent. I’ll get back to you soon." };
+  return { status: "success", message: "Thanks — your message has been sent, and a confirmation is on its way to your inbox." };
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import type { EmblaCarouselType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -79,6 +79,8 @@ export function ProjectShowcase() {
   const [featuredSlug, setFeaturedSlug] = useState<ProjectSlug>(projects[0].slug);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const reduceMotion = useReducedMotion();
+  const suppressFeaturedClick = useRef(false);
+  const featuredPointerStart = useRef<{ x: number; y: number } | null>(null);
   const featuredProject = getProject(featuredSlug);
   const [carouselRef, carouselApi] = useEmblaCarousel({
     align: "start",
@@ -113,12 +115,50 @@ export function ProjectShowcase() {
     setFeaturedSlug(projects[index].slug);
   };
 
+  const handleFeaturedPointerUp = (event: ReactPointerEvent<HTMLElement>) => {
+    const start = featuredPointerStart.current;
+    featuredPointerStart.current = null;
+    if (!start) return;
+
+    const deltaX = event.clientX - start.x;
+    const deltaY = event.clientY - start.y;
+    const isHorizontalSwipe = Math.abs(deltaX) >= 50 && Math.abs(deltaX) > Math.abs(deltaY);
+    suppressFeaturedClick.current = Math.abs(deltaX) > 8;
+
+    if (isHorizontalSwipe && deltaX < 0) carouselApi?.scrollNext();
+    if (isHorizontalSwipe && deltaX > 0) carouselApi?.scrollPrev();
+
+    requestAnimationFrame(() => {
+      suppressFeaturedClick.current = false;
+    });
+  };
+
   return (
     <div>
       <p className="sr-only" aria-live="polite">Featured project: {featuredProject.name}</p>
-      <article className="overflow-hidden rounded-xl border border-border bg-surface">
+      <motion.article
+        className="cursor-grab touch-pan-y overflow-hidden rounded-xl border border-border bg-surface select-none active:cursor-grabbing"
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={reduceMotion ? 0 : 0.12}
+        dragMomentum={false}
+        onPointerDown={(event) => {
+          featuredPointerStart.current = { x: event.clientX, y: event.clientY };
+        }}
+        onPointerUp={handleFeaturedPointerUp}
+        onPointerCancel={() => {
+          featuredPointerStart.current = null;
+          suppressFeaturedClick.current = false;
+        }}
+        onClickCapture={(event) => {
+          if (!suppressFeaturedClick.current) return;
+          event.preventDefault();
+          event.stopPropagation();
+        }}
+        aria-label="Drag the featured project left or right to explore projects"
+      >
         <AnimatePresence mode="wait" initial={false}><FeaturedContent project={featuredProject} reduceMotion={reduceMotion} /></AnimatePresence>
-      </article>
+      </motion.article>
 
       <section className="mt-3" role="region" aria-roledescription="carousel" aria-label="Selected project carousel">
         <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.16em] text-faint">Drag to explore <span aria-hidden="true">·</span> Project {selectedIndex + 1} of {projects.length}</p>

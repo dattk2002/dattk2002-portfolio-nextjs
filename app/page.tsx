@@ -53,7 +53,7 @@ export default function HomePage() {
           <div className="relative z-10 min-w-0 md:col-span-7 lg:col-span-8">
             <MotionReveal>
               <div className="flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[9px] uppercase tracking-[0.18em] text-steel sm:text-[10px]">
-                <span>Full-stack Developer</span><span className="h-px w-9 bg-border" /><span>Ho Chi Minh City, Vietnam</span>
+                <span>Full-stack Developer</span><span className="h-px w-9 bg-border" /><span>{siteConfig.location}</span>
               </div>
             </MotionReveal>
             <MotionReveal delay={0.08}>
@@ -74,14 +74,14 @@ export default function HomePage() {
             </MotionReveal>
             <MotionReveal delay={0.16}>
               <p className="mt-7 max-w-2xl text-sm leading-6 text-muted md:text-base md:leading-7 lg:text-lg lg:leading-8">
-                Full-stack developer with 3+ years delivering production web applications and cross-platform products across commerce, CMS, booking, SaaS, education, and social experiences.
+                Full-stack developer with 3+ years delivering production web applications and cross-platform mobile experiences across e-commerce, CMS, booking, SaaS, and social products, with hands-on ownership across responsive interfaces, APIs, data, authentication, and real-time systems.
               </p>
             </MotionReveal>
             <MotionReveal delay={0.22} className="mt-8 flex flex-col gap-3 sm:flex-row md:mt-9">
               <Button size="lg" asChild><SectionLink href="#work">View selected work <ArrowDownRight aria-hidden="true" /></SectionLink></Button>
               <Button size="lg" variant="outline" asChild><a href={siteConfig.cvPath} download={siteConfig.cvDownloadName}>Download CV <Download aria-hidden="true" /></a></Button>
             </MotionReveal>
-            <p className="mt-7 font-mono text-[9px] uppercase tracking-[0.15em] text-faint">Open to full-stack opportunities · Remote or Ho Chi Minh City</p>
+            <p className="mt-7 font-mono text-[9px] uppercase tracking-[0.15em] text-faint">Open to full-stack opportunities · Remote, Da Nang, or Ho Chi Minh City</p>
           </div>
 
           <MotionReveal delay={0.12} className="relative md:col-span-5 lg:col-span-4 lg:translate-y-10">
@@ -163,8 +163,8 @@ export default function HomePage() {
           <MotionReveal>
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-steel">Education</p>
             <h2 className="mt-5 font-display text-4xl tracking-[-0.055em] md:text-5xl">FPT University</h2>
-            <p className="mt-4 text-lg text-background/65">Software Engineering</p>
-            <div className="mt-8 border-t border-background/20 pt-4 font-mono text-[9px] uppercase leading-5 tracking-[0.14em] text-background/55">Sep 2021 – Dec 2024 · Graduated · GPA 7.8/10</div>
+            <p className="mt-4 text-lg text-background/65">Bachelor’s Degree in Software Engineering</p>
+            <div className="mt-8 border-t border-background/20 pt-4 font-mono text-[9px] uppercase leading-5 tracking-[0.14em] text-background/55">Sep 2021 – Sep 2025 · Graduated · GPA 8.1/10 · 3.24/4</div>
           </MotionReveal>
           <MotionReveal delay={0.08}>
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-steel">Certifications</p>

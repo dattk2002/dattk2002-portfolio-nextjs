@@ -248,7 +248,7 @@ export const projects: readonly Project[] = [
       { src: "/images/projects/caocao-adventures-main.webp", alt: "Caocao Adventures desktop cycling tour homepage" },
     ],
     accent: "lime",
-    liveUrls: [{ label: "Caocao Adventures", href: "https://caocaoadventures.com/" }],
+    liveUrls: [{ label: "Caocao Adventures", href: "https://www.caocaoadventures.com" }],
     repositoryUrls: [
       { label: "UI repository", href: "https://github.com/tungvt2003/caocaoadventures" },
     ],
@@ -293,8 +293,10 @@ export const projects: readonly Project[] = [
     ],
     accent: "blue",
     liveUrls: [
-      { label: "Tamda Group", href: "https://tamdagroup.eu/" },
-      { label: "Tamda Media", href: "https://tamdamedia.eu/" },
+      { label: "Tamda Media", href: "https://tamdamedia.eu" },
+      { label: "Tamda Group", href: "https://tamdagroup.eu" },
+      { label: "Tamda Express", href: "https://tamdaexpress.eu" },
+      { label: "Tamda OC", href: "https://tamdaoc.eu" },
     ],
     repositoryUrls: [
       { label: "UI repository", href: "https://github.com/tungvt2003/tamdamedia" },

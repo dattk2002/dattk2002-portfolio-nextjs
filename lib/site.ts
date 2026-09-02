@@ -31,7 +31,7 @@ export const siteConfig = {
   role: "Full-stack Developer",
   description:
     "Full-stack developer building production web applications and cross-platform products from interface to infrastructure.",
-  location: "Ho Chi Minh City, Vietnam",
+  location: "Da Nang City / Ho Chi Minh City, Vietnam",
   email: "kimdat0705@gmail.com",
   phoneDisplay: "+84 98 356 4074",
   phoneHref: "+84983564074",
