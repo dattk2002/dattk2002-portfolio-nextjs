@@ -1,6 +1,11 @@
 import Image from "next/image";
 
-import type { BlogDocument, BlogEditorNode } from "@/lib/blog/types";
+import {
+  isBlogFontSize,
+  isBlogFontWeight,
+  type BlogDocument,
+  type BlogEditorNode,
+} from "@/lib/blog/types";
 
 type BlogContentProps = {
   document: BlogDocument;
@@ -58,6 +63,16 @@ function renderText(node: BlogEditorNode, key: string) {
     if (mark.type === "underline") content = <u>{content}</u>;
     if (mark.type === "strike") content = <s>{content}</s>;
     if (mark.type === "code") content = <code>{content}</code>;
+    if (mark.type === "textStyle") {
+      const fontSize = isBlogFontSize(mark.attrs?.fontSize) ? mark.attrs.fontSize : undefined;
+      const fontWeight = isBlogFontWeight(mark.attrs?.fontWeight)
+        ? mark.attrs.fontWeight
+        : undefined;
+
+      if (fontSize || fontWeight) {
+        content = <span style={{ fontSize, fontWeight }}>{content}</span>;
+      }
+    }
     if (mark.type === "link") {
       const href = safeUrl(mark.attrs?.href);
       if (href) {

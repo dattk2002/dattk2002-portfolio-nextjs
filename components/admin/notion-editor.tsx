@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { Editor, JSONContent } from "@tiptap/core";
+import { Extension, type Editor, type JSONContent } from "@tiptap/core";
 import DragHandle from "@tiptap/extension-drag-handle-react";
 import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder";
 import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
+import { TextStyle } from "@tiptap/extension-text-style";
 import Youtube from "@tiptap/extension-youtube";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -34,7 +35,11 @@ import {
 import { ImageUploadButton } from "@/components/admin/image-upload-button";
 import { Button } from "@/components/ui/button";
 import { downloadBlogImage, uploadBlogImage } from "@/lib/blog/image-upload";
-import type { BlogDocument } from "@/lib/blog/types";
+import {
+  isBlogFontSize,
+  isBlogFontWeight,
+  type BlogDocument,
+} from "@/lib/blog/types";
 import { cn } from "@/lib/utils";
 
 type NotionEditorProps = {
@@ -55,6 +60,58 @@ type ImagePasteStatus = {
   type: "uploading" | "success" | "error";
   message: string;
 } | null;
+
+const BlogTypography = Extension.create({
+  name: "blogTypography",
+  addGlobalAttributes() {
+    return [
+      {
+        types: ["textStyle"],
+        attributes: {
+          fontSize: {
+            default: null,
+            parseHTML: (element) => {
+              const value = element.style.fontSize;
+              return isBlogFontSize(value) ? value : null;
+            },
+            renderHTML: (attributes) =>
+              isBlogFontSize(attributes.fontSize)
+                ? { style: `font-size: ${attributes.fontSize}` }
+                : {},
+          },
+          fontWeight: {
+            default: null,
+            parseHTML: (element) => {
+              const value = element.style.fontWeight;
+              return isBlogFontWeight(value) ? value : null;
+            },
+            renderHTML: (attributes) =>
+              isBlogFontWeight(attributes.fontWeight)
+                ? { style: `font-weight: ${attributes.fontWeight}` }
+                : {},
+          },
+        },
+      },
+    ];
+  },
+});
+
+const fontSizeOptions = [
+  { value: "", label: "Normal" },
+  { value: "0.875rem", label: "Small" },
+  { value: "1.125rem", label: "Large" },
+  { value: "1.25rem", label: "XL" },
+  { value: "1.5rem", label: "2XL" },
+  { value: "2rem", label: "Display" },
+] as const;
+
+const fontWeightOptions = [
+  { value: "", label: "Regular" },
+  { value: "300", label: "Light" },
+  { value: "500", label: "Medium" },
+  { value: "600", label: "Semibold" },
+  { value: "700", label: "Bold" },
+] as const;
 
 function pastedImageSource(clipboardData: DataTransfer | null) {
   if (!clipboardData) return null;
@@ -104,6 +161,37 @@ const slashCommands: SlashCommand[] = [
 
 function ToolbarButton({ label, active, onClick, children }: { label: string; active?: boolean; onClick: () => void; children: React.ReactNode }) {
   return <button type="button" onClick={onClick} aria-label={label} aria-pressed={active || undefined} className={cn("grid size-11 shrink-0 place-items-center border-r border-border text-muted transition-colors hover:bg-surface-raised hover:text-foreground", active && "bg-surface-raised text-accent")}>{children}</button>;
+}
+
+function ToolbarSelect({
+  label,
+  value,
+  onChange,
+  options,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  options: ReadonlyArray<{ value: string; label: string }>;
+}) {
+  return (
+    <label className="relative shrink-0 border-r border-border">
+      <span className="sr-only">{label}</span>
+      <select
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        aria-label={label}
+        title={label}
+        className="h-11 min-w-24 cursor-pointer bg-surface px-3 text-xs font-medium text-foreground outline-none transition-colors hover:bg-surface-raised focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent"
+      >
+        {options.map((option) => (
+          <option key={option.value || "default"} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
 }
 
 export function NotionEditor({ value, onChange, onImageUploadChange, label }: NotionEditorProps) {
@@ -188,6 +276,8 @@ export function NotionEditor({ value, onChange, onImageUploadChange, label }: No
     Youtube.configure({ nocookie: true, controls: true, allowFullscreen: true, width: 1280, height: 720 }),
     TaskList,
     TaskItem.configure({ nested: true }),
+    TextStyle,
+    BlogTypography,
   ], []);
 
   const editor = useEditor({
@@ -256,6 +346,13 @@ export function NotionEditor({ value, onChange, onImageUploadChange, label }: No
   if (!editor) return <div className="min-h-80 animate-pulse border border-border bg-surface" aria-label="Loading editor" />;
 
   const filteredCommands = slashCommands.filter((command) => command.label.toLowerCase().includes(slashMenu?.query ?? ""));
+  const textStyle = editor.getAttributes("textStyle");
+  const activeFontSize = isBlogFontSize(textStyle.fontSize) ? textStyle.fontSize : "";
+  const activeFontWeight = editor.isActive("bold")
+    ? "700"
+    : isBlogFontWeight(textStyle.fontWeight)
+      ? textStyle.fontWeight
+      : "";
   void revision;
 
   return (
@@ -265,6 +362,38 @@ export function NotionEditor({ value, onChange, onImageUploadChange, label }: No
         <ToolbarButton label="Redo" onClick={() => editor.chain().focus().redo().run()}><Redo2 className="size-4" /></ToolbarButton>
         <ToolbarButton label="Heading 2" active={editor.isActive("heading", { level: 2 })} onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}><Heading2 className="size-4" /></ToolbarButton>
         <ToolbarButton label="Heading 3" active={editor.isActive("heading", { level: 3 })} onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}><Heading3 className="size-4" /></ToolbarButton>
+        <ToolbarSelect
+          label="Font size"
+          value={activeFontSize}
+          options={fontSizeOptions}
+          onChange={(fontSize) => {
+            const chain = editor.chain().focus().setMark("textStyle", {
+              fontSize: fontSize || null,
+            });
+            if (!fontSize) chain.removeEmptyTextStyle();
+            chain.run();
+          }}
+        />
+        <ToolbarSelect
+          label="Font weight"
+          value={activeFontWeight}
+          options={fontWeightOptions}
+          onChange={(fontWeight) => {
+            const chain = editor.chain().focus();
+            if (fontWeight === "700") {
+              chain
+                .setMark("textStyle", { fontWeight: null })
+                .removeEmptyTextStyle()
+                .setBold()
+                .run();
+              return;
+            }
+
+            chain.unsetBold().setMark("textStyle", { fontWeight: fontWeight || null });
+            if (!fontWeight) chain.removeEmptyTextStyle();
+            chain.run();
+          }}
+        />
         <ToolbarButton label="Bold" active={editor.isActive("bold")} onClick={() => editor.chain().focus().toggleBold().run()}><Bold className="size-4" /></ToolbarButton>
         <ToolbarButton label="Italic" active={editor.isActive("italic")} onClick={() => editor.chain().focus().toggleItalic().run()}><Italic className="size-4" /></ToolbarButton>
         <ToolbarButton label="Underline" active={editor.isActive("underline")} onClick={() => editor.chain().focus().toggleUnderline().run()}><UnderlineIcon className="size-4" /></ToolbarButton>
