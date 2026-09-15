@@ -3518,6 +3518,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tiptap/extension-text-style@npm:^3.31.3":
+  version: 3.31.3
+  resolution: "@tiptap/extension-text-style@npm:3.31.3"
+  peerDependencies:
+    "@tiptap/core": 3.31.3
+  checksum: 10c0/7b70d665ab2d707086fa0056ba095d72d63e81f16479bcbe933898383c54bef065a3ef50e68ff3e55b913ad0584c5c0b482fdf39028011b999f0c764f5e836ce
+  languageName: node
+  linkType: hard
+
 "@tiptap/extension-text@npm:3.31.3":
   version: 3.31.3
   resolution: "@tiptap/extension-text@npm:3.31.3"
@@ -4733,6 +4742,7 @@ __metadata:
     "@tiptap/extension-placeholder": "npm:^3.31.3"
     "@tiptap/extension-task-item": "npm:^3.31.3"
     "@tiptap/extension-task-list": "npm:^3.31.3"
+    "@tiptap/extension-text-style": "npm:^3.31.3"
     "@tiptap/extension-underline": "npm:^3.31.3"
     "@tiptap/extension-youtube": "npm:^3.31.3"
     "@tiptap/extensions": "npm:^3.31.3"

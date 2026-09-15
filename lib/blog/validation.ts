@@ -1,6 +1,12 @@
 import { z } from "zod";
 
-import { blogLocales, type BlogDocument, type BlogEditorNode } from "@/lib/blog/types";
+import {
+  blogFontSizes,
+  blogFontWeights,
+  blogLocales,
+  type BlogDocument,
+  type BlogEditorNode,
+} from "@/lib/blog/types";
 
 const allowedNodeTypes = new Set([
   "doc",
@@ -21,8 +27,25 @@ const allowedNodeTypes = new Set([
 ]);
 
 const markSchema = z.object({
-  type: z.enum(["bold", "italic", "underline", "strike", "code", "link"]),
+  type: z.enum(["bold", "italic", "underline", "strike", "code", "link", "textStyle"]),
   attrs: z.record(z.string(), z.unknown()).optional(),
+}).superRefine((mark, context) => {
+  if (mark.type !== "textStyle") return;
+
+  const result = z
+    .object({
+      fontSize: z.enum(blogFontSizes).nullable().optional(),
+      fontWeight: z.enum(blogFontWeights).nullable().optional(),
+    })
+    .strict()
+    .safeParse(mark.attrs ?? {});
+
+  if (!result.success) {
+    context.addIssue({
+      code: "custom",
+      message: "Unsupported text size or weight.",
+    });
+  }
 });
 
 const editorNodeSchema: z.ZodType<BlogEditorNode> = z.lazy(() =>
