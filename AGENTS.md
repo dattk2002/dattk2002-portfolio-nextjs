@@ -71,7 +71,7 @@ The homepage currently represents seven milestones and nine total projects. If r
 - `/`: fixed navigation, hero, responsive positioning statement, selected work, delivery pipeline and technology marquee, professional experience, education/certifications, contact, and footer.
 - `/projects/[slug]`: statically generated project case studies with project metadata, hero artwork, ownership, verified outcomes, challenge/approach, architecture, gallery, links, circular previous/next navigation, and CTA.
 - `/blog`: public, database-backed article index with a locale filter, tagged article cards, and a reduced-motion-aware GSAP owner transition to the protected admin workspace; published translations are cached and invalidated by the admin workflow.
-- `/blog/[locale]/[slug]`: localized English or Vietnamese articles with safe structured-content rendering, alternate-language links, article metadata, JSON-LD, and privacy-enhanced YouTube embeds.
+- `/blog/[locale]/[slug]`: localized English or Vietnamese articles with an editorial split intro, constrained reading measure, author and reading metadata, related articles, safe structured-content rendering, alternate-language links, JSON-LD, and privacy-enhanced YouTube embeds.
 - `/blog/rss.xml`: RSS feed for published article translations.
 - `/admin` redirects to `/admin/sign-in`; `/admin/sign-in` opens GitHub OAuth in a new tab, and `/admin/blog/**` is the protected blog workspace. Authorization is restricted exclusively to the configured immutable GitHub account ID.
 - `/api/auth/[...path]`: Neon Auth handler. `/api/blog/upload` issues authenticated client-upload tokens for Vercel Blob images.
@@ -124,7 +124,7 @@ Do not create competing arrays, contact constants, project facts, or design toke
 - Zod and React Server Actions for contact validation/submission
 - Neon Postgres with Drizzle ORM and versioned SQL migrations
 - Neon Auth with GitHub OAuth for the single-owner admin workspace
-- Tiptap structured JSON editing and Vercel Blob image uploads for blog publishing
+- Tiptap structured JSON editing with clipboard-image importing, image captions, and Vercel Blob uploads for blog publishing
 - Resend for transactional email; optional Upstash Redis REST for rate limiting
 - `next/image`, `next/font`, and `ImageResponse` for media, fonts, and OG images
 - Yarn 4.9.2 via Corepack; Node.js 24.x

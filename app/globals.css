@@ -46,7 +46,11 @@ html {
 body {
   min-height: 100vh;
   background:
-    radial-gradient(circle at 82% 8%, rgb(126 162 184 / 10%), transparent 30rem),
+    radial-gradient(
+      circle at 82% 8%,
+      rgb(126 162 184 / 10%),
+      transparent 30rem
+    ),
     var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), sans-serif;
@@ -85,9 +89,10 @@ body {
 }
 
 .blog-content {
+  max-width: 46rem;
   color: var(--muted);
-  font-size: 1.0625rem;
-  line-height: 1.85;
+  font-size: 1.125rem;
+  line-height: 1.8;
 }
 
 .blog-content > * + * {
@@ -146,6 +151,12 @@ body {
   line-height: 1.4;
 }
 
+.blog-content > p:first-child {
+  color: var(--foreground);
+  font-size: clamp(1.2rem, 2vw, 1.45rem);
+  line-height: 1.65;
+}
+
 .blog-content code {
   border: 1px solid var(--border);
   background: var(--surface-raised);
@@ -181,10 +192,11 @@ body {
 }
 
 .blog-content figcaption {
-  margin-top: 0.75rem;
+  margin-top: 0.5rem;
   color: var(--faint);
   font-family: var(--font-geist-mono), monospace;
-  font-size: 0.7rem;
+  font-size: 0.6875rem;
+  font-style: italic;
   line-height: 1.5;
 }
 

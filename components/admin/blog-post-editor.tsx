@@ -132,6 +132,7 @@ export function BlogPostEditor({ initialPost }: { initialPost?: InitialBlogPost 
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [fieldErrors, setFieldErrors] = useState<BlogFieldErrors>({});
   const [dirty, setDirty] = useState(false);
+  const [contentImageUploading, setContentImageUploading] = useState(false);
   const errorRef = useRef<HTMLDivElement>(null);
   const active = translations.find((translation) => translation.locale === activeLocale) ?? translations[0];
   const activeTranslationIndex = Math.max(0, translations.findIndex((translation) => translation.locale === activeLocale));
@@ -217,6 +218,13 @@ export function BlogPostEditor({ initialPost }: { initialPost?: InitialBlogPost 
 
   function submit() {
     setMessage(null);
+
+    if (contentImageUploading) {
+      setMessage({ type: "error", text: "Wait for the pasted image to finish uploading." });
+      requestAnimationFrame(() => errorRef.current?.focus());
+      return;
+    }
+
     const parsed = blogPostInputSchema.safeParse(buildPayload());
 
     if (!parsed.success) {
@@ -271,7 +279,7 @@ export function BlogPostEditor({ initialPost }: { initialPost?: InitialBlogPost 
   return (
     <form
       noValidate
-      aria-busy={pending}
+      aria-busy={pending || contentImageUploading}
       onSubmit={(event) => {
         event.preventDefault();
         submit();
@@ -281,9 +289,9 @@ export function BlogPostEditor({ initialPost }: { initialPost?: InitialBlogPost 
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-6">
         <Link href="/admin/blog" className="inline-flex min-h-11 items-center gap-2 text-sm text-muted hover:text-foreground"><ArrowLeft className="size-4" aria-hidden="true" /> Articles</Link>
         <div className="flex flex-wrap gap-2">
-          {postId ? <Button type="button" variant="ghost" disabled={pending} onClick={removePost}><Trash2 className="size-4" aria-hidden="true" />Delete</Button> : null}
-          <Button type="button" variant="outline" onClick={() => setPreview((value) => !value)}>{preview ? <FilePenLine className="size-4" aria-hidden="true" /> : <Eye className="size-4" aria-hidden="true" />}{preview ? "Edit" : "Preview"}</Button>
-          <Button type="submit" disabled={pending}><Save className="size-4" aria-hidden="true" />{pending ? "Saving…" : "Save article"}</Button>
+          {postId ? <Button type="button" variant="ghost" disabled={pending || contentImageUploading} onClick={removePost}><Trash2 className="size-4" aria-hidden="true" />Delete</Button> : null}
+          <Button type="button" variant="outline" disabled={contentImageUploading} onClick={() => setPreview((value) => !value)}>{preview ? <FilePenLine className="size-4" aria-hidden="true" /> : <Eye className="size-4" aria-hidden="true" />}{preview ? "Edit" : "Preview"}</Button>
+          <Button type="submit" disabled={pending || contentImageUploading}><Save className="size-4" aria-hidden="true" />{pending ? "Saving…" : contentImageUploading ? "Uploading image…" : "Save article"}</Button>
         </div>
       </div>
 
@@ -315,11 +323,12 @@ export function BlogPostEditor({ initialPost }: { initialPost?: InitialBlogPost 
                     key={translation.locale}
                     type="button"
                     role="tab"
+                    disabled={contentImageUploading}
                     aria-selected={translation.locale === activeLocale}
                     aria-label={`${localeNames[translation.locale]}, ${errorCount > 0 ? `${errorCount} validation ${errorCount === 1 ? "error" : "errors"}` : translation.status}`}
                     onClick={() => setActiveLocale(translation.locale)}
                     className={cn(
-                      "min-h-12 border-r border-border px-5 font-mono text-[10px] uppercase tracking-[0.14em]",
+                      "min-h-12 border-r border-border px-5 font-mono text-[10px] uppercase tracking-[0.14em] disabled:cursor-not-allowed disabled:opacity-50",
                       translation.locale === activeLocale ? "bg-accent text-accent-foreground" : "text-muted hover:bg-surface",
                     )}
                   >
@@ -331,7 +340,7 @@ export function BlogPostEditor({ initialPost }: { initialPost?: InitialBlogPost 
                 );
               })}
             </div>
-            {!hasOtherLocale ? <div className="flex flex-wrap gap-2 pb-3 sm:pb-0"><Button type="button" size="sm" variant="ghost" onClick={() => addTranslation(false)}><Plus className="size-4" aria-hidden="true" />Add {localeNames[otherLocale]}</Button><Button type="button" size="sm" variant="ghost" onClick={() => addTranslation(true)}><Copy className="size-4" aria-hidden="true" />Duplicate content</Button></div> : null}
+            {!hasOtherLocale ? <div className="flex flex-wrap gap-2 pb-3 sm:pb-0"><Button type="button" size="sm" variant="ghost" disabled={contentImageUploading} onClick={() => addTranslation(false)}><Plus className="size-4" aria-hidden="true" />Add {localeNames[otherLocale]}</Button><Button type="button" size="sm" variant="ghost" disabled={contentImageUploading} onClick={() => addTranslation(true)}><Copy className="size-4" aria-hidden="true" />Duplicate content</Button></div> : null}
           </div>
 
           {preview ? (
@@ -376,7 +385,7 @@ export function BlogPostEditor({ initialPost }: { initialPost?: InitialBlogPost 
               </Field>
               <div className="min-w-0">
                 <p className="mb-2 text-sm font-medium">Content</p>
-                <NotionEditor key={active.locale} label={`${localeNames[active.locale]} article content`} value={active.content} onChange={(content) => updateActive({ content })} />
+                <NotionEditor key={active.locale} label={`${localeNames[active.locale]} article content`} value={active.content} onChange={(content) => updateActive({ content })} onImageUploadChange={setContentImageUploading} />
                 {getFieldError(`${activePath}.content`) ? <p className="mt-2 text-sm leading-6 text-error" role="alert">{getFieldError(`${activePath}.content`)}</p> : null}
               </div>
             </div>
@@ -492,7 +501,7 @@ export function BlogPostEditor({ initialPost }: { initialPost?: InitialBlogPost 
             </Field>
           </section>
 
-          {translations.length > 1 ? <Button type="button" variant="ghost" onClick={removeActiveTranslation}><Trash2 className="size-4" aria-hidden="true" />Remove {localeNames[active.locale]} translation</Button> : null}
+          {translations.length > 1 ? <Button type="button" variant="ghost" disabled={contentImageUploading} onClick={removeActiveTranslation}><Trash2 className="size-4" aria-hidden="true" />Remove {localeNames[active.locale]} translation</Button> : null}
         </aside>
       </div>
     </form>

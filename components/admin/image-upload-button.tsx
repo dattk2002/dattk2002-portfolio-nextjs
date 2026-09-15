@@ -1,10 +1,10 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { upload } from "@vercel/blob/client";
 import { ImagePlus, LoaderCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { uploadBlogImage, validateBlogImage } from "@/lib/blog/image-upload";
 import { cn } from "@/lib/utils";
 
 type ImageUploadButtonProps = {
@@ -20,25 +20,16 @@ export function ImageUploadButton({ label = "Upload image", onUploaded, classNam
   const [error, setError] = useState("");
 
   async function handleFile(file: File) {
-    if (!file.type.startsWith("image/")) {
-      setError("Choose a JPEG, PNG, WebP, or GIF image.");
-      return;
-    }
-    if (file.size > 8 * 1024 * 1024) {
-      setError("Images must be 8 MB or smaller.");
+    const validationError = validateBlogImage(file);
+    if (validationError) {
+      setError(validationError);
       return;
     }
 
     setError("");
     setUploading(true);
     try {
-      const safeName = file.name.toLowerCase().replace(/[^a-z0-9._-]+/g, "-");
-      const blob = await upload(`blog/${Date.now()}-${safeName}`, file, {
-        access: "public",
-        handleUploadUrl: "/api/blog/upload",
-        contentType: file.type,
-      });
-      onUploaded(blob.url);
+      onUploaded(await uploadBlogImage(file));
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "The image could not be uploaded.");
     } finally {
