@@ -35,6 +35,16 @@ function youtubeEmbedUrl(value: unknown) {
   }
 }
 
+function canOptimizeImage(source: string) {
+  if (source.startsWith("/") && !source.startsWith("//")) return true;
+
+  try {
+    return new URL(source).hostname.endsWith(".public.blob.vercel-storage.com");
+  } catch {
+    return false;
+  }
+}
+
 function renderChildren(node: BlogEditorNode) {
   return node.content?.map((child, index) => renderNode(child, `${node.type}-${index}`)) ?? null;
 }
@@ -91,9 +101,18 @@ function renderNode(node: BlogEditorNode, key: string): React.ReactNode {
     const alt = typeof node.attrs?.alt === "string" ? node.attrs.alt : "";
     const width = Number(node.attrs?.width) || 1600;
     const height = Number(node.attrs?.height) || 900;
+    const optimized = canOptimizeImage(src);
     return (
       <figure key={key}>
-        <Image src={src} alt={alt} width={width} height={height} sizes="(max-width: 900px) 100vw, 800px" />
+        <Image
+          src={src}
+          alt={alt}
+          width={width}
+          height={height}
+          sizes="(max-width: 900px) 100vw, 800px"
+          unoptimized={!optimized}
+          referrerPolicy={optimized ? undefined : "no-referrer"}
+        />
         {typeof node.attrs?.title === "string" && node.attrs.title ? <figcaption>{node.attrs.title}</figcaption> : null}
       </figure>
     );

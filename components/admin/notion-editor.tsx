@@ -21,6 +21,7 @@ import {
   List,
   ListChecks,
   ListOrdered,
+  LoaderCircle,
   Minus,
   Quote,
   Redo2,
@@ -32,12 +33,14 @@ import {
 
 import { ImageUploadButton } from "@/components/admin/image-upload-button";
 import { Button } from "@/components/ui/button";
+import { downloadBlogImage, uploadBlogImage } from "@/lib/blog/image-upload";
 import type { BlogDocument } from "@/lib/blog/types";
 import { cn } from "@/lib/utils";
 
 type NotionEditorProps = {
   value: BlogDocument;
   onChange: (value: BlogDocument) => void;
+  onImageUploadChange?: (uploading: boolean) => void;
   label: string;
 };
 
@@ -47,6 +50,46 @@ type SlashCommand = {
   icon: React.ComponentType<{ className?: string }>;
   run: (editor: Editor) => void;
 };
+
+type ImagePasteStatus = {
+  type: "uploading" | "success" | "error";
+  message: string;
+} | null;
+
+function pastedImageSource(clipboardData: DataTransfer | null) {
+  if (!clipboardData) return null;
+
+  const file = Array.from(clipboardData.files).find((item) => item.type.startsWith("image/"));
+  if (file) return file;
+
+  const html = clipboardData.getData("text/html");
+  if (!html) return null;
+
+  const document = new DOMParser().parseFromString(html, "text/html");
+  const source = document.querySelector("img[src]")?.getAttribute("src");
+  if (!source) return null;
+
+  if (source.startsWith("data:image/")) return source;
+
+  try {
+    const url = new URL(source, window.location.href);
+    if (url.origin === window.location.origin) return null;
+    return url.protocol === "https:" ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
+function requestImageDetails() {
+  const alt =
+    window.prompt(
+      "Describe this image for readers using assistive technology. Leave blank only if it is decorative.",
+    ) ?? "";
+  const title =
+    window.prompt("Add an optional caption shown directly below the image.") ?? "";
+
+  return { alt, title };
+}
 
 const slashCommands: SlashCommand[] = [
   { label: "Heading 2", hint: "Large section heading", icon: Heading2, run: (editor) => editor.chain().focus().setHeading({ level: 2 }).run() },
@@ -63,15 +106,76 @@ function ToolbarButton({ label, active, onClick, children }: { label: string; ac
   return <button type="button" onClick={onClick} aria-label={label} aria-pressed={active || undefined} className={cn("grid size-11 shrink-0 place-items-center border-r border-border text-muted transition-colors hover:bg-surface-raised hover:text-foreground", active && "bg-surface-raised text-accent")}>{children}</button>;
 }
 
-export function NotionEditor({ value, onChange, label }: NotionEditorProps) {
+export function NotionEditor({ value, onChange, onImageUploadChange, label }: NotionEditorProps) {
   const [revision, setRevision] = useState(0);
   const [urlMode, setUrlMode] = useState<"link" | "youtube" | null>(null);
   const [urlValue, setUrlValue] = useState("");
+  const [imagePasteStatus, setImagePasteStatus] = useState<ImagePasteStatus>(null);
   const [slashMenu, setSlashMenu] = useState<{ from: number; query: string; top: number; left: number } | null>(null);
   const [slashIndex, setSlashIndex] = useState(0);
   const slashRef = useRef(slashMenu);
   const slashIndexRef = useRef(0);
   const editorRef = useRef<Editor | null>(null);
+  const imagePastePendingRef = useRef(false);
+
+  async function insertPastedImage(source: File | string) {
+    if (imagePastePendingRef.current) {
+      setImagePasteStatus({
+        type: "error",
+        message: "Wait for the current pasted image to finish uploading.",
+      });
+      return;
+    }
+
+    imagePastePendingRef.current = true;
+    onImageUploadChange?.(true);
+    setImagePasteStatus({ type: "uploading", message: "Uploading pasted image…" });
+
+    try {
+      let file: File;
+      if (source instanceof File) {
+        file = source;
+      } else if (source.startsWith("data:image/")) {
+        const blob = await fetch(source).then((response) => response.blob());
+        file = new File([blob], "pasted-image", { type: blob.type });
+      } else {
+        file = await downloadBlogImage(source);
+      }
+
+      const url = await uploadBlogImage(file);
+      const currentEditor = editorRef.current;
+      if (!currentEditor || currentEditor.isDestroyed) {
+        throw new Error("The editor is no longer available.");
+      }
+
+      const { alt, title } = requestImageDetails();
+      const inserted = currentEditor
+        .chain()
+        .focus()
+        .setImage({ src: url, alt, title })
+        .run();
+      if (!inserted) throw new Error("The uploaded image could not be inserted.");
+
+      setImagePasteStatus({
+        type: "success",
+        message: "Pasted image uploaded and inserted.",
+      });
+    } catch (caught) {
+      const fallback =
+        "The copied image could not be imported. Download it first, then use the Image button.";
+      const message = caught instanceof Error ? caught.message : "";
+      setImagePasteStatus({
+        type: "error",
+        message:
+          message && !/failed to fetch|networkerror|aborted/i.test(message)
+            ? message
+            : fallback,
+      });
+    } finally {
+      imagePastePendingRef.current = false;
+      onImageUploadChange?.(false);
+    }
+  }
 
   useEffect(() => {
     slashRef.current = slashMenu;
@@ -102,6 +206,14 @@ export function NotionEditor({ value, onChange, label }: NotionEditorProps) {
         if (event.key === "ArrowUp" && commands.length > 0) { event.preventDefault(); const next = (slashIndexRef.current - 1 + commands.length) % commands.length; slashIndexRef.current = next; setSlashIndex(next); return true; }
         if (event.key === "Enter" && commands.length > 0) { event.preventDefault(); executeSlashCommand(currentEditor, commands[slashIndexRef.current] ?? commands[0], menu); return true; }
         return false;
+      },
+      handlePaste: (_view, event) => {
+        const source = pastedImageSource(event.clipboardData);
+        if (!source) return false;
+
+        event.preventDefault();
+        void insertPastedImage(source);
+        return true;
       },
     },
     onCreate: ({ editor: currentEditor }) => { editorRef.current = currentEditor; },
@@ -147,7 +259,7 @@ export function NotionEditor({ value, onChange, label }: NotionEditorProps) {
   void revision;
 
   return (
-    <div className="relative min-w-0 max-w-full overflow-hidden border border-border bg-background">
+    <div className="relative min-w-0 max-w-full overflow-hidden border border-border bg-background" aria-busy={imagePasteStatus?.type === "uploading" || undefined}>
       <div className="sticky top-0 z-20 flex w-full max-w-full overflow-x-auto border-b border-border bg-surface/95 backdrop-blur-xl" role="toolbar" aria-label="Article formatting">
         <ToolbarButton label="Undo" onClick={() => editor.chain().focus().undo().run()}><Undo2 className="size-4" /></ToolbarButton>
         <ToolbarButton label="Redo" onClick={() => editor.chain().focus().redo().run()}><Redo2 className="size-4" /></ToolbarButton>
@@ -164,9 +276,29 @@ export function NotionEditor({ value, onChange, label }: NotionEditorProps) {
         <ToolbarButton label="Quote" active={editor.isActive("blockquote")} onClick={() => editor.chain().focus().toggleBlockquote().run()}><Quote className="size-4" /></ToolbarButton>
         <ToolbarButton label="Code block" active={editor.isActive("codeBlock")} onClick={() => editor.chain().focus().toggleCodeBlock().run()}><Code className="size-4" /></ToolbarButton>
         <ToolbarButton label="Divider" onClick={() => editor.chain().focus().setHorizontalRule().run()}><Minus className="size-4" /></ToolbarButton>
-        <ImageUploadButton label="Image" variant="ghost" className="[&>button]:rounded-none [&>button]:border-r [&>button]:border-border [&>button]:px-4" onUploaded={(url) => { const alt = window.prompt("Describe this image for readers using assistive technology. Leave blank only if it is decorative.") ?? ""; editor.chain().focus().setImage({ src: url, alt }).run(); }} />
+        <ImageUploadButton label="Image" variant="ghost" className="[&>button]:rounded-none [&>button]:border-r [&>button]:border-border [&>button]:px-4" onUploaded={(url) => { const { alt, title } = requestImageDetails(); editor.chain().focus().setImage({ src: url, alt, title }).run(); }} />
         <ToolbarButton label="Embed YouTube" onClick={() => { setUrlMode("youtube"); setUrlValue(""); }}><Video className="size-4" /></ToolbarButton>
       </div>
+
+      {imagePasteStatus ? (
+        <div
+          className={cn(
+            "flex min-h-11 items-center gap-2 border-b border-border px-4 py-2 text-sm",
+            imagePasteStatus.type === "error"
+              ? "text-error"
+              : imagePasteStatus.type === "success"
+                ? "text-success"
+                : "text-muted",
+          )}
+          role={imagePasteStatus.type === "error" ? "alert" : "status"}
+          aria-atomic="true"
+        >
+          {imagePasteStatus.type === "uploading" ? (
+            <LoaderCircle className="size-4 shrink-0 animate-spin" aria-hidden="true" />
+          ) : null}
+          {imagePasteStatus.message}
+        </div>
+      ) : null}
 
       {urlMode ? (
         <div className="grid gap-3 border-b border-border bg-surface-raised p-4 sm:grid-cols-[1fr_auto_auto] sm:items-end">
