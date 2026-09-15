@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { LockKeyhole } from "lucide-react";
 
+import { AdminPortalLink } from "@/components/admin/admin-portal-link";
 import { BlogCard } from "@/components/blog-card";
 import { MotionReveal } from "@/components/motion-reveal";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNavigation } from "@/components/site-navigation";
-import { Button } from "@/components/ui/button";
 import { getPublishedBlogPosts } from "@/lib/blog/data";
 import type { BlogLocale } from "@/lib/blog/types";
 
@@ -61,11 +60,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                   <Link key={String(label)} href={String(href)} aria-current={active ? "page" : undefined} className={active ? "inline-flex min-h-11 items-center border border-accent bg-accent px-4 font-mono text-[10px] uppercase tracking-[0.14em] text-accent-foreground" : "inline-flex min-h-11 items-center border border-border px-4 font-mono text-[10px] uppercase tracking-[0.14em] text-muted transition-colors hover:border-foreground hover:text-foreground"}>{label}</Link>
                 ))}
               </nav>
-              <Button variant="outline" asChild>
-                <Link href="/admin/blog" prefetch={false}>
-                  Open admin <LockKeyhole className="size-4" aria-hidden="true" />
-                </Link>
-              </Button>
+              <AdminPortalLink />
             </div>
           </MotionReveal>
         </div>
