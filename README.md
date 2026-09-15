@@ -20,6 +20,8 @@ The site is organized around real project evidence. Each selected work item conn
 - **Two-way contact workflow** — a validated server action sends the enquiry to me and a confirmation to the visitor through Resend. It includes Zod validation, subject sanitization, a honeypot, reply routing, and optional Upstash rate limiting.
 - **Always-current CV delivery** — `/api/cv` exports the source Google Doc as PDF and uses a local PDF as a fallback, so the download can stay current without rebuilding the portfolio for every CV edit.
 - **Search and sharing support** — canonical metadata, generated Open Graph artwork, `robots.txt`, and a project-aware sitemap are produced through Next.js conventions.
+- **Localized publishing workspace** — a protected GitHub sign-in opens a Notion-inspired editor for English and Vietnamese articles, drafts, scheduled publishing, tags, SEO fields, cover images, and privacy-enhanced YouTube embeds.
+- **Database-backed blog** — Neon Postgres and Drizzle persist structured editor JSON, localized URLs, publication state, and tags. Public article pages, RSS, sitemap entries, and cache invalidation stay inside the same Next.js deployment.
 
 ## Selected work experience
 
@@ -37,6 +39,9 @@ flowchart LR
     Functions --> GitHub[GitHub activity data]
     Functions --> Docs[Google Docs CV export]
     Functions --> Resend[Resend email delivery]
+    Functions --> Neon[(Neon Postgres)]
+    Functions --> Auth[Neon Auth + GitHub OAuth]
+    Functions --> Blob[Vercel Blob]
     Resend --> Owner[Portfolio inbox]
     Resend --> Sender[Visitor confirmation]
 ```
@@ -65,7 +70,9 @@ The CDN is not described here as a blanket cache for every request: static outpu
 | Styling | Tailwind CSS, shadcn/ui conventions, Geist and Outfit |
 | Motion | Framer Motion, Embla Carousel, Embla Auto Scroll |
 | Forms and email | React Server Actions, Zod, Resend |
-| Content | Typed TypeScript data, Google Docs CV export |
+| Content | Typed portfolio data, Tiptap blog editor, Google Docs CV export |
+| Blog data and auth | Neon Postgres, Drizzle ORM, Neon Auth, GitHub OAuth |
+| Blog media | Vercel Blob client uploads |
 | Media and SEO | `next/image`, generated Open Graph images, sitemap, robots |
 | Hosting | Vercel production deployment, custom domain, Vercel CDN |
 | Runtime | Node.js 24.x, Yarn 4.9.2 |
@@ -85,6 +92,12 @@ Open `http://localhost:3000`.
 | Variable | Purpose | Exposure |
 | --- | --- | --- |
 | `NEXT_PUBLIC_SITE_URL` | Canonical origin used for metadata, sitemap, robots, and Open Graph URLs | Public config |
+| `DATABASE_URL` | Pooled Neon Postgres connection used by the application | Secret, server only |
+| `DATABASE_URL_UNPOOLED` | Direct Neon connection used by Drizzle migrations | Secret, local/CI only |
+| `NEON_AUTH_BASE_URL` | Neon Auth project endpoint | Server config |
+| `NEON_AUTH_COOKIE_SECRET` | Encrypts and signs authentication cookies | Secret, server only |
+| `ADMIN_GITHUB_ACCOUNT_ID` | Immutable GitHub account ID allowed into the blog admin | Server config |
+| `BLOB_READ_WRITE_TOKEN` | Vercel Blob credential for cover and inline image uploads | Secret, server only |
 | `RESEND_API_KEY` | Authenticates server-side Resend requests | Secret, server only |
 | `RESEND_FROM_EMAIL` | Verified sender, currently `Portfolio <contact@dattk.dev>` | Server config |
 | `CONTACT_TO_EMAIL` | Destination for portfolio enquiries | Server config |
@@ -105,6 +118,12 @@ corepack yarn build
 
 - `/` — portfolio home and project overview
 - `/projects/[slug]` — statically generated project case studies
+- `/blog` — published articles with locale filtering and visible tags
+- `/blog/[locale]/[slug]` — localized article detail
+- `/blog/rss.xml` — published article feed
+- `/admin` — entry point that redirects to the owner sign-in
+- `/admin/sign-in` — GitHub sign-in for the blog owner; authorization opens in a new tab
+- `/admin/blog` — protected article management and editor
 - `/api/cv` — current CV exported as PDF
 - `/api/github-stats` — cached contribution and streak summary
 - `/opengraph-image` — generated social sharing image
@@ -115,7 +134,8 @@ corepack yarn build
 ```text
 app/                  App Router pages, metadata, Server Actions, and API routes
 components/           Interface, navigation, motion, carousel, and form components
-lib/                  Typed project, experience, capability, and site content
+drizzle/              Versioned Neon Postgres migrations
+lib/                  Portfolio content, database, blog, and authorization modules
 public/images/        Optimized portraits, project artwork, and README screenshots
 public/documents/     Static CV fallback
 ```
@@ -125,8 +145,10 @@ public/documents/     Static CV fallback
 1. Import the repository into Vercel with the project root unchanged.
 2. Use the Next.js framework preset, Yarn package manager, and Node.js `24.x`.
 3. Add the variables documented in `.env.example` to the appropriate Production, Preview, and Development environments.
-4. Keep `RESEND_API_KEY` sensitive and server-only. `NEXT_PUBLIC_SITE_URL` is intentionally public configuration.
-5. Verify `dattk.dev` in Resend and use a sending-only API key restricted to that domain.
-6. Deploy, then verify the canonical domain, CV download, project routes, GitHub activity, and both contact emails.
+4. Create a public Vercel Blob store and connect it to the project so `BLOB_READ_WRITE_TOKEN` is available.
+5. Add the Neon runtime/auth values and admin allowlist from `.env.example`. GitHub OAuth client credentials stay in Neon Auth and are not Vercel runtime variables.
+6. Keep `RESEND_API_KEY`, database URLs, the auth cookie secret, and Blob token sensitive and server-only. `NEXT_PUBLIC_SITE_URL` is intentionally public configuration.
+7. Verify `dattk.dev` in Resend and use a sending-only API key restricted to that domain.
+8. Run `corepack yarn db:migrate` against the target database, deploy, then verify GitHub admin sign-in, image upload, draft/publish behavior, localized article URLs, RSS, sitemap, CV download, project routes, GitHub activity, and both contact emails.
 
 No cookie banner is required unless analytics, advertising, or other non-essential tracking is added later.
