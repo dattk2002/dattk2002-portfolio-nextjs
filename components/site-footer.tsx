@@ -12,6 +12,8 @@ export function SiteFooter() {
           <p className="mt-2 text-sm text-muted">Full-stack Developer · Ho Chi Minh City, Vietnam</p>
         </div>
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-muted">
+          <Link href="/blog" className="hover:text-foreground">Blog</Link>
+          <Link href="/blog/rss.xml" className="hover:text-foreground">RSS</Link>
           <a href={siteConfig.github} target="_blank" rel="noreferrer" className="hover:text-foreground">GitHub</a>
           <a href={siteConfig.linkedin} target="_blank" rel="noreferrer" className="hover:text-foreground">LinkedIn</a>
           <a href={`mailto:${siteConfig.email}`} className="hover:text-foreground">Email</a>

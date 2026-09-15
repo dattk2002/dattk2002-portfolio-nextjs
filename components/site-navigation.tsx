@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { label: "Work", href: "/#work" },
+  { label: "Blog", href: "/blog" },
   { label: "Experience", href: "/#experience" },
   { label: "Delivery", href: "/#capabilities" },
   { label: "Contact", href: "/#contact" },
@@ -33,8 +34,9 @@ export function SiteNavigation() {
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <motion.header
-        initial={reduceMotion ? false : { opacity: 0, y: -16 }}
+        initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: reduceMotion ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}
         className={cn(
           "fixed top-4 right-4 left-4 z-50 mx-auto flex max-w-[86rem] items-center justify-between border border-border/80 bg-background/82 px-4 backdrop-blur-xl transition-[padding,border-radius] duration-300 sm:px-5",
           compact ? "rounded-xl py-2.5" : "rounded-2xl py-3.5",

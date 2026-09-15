@@ -70,6 +70,11 @@ The homepage currently represents seven milestones and nine total projects. If r
 
 - `/`: fixed navigation, hero, responsive positioning statement, selected work, delivery pipeline and technology marquee, professional experience, education/certifications, contact, and footer.
 - `/projects/[slug]`: statically generated project case studies with project metadata, hero artwork, ownership, verified outcomes, challenge/approach, architecture, gallery, links, circular previous/next navigation, and CTA.
+- `/blog`: public, database-backed article index with a locale filter, tagged article cards, and an owner shortcut to the protected admin workspace; published translations are cached and invalidated by the admin workflow.
+- `/blog/[locale]/[slug]`: localized English or Vietnamese articles with safe structured-content rendering, alternate-language links, article metadata, JSON-LD, and privacy-enhanced YouTube embeds.
+- `/blog/rss.xml`: RSS feed for published article translations.
+- `/admin` redirects to `/admin/sign-in`; `/admin/sign-in` opens GitHub OAuth in a new tab, and `/admin/blog/**` is the protected blog workspace. Authorization is restricted exclusively to the configured immutable GitHub account ID.
+- `/api/auth/[...path]`: Neon Auth handler. `/api/blog/upload` issues authenticated client-upload tokens for Vercel Blob images.
 - `/api/cv`: attempts a Google Docs PDF export with an 8-second timeout and size/signature validation, then falls back to `public/documents/CV-Tran Kim Dat-Full-stack Developer.pdf`; returns 503 if both fail.
 - `/api/github-stats`: fetches contribution history, calculates total/current/longest streaks in the Asia/Bangkok time zone, caches success for one hour, and degrades to a 503 JSON response.
 - `app/actions/contact.ts`: contact Server Action with Zod validation, a honeypot, header-injection sanitization, optional Upstash rate limiting, and a Resend batch containing the owner notification plus visitor confirmation.
@@ -98,6 +103,12 @@ The project is a single Next.js App Router application deployed to Vercel. Conte
 | Contact validation, abuse protection, and email | `app/actions/contact.ts` |
 | Live GitHub activity | `components/github-stats.tsx`, `app/api/github-stats/route.ts` |
 | Dynamic CV delivery | `app/api/cv/route.ts` |
+| Blog schema and migrations | `lib/db/schema.ts`, `drizzle/` |
+| Blog queries, validation, and structured content types | `lib/blog/data.ts`, `lib/blog/validation.ts`, `lib/blog/types.ts` |
+| Public blog index and article rendering | `app/blog/`, `components/blog-card.tsx`, `components/blog-content.tsx` |
+| Blog administration and editor | `app/admin/blog/`, `components/admin/blog-post-editor.tsx`, `components/admin/notion-editor.tsx` |
+| Blog authentication and authorization | `lib/auth/`, `proxy.ts`, `app/api/auth/[...path]/route.ts` |
+| Blog image uploads | `app/api/blog/upload/route.ts`, `components/admin/image-upload-button.tsx` |
 | Public media | `public/images`, `public/documents` |
 
 Do not create competing arrays, contact constants, project facts, or design tokens in components. Extend the canonical model and let consumers derive their output.
@@ -111,6 +122,9 @@ Do not create competing arrays, contact constants, project facts, or design toke
 - Embla Carousel and Embla Auto Scroll for draggable content
 - Lucide React icons
 - Zod and React Server Actions for contact validation/submission
+- Neon Postgres with Drizzle ORM and versioned SQL migrations
+- Neon Auth with GitHub OAuth for the single-owner admin workspace
+- Tiptap structured JSON editing and Vercel Blob image uploads for blog publishing
 - Resend for transactional email; optional Upstash Redis REST for rate limiting
 - `next/image`, `next/font`, and `ImageResponse` for media, fonts, and OG images
 - Yarn 4.9.2 via Corepack; Node.js 24.x
@@ -160,8 +174,10 @@ When changing design, extend existing CSS variables and component patterns befor
 ## Security and privacy boundaries
 
 - Never commit `.env.local`, API keys, tokens, or real secret values. `.env.example` contains names and safe placeholders only.
-- Server-only variables: `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `CONTACT_TO_EMAIL`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `CONTACT_RATE_LIMIT_MAX`, and `CONTACT_RATE_LIMIT_WINDOW_SECONDS`.
+- Server-only variables: `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `NEON_AUTH_BASE_URL`, `NEON_AUTH_COOKIE_SECRET`, `ADMIN_GITHUB_ACCOUNT_ID`, `BLOB_READ_WRITE_TOKEN`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `CONTACT_TO_EMAIL`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `CONTACT_RATE_LIMIT_MAX`, and `CONTACT_RATE_LIMIT_WINDOW_SECONDS`.
 - Public configuration: `NEXT_PUBLIC_SITE_URL`; production should use `https://www.dattk.dev`.
+- Treat all editor JSON as untrusted input: validate supported nodes on write and render nodes through the explicit component allowlist rather than injecting stored HTML.
+- Protect every admin mutation and upload route with `requireAdmin`; proxy redirects are navigation UX, not the authorization boundary.
 - Preserve contact validation, the honeypot, subject/name CRLF sanitization, server-only email delivery, and rate-limit privacy hashing.
 - Do not add analytics, advertising, cookies, or other tracking silently. Adding non-essential tracking changes the current privacy/cookie-consent assumption and requires an explicit product decision.
 - Bound third-party requests with timeouts and graceful fallbacks. Do not expose upstream errors, credentials, document IDs, or visitor data to the browser or logs.
