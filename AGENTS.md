@@ -70,7 +70,7 @@ The homepage currently represents seven milestones and nine total projects. If r
 
 - `/`: fixed navigation, hero, responsive positioning statement, selected work, delivery pipeline and technology marquee, professional experience, education/certifications, contact, and footer.
 - `/projects/[slug]`: statically generated project case studies with project metadata, hero artwork, ownership, verified outcomes, challenge/approach, architecture, gallery, links, circular previous/next navigation, and CTA.
-- `/blog`: public, database-backed article index with a locale filter, tagged article cards, and an owner shortcut to the protected admin workspace; published translations are cached and invalidated by the admin workflow.
+- `/blog`: public, database-backed article index with a locale filter, tagged article cards, and a reduced-motion-aware GSAP owner transition to the protected admin workspace; published translations are cached and invalidated by the admin workflow.
 - `/blog/[locale]/[slug]`: localized English or Vietnamese articles with safe structured-content rendering, alternate-language links, article metadata, JSON-LD, and privacy-enhanced YouTube embeds.
 - `/blog/rss.xml`: RSS feed for published article translations.
 - `/admin` redirects to `/admin/sign-in`; `/admin/sign-in` opens GitHub OAuth in a new tab, and `/admin/blog/**` is the protected blog workspace. Authorization is restricted exclusively to the configured immutable GitHub account ID.
@@ -118,7 +118,7 @@ Do not create competing arrays, contact constants, project facts, or design toke
 - Next.js App Router, React, TypeScript in strict mode
 - Tailwind CSS v4 through `@import "tailwindcss"` and CSS theme tokens
 - shadcn/ui conventions with Radix primitives; current shared primitive is `components/ui/button.tsx`
-- Framer Motion for reveals and motion preferences
+- Framer Motion for reveals and motion preferences; GSAP for the admin route transition
 - Embla Carousel and Embla Auto Scroll for draggable content
 - Lucide React icons
 - Zod and React Server Actions for contact validation/submission

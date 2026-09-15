@@ -68,7 +68,7 @@ The CDN is not described here as a blanket cache for every request: static outpu
 | --- | --- |
 | Framework | Next.js 16 App Router, React, TypeScript |
 | Styling | Tailwind CSS, shadcn/ui conventions, Geist and Outfit |
-| Motion | Framer Motion, Embla Carousel, Embla Auto Scroll |
+| Motion | Framer Motion, GSAP, Embla Carousel, Embla Auto Scroll |
 | Forms and email | React Server Actions, Zod, Resend |
 | Content | Typed portfolio data, Tiptap blog editor, Google Docs CV export |
 | Blog data and auth | Neon Postgres, Drizzle ORM, Neon Auth, GitHub OAuth |
