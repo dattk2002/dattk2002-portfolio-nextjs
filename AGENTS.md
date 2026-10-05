@@ -79,7 +79,7 @@ The homepage currently represents eight milestones and ten total projects (nine 
 - `/api/cv`: attempts a Google Docs PDF export with an 8-second timeout and size/signature validation, then falls back to `public/documents/CV-Tran Kim Dat-Full-stack Engineer.pdf`; returns 503 if both fail.
 - `/api/github-stats`: fetches contribution history, calculates total/current/longest streaks in the Asia/Bangkok time zone, caches success for one hour, and degrades to a 503 JSON response.
 - `app/actions/contact.ts`: contact Server Action with Zod validation, a honeypot, header-injection sanitization, optional Upstash rate limiting, and a Resend batch containing the owner notification plus visitor confirmation.
-- `/opengraph-image` and `/projects/[slug]/opengraph-image`: generated 1200×630 social images.
+- `/opengraph-image` and `/projects/[slug]/opengraph-image`: generated 1200×630 social images. Project images are statically generated from canonical project slugs alongside the case studies.
 - `/sitemap.xml` and `/robots.txt`: generated through Next.js metadata conventions.
 
 ## Architecture and source-of-truth map
