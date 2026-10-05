@@ -1,4 +1,5 @@
 export type ProjectSlug =
+  | "bravodemy"
   | "tapmood"
   | "habistride"
   | "ngoaingungay"
@@ -29,6 +30,48 @@ export type Project = {
 
 export const projects: readonly Project[] = [
   {
+    slug: "bravodemy",
+    name: "Bravodemy",
+    period: "Aug 2026 – Present",
+    context: "Independent product",
+    summary:
+      "An AI microlearning platform that turns natural-language goals into source-grounded syllabi and lesson cores, followed by 5–10 minute lessons, practice, spaced review, and progress tracking.",
+    ownership:
+      "Owned most of the architecture and end-to-end delivery across AI research and generation, the bilingual Next.js client, FastAPI services, data models, automated quality checks, and cloud deployment.",
+    technologies: [
+      "Next.js 16", "React 19", "TypeScript", "Python", "FastAPI", "SQLAlchemy",
+      "PostgreSQL", "Redis", "Gemini grounded search", "Exa", "Tavily", "Langfuse",
+      "Tailwind CSS", "Radix UI", "Recharts", "GSAP", "Polar", "Docker", "Render",
+      "Neon", "GitHub Actions", "Pytest", "Vitest", "Playwright",
+    ],
+    outcomes: [
+      "Built 107 FastAPI endpoints and 35 SQLAlchemy models across generation, learning, authentication, admin, privacy, and entitlements.",
+      "Integrated Gemini grounded search, Exa, and Tavily for source context, with Langfuse tracing for AI generation workflows.",
+      "Verified 192 backend tests at 85.11% coverage and 151 frontend tests.",
+      "Established CI for PostgreSQL 16, builds, accessibility, and responsive journeys across Chromium, Firefox, and WebKit.",
+      "Delivered a bilingual UI with light/dark themes and WCAG 2.2 AA checks.",
+    ],
+    challenge:
+      "Translate open-ended learning goals into research-backed content across technical and non-technical domains while keeping generation observable, practice grading deterministic, and access secure.",
+    approach:
+      "Research providers supply source context before syllabus and lesson-core generation, and Langfuse traces the AI workflows. Python/SQL grading supports deterministic practice, while secure cookies, Polar entitlements, and Redis caching, rate limits, and distributed locks support the learning journey.",
+    architecture: [
+      "Bilingual Next.js 16 and React 19 UI with Tailwind CSS, Radix UI, Recharts, and GSAP",
+      "FastAPI with 107 endpoints, 35 SQLAlchemy models, and deterministic Python/SQL grading",
+      "Gemini grounded search, Exa, and Tavily research with Langfuse workflow tracing",
+      "Neon PostgreSQL pooled runtime and direct migration connections, plus fail-open Redis caching",
+      "Independent UI/API services on Render Singapore with health-gated auto-deploys",
+      "GitHub Actions CI with Pytest, Vitest, Playwright, accessibility, and responsive checks",
+    ],
+    gallery: [
+      { src: "/images/projects/bravodemy-main.webp", alt: "Bravodemy AI microlearning landing page" },
+    ],
+    accent: "blue",
+    liveUrls: [{ label: "Bravodemy", href: "https://bravodemy.com" }],
+    repositoryUrls: [{ label: "Product repository", href: "https://github.com/tkhieu/AIMicroLearningPlatform" }],
+    featured: true,
+  },
+  {
     slug: "fastcare",
     name: "Fastcare",
     period: "Dec 2023 – Aug 2024",
@@ -58,7 +101,7 @@ export const projects: readonly Project[] = [
     ],
     accent: "amber",
     liveUrls: [{ label: "Fastcare", href: "https://fastcare.vn/" }],
-    featured: true,
+    featured: false,
   },
   {
     slug: "habistride",
@@ -82,6 +125,7 @@ export const projects: readonly Project[] = [
       "Built 24 REST handlers across seven controllers.",
       "Modelled ten PostgreSQL entities with TypeORM.",
       "Scheduled daily snapshots at 00:00 Asia/Bangkok.",
+      "Delivered eight App Router pages and 22 reusable UI components for tracking, analytics, settings, and authentication.",
     ],
     challenge:
       "Turn daily repetition into visible progress while preserving a reliable history across time zones and independently deployable services.",
@@ -189,6 +233,7 @@ export const projects: readonly Project[] = [
       "Cloudinary",
       "FFmpeg",
       "Firebase",
+      "Gemini",
       "Docker",
     ],
     outcomes: [
@@ -199,9 +244,9 @@ export const projects: readonly Project[] = [
     challenge:
       "Coordinate media-heavy social interactions, privacy rules, real-time state, and multi-platform behavior without splitting the product into inconsistent experiences.",
     approach:
-      "Shared domain services keep authorization, privacy, moderation, notifications, and presence consistent. Long-running media work moves to hosted workers while SignalR reports progress back to the client.",
+      "Shared domain services keep authorization, privacy, moderation, notifications, and presence consistent. Resumable uploads verify SHA-256 chunks before background H.264 processing, while SignalR reports progress. Google/OTP authentication, session rotation, export, retention, and audit logging support account and data lifecycle flows.",
     architecture: [
-      "Flutter clients across six platforms",
+      "Flutter clients across six platforms with Gemini AI features",
       "ASP.NET Core REST API and authenticated SignalR hub",
       "PostgreSQL with EF Core across 38 entity sets",
       "Six hosted workers for media, retention, push, and reminders",

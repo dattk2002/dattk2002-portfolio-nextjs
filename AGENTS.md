@@ -14,7 +14,7 @@ This file is the durable source of truth for agents working in this repository. 
 
 ## Product in one sentence
 
-This is Tran Kim Dat's production portfolio: an editorial, responsive, evidence-led product that positions him as a full-stack developer who can carry web and cross-platform products from interface design through APIs, data, testing, infrastructure, and release.
+This is Tran Kim Dat's production portfolio: an editorial, responsive, evidence-led product that positions him as a full-stack engineer who can carry web and cross-platform products from interface design through APIs, data, testing, infrastructure, and release.
 
 ## Product goals and audience
 
@@ -30,7 +30,7 @@ The desired impression is capable, intentional, technically credible, and produc
 ## Owner profile and public identity
 
 - Name: Tran Kim Dat
-- Role: Full-stack Developer
+- Role: Full-stack Engineer
 - Location: Da Nang City / Ho Chi Minh City, Vietnam
 - Experience claim currently used in the hero: 3+ years
 - Education: FPT University, Bachelor's Degree in Software Engineering, Sep 2021–Sep 2025, graduated, GPA 8.1/10 (3.24/4)
@@ -54,7 +54,8 @@ The canonical case-study records live in `lib/projects.ts`; the following table 
 
 | Project | Context / period | Core ownership and evidence |
 | --- | --- | --- |
-| Fastcare | Client production, Dec 2023–Aug 2024 | Frontend ownership plus Laravel admin workflows; 20+ screens; booking, catalog, and content flows. This is currently the only `featured: true` project. |
+| Bravodemy | Independent, Aug 2026–Present | AI microlearning; Gemini grounded search, Exa/Tavily, Langfuse; 107 FastAPI endpoints, 35 SQLAlchemy models; 192 backend tests at 85.11% coverage and 151 frontend tests; Next.js UI, Render Singapore, Neon, Redis, and CI. This is the initial showcase and only `featured: true` project. |
+| Fastcare | Client production, Dec 2023–Aug 2024 | Frontend ownership plus Laravel admin workflows; 20+ screens; booking, catalog, and content flows. |
 | HabiStride | Independent, May–Jun 2026 | Next.js + NestJS + PostgreSQL habit product; 24 REST handlers, 7 controllers, 10 TypeORM entities, daily Asia/Bangkok snapshots. |
 | NgoaiNguNgay | Capstone, May–Sep 2025 | Role-aware React/Vite language learning, tutoring, booking, and SignalR messaging; 16 routes and 79 component files. |
 | Trivia Quiz | Independent, Apr–May 2026 | Next.js + MongoDB session-based quiz; server-side answer validation, duplicate-score protection, and 1-hour TTL cleanup. |
@@ -64,7 +65,7 @@ The canonical case-study records live in `lib/projects.ts`; the following table 
 | VNCaps | Client production, Dec 2023–Aug 2024 | React Native/Expo role-aware school application; 15+ screens, timetable rendering, and push notifications. |
 | LMS FSoft Education Management | FPT Software internship, Feb–Apr 2023 | Angular frontend work in a six-person team; class list/detail and seven calendar/class states. This item exists only as a detailed experience record, not a `/projects/[slug]` case study. |
 
-The homepage currently represents seven milestones and nine total projects. If records are added or removed, update derived UI labels rather than leaving hard-coded counts stale.
+The homepage currently represents eight milestones and ten total projects (nine case studies plus the internship LMS). If records are added or removed, update derived UI labels rather than leaving hard-coded counts stale.
 
 ## Information architecture and routes
 
@@ -75,7 +76,7 @@ The homepage currently represents seven milestones and nine total projects. If r
 - `/blog/rss.xml`: RSS feed for published article translations.
 - `/admin` redirects to `/admin/sign-in`; `/admin/sign-in` opens GitHub OAuth in a new tab, and `/admin/blog/**` is the protected blog workspace. Authorization is restricted exclusively to the configured immutable GitHub account ID.
 - `/api/auth/[...path]`: Neon Auth handler. `/api/blog/upload` issues authenticated client-upload tokens for Vercel Blob images.
-- `/api/cv`: attempts a Google Docs PDF export with an 8-second timeout and size/signature validation, then falls back to `public/documents/CV-Tran Kim Dat-Full-stack Developer.pdf`; returns 503 if both fail.
+- `/api/cv`: attempts a Google Docs PDF export with an 8-second timeout and size/signature validation, then falls back to `public/documents/CV-Tran Kim Dat-Full-stack Engineer.pdf`; returns 503 if both fail.
 - `/api/github-stats`: fetches contribution history, calculates total/current/longest streaks in the Asia/Bangkok time zone, caches success for one hour, and degrades to a 503 JSON response.
 - `app/actions/contact.ts`: contact Server Action with Zod validation, a honeypot, header-injection sanitization, optional Upstash rate limiting, and a Resend batch containing the owner notification plus visitor confirmation.
 - `/opengraph-image` and `/projects/[slug]/opengraph-image`: generated 1200×630 social images.
@@ -122,6 +123,7 @@ Do not create competing arrays, contact constants, project facts, or design toke
 - Embla Carousel and Embla Auto Scroll for draggable content
 - Lucide React icons
 - Zod and React Server Actions for contact validation/submission
+- Portfolio evidence also includes Python/FastAPI, SQLAlchemy, Gemini grounded search, Exa, Tavily, Langfuse, and GitHub Actions CI from Bravodemy.
 - Neon Postgres with Drizzle ORM and versioned SQL migrations
 - Neon Auth with GitHub OAuth for the single-owner admin workspace
 - Tiptap structured JSON editing with clipboard-image importing, image captions, and Vercel Blob uploads for blog publishing

@@ -9,7 +9,7 @@ export function SiteFooter() {
       <div className="mx-auto flex max-w-[90rem] flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="font-display text-2xl tracking-[-0.04em]">Tran Kim Dat</p>
-          <p className="mt-2 text-sm text-muted">Full-stack Developer · Ho Chi Minh City, Vietnam</p>
+          <p className="mt-2 text-sm text-muted">{siteConfig.role} · {siteConfig.location}</p>
         </div>
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-muted">
           <Link href="/blog" className="hover:text-foreground">Blog</Link>

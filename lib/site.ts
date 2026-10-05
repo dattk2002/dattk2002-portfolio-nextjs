@@ -28,9 +28,11 @@ function resolveSiteUrl() {
 
 export const siteConfig = {
   name: "Tran Kim Dat",
-  role: "Full-stack Developer",
+  role: "Full-stack Engineer",
   description:
-    "Full-stack developer building production web applications and cross-platform products from interface to infrastructure.",
+    "Full-stack engineer building production web, cross-platform mobile, and source-grounded AI learning products from interface to infrastructure.",
+  summary:
+    "Full-stack Engineer with 3+ years delivering production web and cross-platform mobile applications. I build source-grounded AI learning workflows, REST APIs, authentication, and real-time systems, and own delivery through automated testing, Docker, CI/CD, and cloud deployment.",
   location: "Da Nang City / Ho Chi Minh City, Vietnam",
   email: "kimdat0705@gmail.com",
   phoneDisplay: "+84 98 356 4074",
@@ -39,6 +41,6 @@ export const siteConfig = {
   linkedin: "https://www.linkedin.com/in/kimdat0705/",
   portraitPath: "/images/tran-kim-dat-portrait-2026.webp",
   cvPath: "/api/cv",
-  cvDownloadName: "CV-Tran Kim Dat-Full-stack Developer.pdf",
+  cvDownloadName: "CV-Tran Kim Dat-Full-stack Engineer.pdf",
   url: resolveSiteUrl(),
 } as const;
