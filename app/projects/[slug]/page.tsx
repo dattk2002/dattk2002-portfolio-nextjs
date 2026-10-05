@@ -58,7 +58,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           <MotionReveal className="mt-16 grid items-end gap-10 lg:grid-cols-12">
             <div className="lg:col-span-8">
               <p className="font-mono text-xs uppercase tracking-[0.18em] text-steel">{project.context} · {project.period}</p>
-              <h1 className="mt-7 max-w-6xl font-display text-[clamp(4.5rem,11vw,10rem)] leading-[0.82] font-medium tracking-[-0.078em]">{project.name}</h1>
+              <h1 className="mt-7 max-w-6xl font-display text-[clamp(3.5rem,11vw,10rem)] leading-[0.82] font-medium tracking-[-0.078em] sm:text-[clamp(4.5rem,11vw,10rem)]">{project.name}</h1>
             </div>
             <p className="max-w-xl text-lg leading-8 text-muted lg:col-span-4 lg:pb-2">{project.summary}</p>
           </MotionReveal>
