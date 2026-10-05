@@ -21,7 +21,7 @@ export type Project = {
   challenge: string;
   approach: string;
   architecture: readonly string[];
-  gallery: readonly { src: string; alt: string }[];
+  gallery: readonly { src: string; alt: string; width: number; height: number }[];
   accent: "lime" | "blue" | "amber" | "violet";
   liveUrls?: readonly { label: string; href: string }[];
   repositoryUrls?: readonly { label: string; href: string }[];
@@ -64,7 +64,7 @@ export const projects: readonly Project[] = [
       "GitHub Actions CI with Pytest, Vitest, Playwright, accessibility, and responsive checks",
     ],
     gallery: [
-      { src: "/images/projects/bravodemy-main.webp", alt: "Bravodemy AI microlearning landing page" },
+      { src: "/images/projects/bravodemy-main.webp", alt: "Bravodemy AI microlearning landing page", width: 1440, height: 900 },
     ],
     accent: "blue",
     liveUrls: [{ label: "Bravodemy", href: "https://bravodemy.com" }],
@@ -97,7 +97,7 @@ export const projects: readonly Project[] = [
       "PHP Laravel administration workflows",
     ],
     gallery: [
-      { src: "/images/projects/fastcare-main.webp", alt: "Fastcare desktop repair and accessory homepage" },
+      { src: "/images/projects/fastcare-main.webp", alt: "Fastcare desktop repair and accessory homepage", width: 1440, height: 900 },
     ],
     accent: "amber",
     liveUrls: [{ label: "Fastcare", href: "https://fastcare.vn/" }],
@@ -138,7 +138,7 @@ export const projects: readonly Project[] = [
       "Google OAuth2 and JWT in HttpOnly cookies",
     ],
     gallery: [
-      { src: "/images/projects/habistride-main.webp", alt: "HabiStride desktop sign-in interface" },
+      { src: "/images/projects/habistride-main.webp", alt: "HabiStride desktop sign-in interface", width: 1440, height: 900 },
     ],
     accent: "blue",
     liveUrls: [{ label: "HabiStride", href: "https://habi-stride-ui.onrender.com" }],
@@ -174,8 +174,8 @@ export const projects: readonly Project[] = [
       "Role-aware learner, tutor, staff, and manager flows",
     ],
     gallery: [
-      { src: "/images/projects/ngoaingungay-main.webp", alt: "NgoaiNguNgay desktop landing page" },
-      { src: "/images/projects/ngoaingungay-banner.webp", alt: "NgoaiNguNgay language learning illustration" },
+      { src: "/images/projects/ngoaingungay-main.webp", alt: "NgoaiNguNgay desktop landing page", width: 1440, height: 900 },
+      { src: "/images/projects/ngoaingungay-banner.webp", alt: "NgoaiNguNgay language learning illustration", width: 840, height: 543 },
     ],
     accent: "amber",
     liveUrls: [{ label: "NgoaiNguNgay", href: "https://ngoai-ngu-ngay.vercel.app" }],
@@ -210,7 +210,7 @@ export const projects: readonly Project[] = [
       "Docker deployment on Render",
     ],
     gallery: [
-      { src: "/images/projects/trivia-quiz-main.webp", alt: "Trivia Quiz desktop setup interface" },
+      { src: "/images/projects/trivia-quiz-main.webp", alt: "Trivia Quiz desktop setup interface", width: 1440, height: 900 },
     ],
     accent: "violet",
     liveUrls: [{ label: "Trivia Quiz", href: "https://trivia-app-elb2.onrender.com" }],
@@ -252,10 +252,10 @@ export const projects: readonly Project[] = [
       "Six hosted workers for media, retention, push, and reminders",
     ],
     gallery: [
-      { src: "/images/projects/tapmood-main.webp", alt: "TapMood desktop sign-in interface" },
-      { src: "/images/projects/tapmood-pulse.webp", alt: "TapMood Pulse mobile interface" },
-      { src: "/images/projects/tapmood-moments.webp", alt: "TapMood Moments desktop interface" },
-      { src: "/images/projects/tapmood-auth.webp", alt: "TapMood authentication mobile interface" },
+      { src: "/images/projects/tapmood-main.webp", alt: "TapMood desktop sign-in interface", width: 1440, height: 900 },
+      { src: "/images/projects/tapmood-pulse.webp", alt: "TapMood Pulse mobile interface", width: 390, height: 1300 },
+      { src: "/images/projects/tapmood-moments.webp", alt: "TapMood Moments desktop interface", width: 1024, height: 900 },
+      { src: "/images/projects/tapmood-auth.webp", alt: "TapMood authentication mobile interface", width: 390, height: 1180 },
     ],
     accent: "lime",
     repositoryUrls: [
@@ -290,7 +290,7 @@ export const projects: readonly Project[] = [
       "Responsive booking and discovery flows",
     ],
     gallery: [
-      { src: "/images/projects/caocao-adventures-main.webp", alt: "Caocao Adventures desktop cycling tour homepage" },
+      { src: "/images/projects/caocao-adventures-main.webp", alt: "Caocao Adventures desktop cycling tour homepage", width: 1440, height: 900 },
     ],
     accent: "lime",
     liveUrls: [{ label: "Caocao Adventures", href: "https://www.caocaoadventures.com" }],
@@ -333,8 +333,8 @@ export const projects: readonly Project[] = [
       "Express middleware and Swagger-documented REST APIs",
     ],
     gallery: [
-      { src: "/images/projects/tamda-group-main.webp", alt: "Tamda Group corporate desktop homepage" },
-      { src: "/images/projects/tamda-media-main.webp", alt: "Tamda Media desktop news homepage" },
+      { src: "/images/projects/tamda-group-main.webp", alt: "Tamda Group corporate desktop homepage", width: 1440, height: 900 },
+      { src: "/images/projects/tamda-media-main.webp", alt: "Tamda Media desktop news homepage", width: 1440, height: 900 },
     ],
     accent: "blue",
     liveUrls: [
@@ -374,10 +374,10 @@ export const projects: readonly Project[] = [
       "Expo Notifications and dynamic timetable flows",
     ],
     gallery: [
-      { src: "/images/projects/vncaps-home.webp", alt: "VNCaps parent home dashboard with school modules" },
-      { src: "/images/projects/vncaps-health.webp", alt: "VNCaps student health and daily activity screen" },
-      { src: "/images/projects/vncaps-login.webp", alt: "VNCaps parent login screen" },
-      { src: "/images/projects/vncaps-splash.webp", alt: "VNCaps application launch screen" },
+      { src: "/images/projects/vncaps-home.webp", alt: "VNCaps parent home dashboard with school modules", width: 237, height: 512 },
+      { src: "/images/projects/vncaps-health.webp", alt: "VNCaps student health and daily activity screen", width: 237, height: 512 },
+      { src: "/images/projects/vncaps-login.webp", alt: "VNCaps parent login screen", width: 237, height: 512 },
+      { src: "/images/projects/vncaps-splash.webp", alt: "VNCaps application launch screen", width: 237, height: 512 },
     ],
     accent: "violet",
     liveUrls: [

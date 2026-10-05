@@ -3,10 +3,14 @@ import { ImageResponse } from "next/og";
 import { BrandMark } from "@/components/brand-mark";
 import { notFound } from "next/navigation";
 
-import { getProject } from "@/lib/projects";
+import { getProject, projects } from "@/lib/projects";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+
+export function generateStaticParams() {
+  return projects.map(({ slug }) => ({ slug }));
+}
 
 export default async function ProjectOpenGraphImage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

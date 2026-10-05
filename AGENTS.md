@@ -79,7 +79,7 @@ The homepage currently represents eight milestones and ten total projects (nine 
 - `/api/cv`: attempts a Google Docs PDF export with an 8-second timeout and size/signature validation, then falls back to `public/documents/CV-Tran Kim Dat-Full-stack Engineer.pdf`; returns 503 if both fail.
 - `/api/github-stats`: fetches contribution history, calculates total/current/longest streaks in the Asia/Bangkok time zone, caches success for one hour, and degrades to a 503 JSON response.
 - `app/actions/contact.ts`: contact Server Action with Zod validation, a honeypot, header-injection sanitization, optional Upstash rate limiting, and a Resend batch containing the owner notification plus visitor confirmation.
-- `/opengraph-image` and `/projects/[slug]/opengraph-image`: generated 1200×630 social images.
+- `/opengraph-image` and `/projects/[slug]/opengraph-image`: generated 1200×630 social images. Project images are statically generated from canonical project slugs alongside the case studies.
 - `/sitemap.xml` and `/robots.txt`: generated through Next.js metadata conventions.
 
 ## Architecture and source-of-truth map
@@ -97,7 +97,7 @@ The project is a single Next.js App Router application deployed to Vercel. Conte
 | Design tokens, global motion/accessibility/print behavior | `app/globals.css` |
 | Case-study rendering and static params | `app/projects/[slug]/page.tsx` |
 | Navigation and mobile dialog | `components/site-navigation.tsx` |
-| Work carousel | `components/project-showcase.tsx` |
+| Work carousel | `components/project-showcase.tsx` — bounded featured panel, keyboard-focusable detail scroller, persistent action links |
 | Expandable/drag-scroll career timeline | `components/experience-timeline.tsx` |
 | Project media treatment | `components/project-artwork.tsx` |
 | Contact client state | `components/contact-form.tsx` |
@@ -143,7 +143,7 @@ This is a dark editorial portfolio, not a generic SaaS dashboard. Preserve its i
 - Shape: restrained rounded rectangles (`rounded-md`, `rounded-xl`) and fine borders, not a page full of interchangeable cards or pills.
 - Atmosphere: subtle ambient grid, radial light, image overlays, high contrast, and generous section rhythm.
 - Motion: purposeful reveal, drag, marquee, word-scrub, and hover feedback. Every new motion path must respect `prefers-reduced-motion` and must not cause horizontal overflow.
-- Media: use local optimized WebP assets with descriptive alt text. Decorative images use empty alt text. Preserve reserved dimensions to avoid layout shift.
+- Media: use local optimized WebP assets with descriptive alt text. Project gallery records include intrinsic width/height; artwork contains the whole screenshot at its natural ratio for desktop and portrait captures. Decorative images use empty alt text. Preserve reserved dimensions to avoid layout shift.
 - Icons: use the existing Lucide set or the brand SVG; do not use emoji as interface icons.
 
 ## Interaction and accessibility invariants
