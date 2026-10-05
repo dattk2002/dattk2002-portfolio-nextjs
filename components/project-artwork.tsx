@@ -19,24 +19,17 @@ export function ProjectArtwork({ project, priority = false, compact = false }: {
       <div className="absolute inset-0 opacity-25 [background-image:linear-gradient(var(--border)_1px,transparent_1px),linear-gradient(90deg,var(--border)_1px,transparent_1px)] [background-size:42px_42px]" />
 
       {image ? (
-        <div className={cn(
-          "absolute overflow-hidden border border-white/10 shadow-2xl",
-          project.slug === "vncaps"
-            ? "inset-y-[7%] left-1/2 w-[42%] max-w-[22rem] -translate-x-1/2 rounded-[1.75rem] bg-white"
-            : "inset-x-[5%] top-[13%] aspect-[16/10] rounded-lg bg-black/20 md:inset-x-[7%]",
-        )}>
+        <div className="absolute inset-x-[6%] top-[8%] bottom-20 flex items-center justify-center">
           <Image
             src={image.src}
             alt={image.alt}
             draggable={false}
-            fill
+            width={image.width}
+            height={image.height}
             preload={priority}
             unoptimized
             sizes="(max-width: 768px) 90vw, 42vw"
-            className={cn(
-              "transition-transform duration-700 ease-out group-hover:scale-[1.025]",
-              project.slug === "vncaps" ? "object-contain object-center" : "object-cover object-top",
-            )}
+            className="h-auto max-h-full w-auto max-w-full rounded-lg border border-white/10 object-contain shadow-2xl transition-transform duration-700 ease-out group-hover:scale-[1.025]"
           />
         </div>
       ) : project.slug === "vncaps" ? (
@@ -79,7 +72,7 @@ export function ProjectArtwork({ project, priority = false, compact = false }: {
         </div>
       )}
 
-      <div className="absolute bottom-5 left-5 font-mono text-[10px] uppercase tracking-[0.2em] text-white/55">{project.technologies.slice(0, 3).join(" / ")}</div>
+      <div className="absolute right-5 bottom-5 left-5 font-mono text-[10px] uppercase leading-5 tracking-[0.2em] text-white/55">{project.technologies.slice(0, 3).join(" / ")}</div>
     </div>
   );
 }

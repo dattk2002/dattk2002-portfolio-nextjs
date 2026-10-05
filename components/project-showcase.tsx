@@ -16,7 +16,7 @@ function getProject(slug: ProjectSlug) {
 
 function ProjectLinks({ project }: { project: Project }) {
   return (
-    <div className="flex flex-wrap gap-x-5 gap-y-3 text-sm">
+    <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm sm:flex sm:flex-wrap sm:gap-x-5 sm:gap-y-3">
       <Link href={`/projects/${project.slug}`} className="inline-flex min-h-11 items-center gap-2 font-medium text-accent hover:underline">
         View case study <ArrowUpRight className="size-4" aria-hidden="true" />
       </Link>
@@ -38,25 +38,34 @@ function FeaturedContent({ project, reduceMotion }: { project: Project; reduceMo
   return (
     <motion.div
       key={`featured-${project.slug}`}
-      className="grid md:grid-cols-[1.05fr_0.95fr] lg:grid-cols-[1.12fr_0.88fr]"
+      className="grid min-w-0 md:h-[42rem] md:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:h-[40rem] lg:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] xl:h-[38rem]"
       initial={reduceMotion ? false : { opacity: 0.62 }}
       animate={{ opacity: 1 }}
       exit={reduceMotion ? undefined : { opacity: 0.38 }}
       transition={{ duration: reduceMotion ? 0 : 0.24 }}
     >
-      <div className="h-80 md:min-h-[52rem] lg:min-h-[46rem] xl:min-h-[43rem]"><ProjectArtwork project={project} priority={project.featured} /></div>
-      <div className="flex min-h-[34rem] flex-col p-6 md:p-7 lg:p-8 xl:p-10">
-        <div className="flex items-center justify-between gap-4 font-mono text-[9px] uppercase tracking-[0.18em] text-faint"><span>{project.context}</span><span>{project.period}</span></div>
-        <div className="mt-auto pt-10">
-          <h3 className="font-display text-5xl leading-[0.92] tracking-[-0.06em] xl:text-6xl">{project.name}</h3>
+      <div className="h-80 min-w-0 sm:h-96 md:h-full"><ProjectArtwork project={project} priority={project.featured} /></div>
+      <div
+        className="flex h-[36rem] min-h-0 min-w-0 cursor-auto flex-col p-6 select-text md:h-full md:p-7 lg:p-8 xl:p-10"
+        onPointerDown={(event) => event.stopPropagation()}
+        onPointerUp={(event) => event.stopPropagation()}
+      >
+        <div className="flex shrink-0 flex-wrap items-center justify-between gap-x-4 gap-y-2 font-mono text-[9px] uppercase tracking-[0.18em] text-faint"><span>{project.context}</span><span>{project.period}</span></div>
+        <div
+          className="project-content-scroll mt-6 min-h-0 flex-1 overflow-x-hidden overflow-y-auto pr-4 md:mt-7"
+          tabIndex={0}
+          role="region"
+          aria-label={`${project.name} project details`}
+        >
+          <h3 className="font-display text-4xl leading-[0.95] tracking-[-0.06em] lg:text-5xl xl:text-6xl">{project.name}</h3>
           <p className="mt-4 max-w-xl leading-7 text-muted">{project.summary}</p>
           <p className="mt-4 border-t border-border pt-4 font-mono text-[10px] uppercase leading-5 tracking-[0.13em] text-steel">{project.ownership}</p>
           <ul className="mt-4 grid gap-3 text-sm text-foreground/82 lg:grid-cols-2">
             {project.outcomes.map((outcome) => <li key={outcome} className="border-t border-border pt-3">{outcome}</li>)}
           </ul>
           <p className="mt-4 font-mono text-[10px] uppercase leading-5 tracking-[0.12em] text-faint">{project.technologies.join(" · ")}</p>
-          <div className="mt-4"><ProjectLinks project={project} /></div>
         </div>
+        <div className="mt-5 shrink-0 border-t border-border pt-3"><ProjectLinks project={project} /></div>
       </div>
     </motion.div>
   );

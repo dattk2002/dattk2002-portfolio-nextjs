@@ -97,7 +97,7 @@ The project is a single Next.js App Router application deployed to Vercel. Conte
 | Design tokens, global motion/accessibility/print behavior | `app/globals.css` |
 | Case-study rendering and static params | `app/projects/[slug]/page.tsx` |
 | Navigation and mobile dialog | `components/site-navigation.tsx` |
-| Work carousel | `components/project-showcase.tsx` |
+| Work carousel | `components/project-showcase.tsx` — bounded featured panel, keyboard-focusable detail scroller, persistent action links |
 | Expandable/drag-scroll career timeline | `components/experience-timeline.tsx` |
 | Project media treatment | `components/project-artwork.tsx` |
 | Contact client state | `components/contact-form.tsx` |
@@ -143,7 +143,7 @@ This is a dark editorial portfolio, not a generic SaaS dashboard. Preserve its i
 - Shape: restrained rounded rectangles (`rounded-md`, `rounded-xl`) and fine borders, not a page full of interchangeable cards or pills.
 - Atmosphere: subtle ambient grid, radial light, image overlays, high contrast, and generous section rhythm.
 - Motion: purposeful reveal, drag, marquee, word-scrub, and hover feedback. Every new motion path must respect `prefers-reduced-motion` and must not cause horizontal overflow.
-- Media: use local optimized WebP assets with descriptive alt text. Decorative images use empty alt text. Preserve reserved dimensions to avoid layout shift.
+- Media: use local optimized WebP assets with descriptive alt text. Project gallery records include intrinsic width/height; artwork contains the whole screenshot at its natural ratio for desktop and portrait captures. Decorative images use empty alt text. Preserve reserved dimensions to avoid layout shift.
 - Icons: use the existing Lucide set or the brand SVG; do not use emoji as interface icons.
 
 ## Interaction and accessibility invariants
