@@ -4,6 +4,7 @@ import { createHash } from "node:crypto";
 import { headers } from "next/headers";
 import { Resend } from "resend";
 import { z } from "zod";
+import { siteConfig } from "@/lib/site";
 
 export type ContactState = {
   status: "idle" | "success" | "error";
@@ -107,8 +108,8 @@ export async function sendContactMessage(_previousState: ContactState, formData:
         `Subject: ${safeSubject}`,
         "",
         "Best,",
-        "Tran Kim Dat",
-        "Full-stack Developer",
+        siteConfig.name,
+        siteConfig.role,
       ].join("\n"),
     },
   ]);

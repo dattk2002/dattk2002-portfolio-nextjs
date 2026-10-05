@@ -1,7 +1,9 @@
+import { siteConfig } from "@/lib/site";
+
 const GOOGLE_DOC_ID = "1TADPEoNptmcp0wyZEzEa29w6VFK7Pu7ZIpWr5NtAw1Q";
 const GOOGLE_DOC_EXPORT_URL = `https://docs.google.com/document/d/${GOOGLE_DOC_ID}/export?format=pdf`;
-const DOWNLOAD_FILENAME = "CV-Tran Kim Dat-Full-stack Developer.pdf";
-const STATIC_FALLBACK_PATH = "/documents/CV-Tran%20Kim%20Dat-Full-stack%20Developer.pdf";
+const DOWNLOAD_FILENAME = siteConfig.cvDownloadName;
+const STATIC_FALLBACK_PATH = `/documents/${encodeURIComponent(siteConfig.cvDownloadName)}`;
 const MAX_PDF_SIZE = 10 * 1024 * 1024;
 
 async function readPdf(response: Response) {

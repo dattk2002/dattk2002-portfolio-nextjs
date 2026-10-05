@@ -53,7 +53,7 @@ export default function HomePage() {
           <div className="relative z-10 min-w-0 md:col-span-7 lg:col-span-8">
             <MotionReveal>
               <div className="flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[9px] uppercase tracking-[0.18em] text-steel sm:text-[10px]">
-                <span>Full-stack Developer</span><span className="h-px w-9 bg-border" /><span>{siteConfig.location}</span>
+                <span>{siteConfig.role}</span><span className="h-px w-9 bg-border" /><span>{siteConfig.location}</span>
               </div>
             </MotionReveal>
             <MotionReveal delay={0.08}>
@@ -74,7 +74,7 @@ export default function HomePage() {
             </MotionReveal>
             <MotionReveal delay={0.16}>
               <p className="mt-7 max-w-2xl text-sm leading-6 text-muted md:text-base md:leading-7 lg:text-lg lg:leading-8">
-                Full-stack developer with 3+ years delivering production web applications and cross-platform mobile experiences across e-commerce, CMS, booking, SaaS, and social products, with hands-on ownership across responsive interfaces, APIs, data, authentication, and real-time systems.
+                {siteConfig.summary}
               </p>
             </MotionReveal>
             <MotionReveal delay={0.22} className="mt-8 flex flex-col gap-3 sm:flex-row md:mt-9">

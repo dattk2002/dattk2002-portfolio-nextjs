@@ -260,7 +260,7 @@ export function ExperienceTimeline() {
   return (
     <div className="min-w-0 lg:col-span-8">
       <div className="mb-4 flex items-center justify-between gap-4 font-mono text-[9px] uppercase tracking-[0.14em] text-faint">
-        <span>7 milestones <span aria-hidden="true">·</span> 9 projects</span>
+        <span>{experiences.length} milestones <span aria-hidden="true">·</span> {experiences.reduce((total, experience) => total + experience.projects.length, 0)} projects</span>
         <span className="hidden items-center gap-2 lg:flex"><MoveVertical className="size-3.5" aria-hidden="true" /> Scroll or drag</span>
       </div>
 

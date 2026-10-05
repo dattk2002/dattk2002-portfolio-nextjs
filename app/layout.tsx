@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   creator: siteConfig.name,
   keywords: [
     "Tran Kim Dat",
-    "Full-stack Developer",
+    "Full-stack Engineer",
     "Next.js Developer",
     "Flutter Developer",
     "ASP.NET Core Developer",

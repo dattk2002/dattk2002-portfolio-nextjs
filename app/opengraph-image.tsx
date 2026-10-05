@@ -1,8 +1,9 @@
 import { ImageResponse } from "next/og";
 
 import { BrandMark } from "@/components/brand-mark";
+import { siteConfig } from "@/lib/site";
 
-export const alt = "Tran Kim Dat — Full-stack Developer";
+export const alt = `${siteConfig.name} — ${siteConfig.role}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -14,7 +15,7 @@ export default function OpenGraphImage() {
           <BrandMark style={{ width: 42, height: 42, color: "#c7f36b" }} />
           <span style={{ fontWeight: 700 }}>TRAN KIM DAT</span>
         </div>
-        <span style={{ color: "#7ea2b8", fontSize: 18 }}>FULL-STACK DEVELOPER · HO CHI MINH CITY</span>
+        <span style={{ color: "#7ea2b8", fontSize: 18 }}>{siteConfig.role.toUpperCase()} · VIETNAM</span>
       </div>
       <div style={{ display: "flex", flexDirection: "column" }}>
         <div style={{ fontSize: 82, lineHeight: 0.95, letterSpacing: "-5px", maxWidth: 1000 }}>Digital products from interface to infrastructure.</div>

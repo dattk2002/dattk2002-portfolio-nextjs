@@ -26,6 +26,11 @@ export type Experience = {
 export const experiences: readonly Experience[] = [
   {
     organization: "Independent Product Development",
+    period: "Aug 2026 – Present",
+    projects: [{ slug: "bravodemy" }],
+  },
+  {
+    organization: "Independent Product Development",
     period: "Jun 2026 – Jul 2026",
     projects: [{ slug: "tapmood" }],
   },
