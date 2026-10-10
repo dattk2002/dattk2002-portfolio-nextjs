@@ -47,7 +47,7 @@ export const experiences: readonly Experience[] = [
   {
     organization: "Dan Solutions",
     period: "Oct 2025 – May 2026",
-    projects: [{ slug: "tamda" }, { slug: "caocao-adventures" }],
+    projects: [{ slug: "panda" }, { slug: "tamda" }, { slug: "caocao-adventures" }],
   },
   {
     organization: "Capstone Project",

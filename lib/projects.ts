@@ -1,5 +1,6 @@
 export type ProjectSlug =
   | "bravodemy"
+  | "panda"
   | "tapmood"
   | "habistride"
   | "ngoaingungay"
@@ -70,6 +71,45 @@ export const projects: readonly Project[] = [
     liveUrls: [{ label: "Bravodemy", href: "https://bravodemy.com" }],
     repositoryUrls: [{ label: "Product repository", href: "https://github.com/tkhieu/AIMicroLearningPlatform" }],
     featured: true,
+  },
+  {
+    slug: "panda",
+    name: "Panda",
+    period: "Feb 2026 – May 2026",
+    context: "Client production",
+    summary:
+      "A multi-tenant POS and F&B management platform connecting restaurant ordering, reservations, kitchen operations, billing, and payments.",
+    ownership:
+      "Worked as a Full-stack Engineer at Dan Solutions in a five-person team, extending the existing web app across frontend screens and backend APIs. Owned receipt printing, takeaway ordering, advance reservations, and payment modules.",
+    technologies: ["React", "TypeScript", "Vite", "Ant Design", "PostgreSQL", "Strapi", "REST API"],
+    outcomes: [
+      "Implemented 13 API endpoints and four React/TypeScript screens: receipt printing, reservation forms, reservation lists, and payments. Delivered these features into the existing production application.",
+      "Built session-based reservation forms and connected booking submissions to backend services and administrative reservation lists. Extended takeaway ordering, bill splitting, payments, and kitchen-screen workflows for restaurant operations.",
+      "Supported a senior engineer on tenant-aware permissions and tenant switching in a PostgreSQL architecture with separate databases and schemas, connecting users to their authorized restaurant environments.",
+      "Refactored reservation and receipt forms from development into main through code review, contributed CI configuration updates, and resolved production bugs reported by Czech restaurant customers.",
+    ],
+    challenge:
+      "Extend a live restaurant platform where bookings, orders, kitchen screens, and billing need to work together, while preserving permissions and tenant context across separate restaurant environments.",
+    approach:
+      "Delivered the assigned modules across the React administration app and backend APIs. Session-based booking forms fed the reservation list, while receipt, split-bill, payment, and kitchen changes connected operational workflows. Tenant permissions and switching were implemented alongside a senior engineer, with code review and customer bug fixes supporting release.",
+    architecture: [
+      "React and TypeScript web administration app built with Vite and Ant Design",
+      "13 contributed API endpoints connecting reservations, ordering, billing, and payments",
+      "PostgreSQL multi-tenant foundation with separate databases and schemas",
+      "Tenant-aware permissions and switching developed alongside a senior engineer",
+      "Existing Strapi headless CMS maintained by the senior engineer",
+      "Code-review and CI contributions supporting development-to-main releases",
+    ],
+    gallery: [
+      { src: "/images/projects/panda-pos.webp", alt: "Panda iPad POS menu, order, and payment interface published on the product website", width: 1600, height: 1112 },
+      { src: "/images/projects/panda-kitchen.webp", alt: "Panda iPad kitchen display with orders grouped by table, published on the product website", width: 1600, height: 1112 },
+    ],
+    accent: "lime",
+    liveUrls: [
+      { label: "Panda", href: "https://panda.vn/" },
+      { label: "Web app", href: "https://app.panda.vn/" },
+    ],
+    featured: false,
   },
   {
     slug: "fastcare",
@@ -267,7 +307,7 @@ export const projects: readonly Project[] = [
   {
     slug: "caocao-adventures",
     name: "Caocao Adventures",
-    period: "2025",
+    period: "Nov 2025 – Jan 2026",
     context: "Client production",
     summary:
       "A production travel platform for discovering guided cycling tours, renting bikes, and exploring destination-led editorial content.",
