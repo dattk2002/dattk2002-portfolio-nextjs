@@ -55,17 +55,18 @@ The canonical case-study records live in `lib/projects.ts`; the following table 
 | Project | Context / period | Core ownership and evidence |
 | --- | --- | --- |
 | Bravodemy | Independent, Aug 2026–Present | AI microlearning; Gemini grounded search, Exa/Tavily, Langfuse; 107 FastAPI endpoints, 35 SQLAlchemy models; 192 backend tests at 85.11% coverage and 151 frontend tests; Next.js UI, Render Singapore, Neon, Redis, and CI. This is the initial showcase and only `featured: true` project. |
+| Panda | Client production, Feb–May 2026 | Full-stack Engineer in a five-person Dan Solutions team; 13 API endpoints and 4 React/TypeScript web-app screens; reservations, receipt printing, takeaway, split bills, payments, and kitchen workflows. Supported senior-led PostgreSQL tenant permissions/switching; Strapi CMS was senior-owned. Gallery images are official iPad POS/KDS product captures, not evidence of authored web-app screens. |
 | Fastcare | Client production, Dec 2023–Aug 2024 | Frontend ownership plus Laravel admin workflows; 20+ screens; booking, catalog, and content flows. |
 | HabiStride | Independent, May–Jun 2026 | Next.js + NestJS + PostgreSQL habit product; 24 REST handlers, 7 controllers, 10 TypeORM entities, daily Asia/Bangkok snapshots. |
 | NgoaiNguNgay | Capstone, May–Sep 2025 | Role-aware React/Vite language learning, tutoring, booking, and SignalR messaging; 16 routes and 79 component files. |
 | Trivia Quiz | Independent, Apr–May 2026 | Next.js + MongoDB session-based quiz; server-side answer validation, duplicate-score protection, and 1-hour TTL cleanup. |
 | TapMood | Independent, Jun–Jul 2026 | Flutter + ASP.NET Core social product; 117 REST mappings, resumable verified uploads up to 250 MB, 92 automated tests, real-time and worker-backed flows. |
-| Caocao Adventures | Client production, 2025 | React travel discovery, rental, and booking experience; three core modules delivered to production in two months. |
+| Caocao Adventures | Client production, Nov 2025–Jan 2026 | React travel discovery, rental, and booking experience; three core modules delivered to production in two months. |
 | TamdaCMS / TamdaOne | Client production, Oct 2025–May 2026 | Next.js/Strapi multi-brand publishing foundation; 10 production features, 5 verticals, and 12+ content schemas. |
 | VNCaps | Client production, Dec 2023–Aug 2024 | React Native/Expo role-aware school application; 15+ screens, timetable rendering, and push notifications. |
 | LMS FSoft Education Management | FPT Software internship, Feb–Apr 2023 | Angular frontend work in a six-person team; class list/detail and seven calendar/class states. This item exists only as a detailed experience record, not a `/projects/[slug]` case study. |
 
-The homepage currently represents eight milestones and ten total projects (nine case studies plus the internship LMS). If records are added or removed, update derived UI labels rather than leaving hard-coded counts stale.
+The homepage currently represents eight milestones and eleven total projects (ten case studies plus the internship LMS). If records are added or removed, update derived UI labels rather than leaving hard-coded counts stale.
 
 ## Information architecture and routes
 

@@ -13,7 +13,7 @@ The site is organized around real project evidence. Each selected work item conn
 ## What I built
 
 - **Responsive editorial interface** — a custom dark visual system with fluid typography, asymmetric layouts, optimized WebP artwork, and layouts designed for phone, tablet, and desktop breakpoints.
-- **Data-driven project portfolio** — eight projects share typed content models and statically generated case-study routes, keeping project details consistent across the homepage, experience timeline, and detail pages.
+- **Data-driven project portfolio** — ten case studies share typed content models and statically generated routes, keeping project details consistent across the homepage, experience timeline, and detail pages.
 - **Gesture-based exploration** — the Selected Work carousel supports touch dragging, mouse dragging, card selection, and arrow-key navigation. The featured project surface can also be swiped directly on mobile.
 - **Interactive professional timeline** — expandable project details, drag-to-scroll behavior, inertial movement, and automatic positioning expose deeper experience without turning the page into a long static résumé.
 - **Live GitHub activity** — a server endpoint calculates contribution totals and streaks in the Asia/Bangkok timezone, with bounded requests, graceful failure states, and CDN-friendly caching.
@@ -28,6 +28,8 @@ The site is organized around real project evidence. Each selected work item conn
 ![Selected Work carousel showing the TapMood case study](./public/images/readme/portfolio-selected-work-desktop.png)
 
 The portfolio currently documents work across Flutter, ASP.NET Core, NestJS, Next.js, React, Laravel, PostgreSQL, MongoDB, SignalR, Docker, and CMS-backed production systems. Project content lives in `lib/projects.ts`, while professional history and delivery evidence are maintained separately in `lib/experience.ts` and `lib/capabilities.ts`.
+
+Panda adds restaurant POS and F&B management experience from Dan Solutions: 13 contributed API endpoints, four web-app screens, and tenant-aware permissions and switching supported alongside a senior engineer. Its gallery uses official product screenshots of the iPad POS and kitchen display; the ownership record describes my web-app contributions.
 
 ## How the portfolio works
 
