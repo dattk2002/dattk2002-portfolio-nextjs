@@ -84,18 +84,19 @@ export const projects: readonly Project[] = [
     technologies: ["React", "TypeScript", "Vite", "Ant Design", "PostgreSQL", "Strapi", "REST API"],
     outcomes: [
       "Implemented 13 API endpoints and four React/TypeScript screens: receipt printing, reservation forms, reservation lists, and payments. Delivered these features into the existing production application.",
-      "Built session-based reservation forms and connected booking submissions to backend services and administrative reservation lists. Extended takeaway ordering, bill splitting, payments, and kitchen-screen workflows for restaurant operations.",
+      "Built multi-tenant reservation forms with sessions bound to restaurant domains, allowing the same form flow to serve multiple restaurants. Connected booking submissions to backend services and administrative reservation lists, and extended takeaway ordering, bill splitting, payments, and kitchen-screen workflows.",
       "Supported a senior engineer on tenant-aware permissions and tenant switching in a PostgreSQL architecture with separate databases and schemas, connecting users to their authorized restaurant environments.",
       "Refactored reservation and receipt forms from development into main through code review, contributed CI configuration updates, and resolved production bugs reported by Czech restaurant customers.",
     ],
     challenge:
       "Extend a live restaurant platform where bookings, orders, kitchen screens, and billing need to work together, while preserving permissions and tenant context across separate restaurant environments.",
     approach:
-      "Delivered the assigned modules across the React administration app and backend APIs. Session-based booking forms fed the reservation list, while receipt, split-bill, payment, and kitchen changes connected operational workflows. Tenant permissions and switching were implemented alongside a senior engineer, with code review and customer bug fixes supporting release.",
+      "Delivered the assigned modules across the React administration app and backend APIs. The reservation form used sessions tied to restaurant domains, allowing reuse across tenants while booking submissions fed the administrative reservation list. Receipt, split-bill, payment, and kitchen changes connected operational workflows. Tenant permissions and switching were implemented alongside a senior engineer, with code review and customer bug fixes supporting release.",
     architecture: [
       "React and TypeScript web administration app built with Vite and Ant Design",
       "13 contributed API endpoints connecting reservations, ordering, billing, and payments",
       "PostgreSQL multi-tenant foundation with separate databases and schemas",
+      "Multi-tenant reservation forms with sessions bound to restaurant domains",
       "Tenant-aware permissions and switching developed alongside a senior engineer",
       "Existing Strapi headless CMS maintained by the senior engineer",
       "Code-review and CI contributions supporting development-to-main releases",
