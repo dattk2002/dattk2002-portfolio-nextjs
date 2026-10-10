@@ -98,7 +98,7 @@ The project is a single Next.js App Router application deployed to Vercel. Conte
 | Design tokens, global motion/accessibility/print behavior | `app/globals.css` |
 | Case-study rendering and static params | `app/projects/[slug]/page.tsx` |
 | Navigation and mobile dialog | `components/site-navigation.tsx` |
-| Work carousel | `components/project-showcase.tsx` — bounded featured panel, keyboard-focusable detail scroller, persistent action links |
+| Work carousel | `components/project-showcase.tsx` — bounded featured panel, keyboard-focusable detail scroller, persistent action links; compact cards have a minimum height, non-shrinking descriptions, aligned two-line outcome previews, and visible focus on selected cards, with full outcomes in the featured panel |
 | Expandable/drag-scroll career timeline | `components/experience-timeline.tsx` |
 | Project media treatment | `components/project-artwork.tsx` |
 | Contact client state | `components/contact-form.tsx` |

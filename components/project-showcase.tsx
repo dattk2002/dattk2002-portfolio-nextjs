@@ -74,12 +74,14 @@ function FeaturedContent({ project, reduceMotion }: { project: Project; reduceMo
 function CompactContent({ project, highlighted }: { project: Project; highlighted: boolean }) {
   return (
     <div className="flex h-full flex-col p-5 text-left lg:p-6">
-      <span className="flex w-full items-center justify-between font-mono text-[9px] uppercase tracking-[0.16em] opacity-65">
+      <span className="flex w-full shrink-0 items-center justify-between font-mono text-[9px] uppercase tracking-[0.16em] opacity-65">
         <span>{String(projects.findIndex((item) => item.slug === project.slug) + 1).padStart(2, "0")}</span><ArrowUpRight className="size-4" aria-hidden="true" />
       </span>
-      <span className="mt-auto pt-10 font-display text-3xl leading-[0.95] tracking-[-0.05em] lg:text-4xl">{project.name}</span>
-      <span className="mt-3 line-clamp-2 text-sm leading-6 opacity-75">{project.summary}</span>
-      <span className={`mt-5 border-t pt-3 font-mono text-[9px] uppercase leading-4 tracking-[0.12em] opacity-65 ${highlighted ? "border-black/20" : "border-border"}`}>{project.outcomes[0]}</span>
+      <span className="mt-auto shrink-0 pt-6 font-display text-3xl leading-[0.95] tracking-[-0.05em] lg:text-4xl">{project.name}</span>
+      <span className="mt-3 line-clamp-2 shrink-0 text-sm leading-6 opacity-75">{project.summary}</span>
+      <span className={`mt-5 shrink-0 border-t pt-3 font-mono text-[9px] uppercase leading-4 tracking-[0.12em] opacity-65 ${highlighted ? "border-black/20" : "border-border"}`}>
+        <span className="line-clamp-2 min-h-8">{project.outcomes[0]}</span>
+      </span>
     </div>
   );
 }
@@ -192,8 +194,8 @@ export function ProjectShowcase() {
             {projects.map((project, index) => {
               const highlighted = index === selectedIndex;
               return (
-                <article key={project.slug} className={`relative mr-3 h-64 min-w-0 flex-[0_0_100%] overflow-hidden rounded-xl border transition-[border-color,background-color,color] duration-200 sm:flex-[0_0_calc(50%-0.375rem)] lg:flex-[0_0_calc(33.333333%-0.5rem)] ${highlighted ? "border-accent/40 bg-accent text-accent-foreground" : "border-border bg-surface-raised"}`}>
-                  <button type="button" className="h-full w-full cursor-pointer touch-manipulation outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent" onClick={() => featureProject(index)} aria-label={`Feature ${project.name}. Currently featuring ${featuredProject.name}.`} aria-current={highlighted ? "true" : undefined}>
+                <article key={project.slug} className={`relative mr-3 min-h-72 min-w-0 flex-[0_0_100%] overflow-hidden rounded-xl border transition-[border-color,background-color,color] duration-200 sm:flex-[0_0_calc(50%-0.375rem)] lg:flex-[0_0_calc(33.333333%-0.5rem)] ${highlighted ? "border-accent/40 bg-accent text-accent-foreground" : "border-border bg-surface-raised"}`}>
+                  <button type="button" className={`h-full w-full cursor-pointer touch-manipulation outline-none focus-visible:ring-2 focus-visible:ring-inset ${highlighted ? "focus-visible:ring-accent-foreground" : "focus-visible:ring-accent"}`} onClick={() => featureProject(index)} aria-label={`Feature ${project.name}. Currently featuring ${featuredProject.name}.`} aria-current={highlighted ? "true" : undefined}>
                     <CompactContent project={project} highlighted={highlighted} />
                   </button>
                 </article>
