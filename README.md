@@ -29,7 +29,7 @@ The site is organized around real project evidence. Each selected work item conn
 
 The portfolio currently documents work across Flutter, ASP.NET Core, NestJS, Next.js, React, Laravel, PostgreSQL, MongoDB, SignalR, Docker, and CMS-backed production systems. Project content lives in `lib/projects.ts`, while professional history and delivery evidence are maintained separately in `lib/experience.ts` and `lib/capabilities.ts`.
 
-Panda adds restaurant POS and F&B management experience from Dan Solutions: 13 contributed API endpoints, four web-app screens, and tenant-aware permissions and switching supported alongside a senior engineer. Its gallery uses official product screenshots of the iPad POS and kitchen display; the ownership record describes my web-app contributions.
+Panda adds restaurant POS and F&B management experience from Dan Solutions: 13 contributed API endpoints, four web-app screens, domain-bound reservation sessions for forms used across multiple restaurants, and tenant-aware permissions and switching supported alongside a senior engineer. Its gallery uses official product screenshots of the iPad POS and kitchen display; the ownership record describes my web-app contributions.
 
 ## How the portfolio works
 
