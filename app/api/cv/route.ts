@@ -1,6 +1,6 @@
 import { siteConfig } from "@/lib/site";
 
-const GOOGLE_DOC_ID = "1TADPEoNptmcp0wyZEzEa29w6VFK7Pu7ZIpWr5NtAw1Q";
+const GOOGLE_DOC_ID = "19z7gjVRi23MUoXUkYkHTiIS4djH99BNiekJhvQaFAGs";
 const GOOGLE_DOC_EXPORT_URL = `https://docs.google.com/document/d/${GOOGLE_DOC_ID}/export?format=pdf`;
 const DOWNLOAD_FILENAME = siteConfig.cvDownloadName;
 const STATIC_FALLBACK_PATH = `/documents/${encodeURIComponent(siteConfig.cvDownloadName)}`;
