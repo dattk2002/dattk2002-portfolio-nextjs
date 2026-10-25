@@ -1,0 +1,1781 @@
+[
+  {
+    "key": "rag",
+    "coverImageUrl": "https://h1lvhovxchgkpuum.public.blob.vercel-storage.com/blog/1792943674296-rag-cover-HdxntBYlc95Go1ja757L8E9eVk955p.webp",
+    "featured": false,
+    "tags": [
+      "AI",
+      "RAG",
+      "PostgreSQL",
+      "architecture",
+      "security"
+    ],
+    "translations": [
+      {
+        "locale": "en",
+        "title": "RAG with PostgreSQL: Retrieval, Permissions, and Answers You Can Verify",
+        "slug": "rag-postgresql-retrieval-permissions-citations",
+        "excerpt": "A practical design for PostgreSQL-backed RAG: versioned ingestion, permission-aware retrieval, useful citations, and separate tests for search quality and answer quality.",
+        "seoTitle": "RAG with PostgreSQL: Retrieval, Permissions, and Citations",
+        "seoDescription": "Design PostgreSQL RAG with versioned documents, permission-aware search, pgvector, verifiable citations, and separate retrieval and answer evaluations.",
+        "coverImageAlt": "Glass document slabs passing through a narrow gate into a softly illuminated database cylinder.",
+        "status": "published",
+        "publishedAt": "2026-10-25T15:58:27.972Z",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "A useful retrieval-augmented generation system has to answer two questions before it writes a sentence: which evidence is relevant, and which evidence is this person allowed to see? A fluent answer is a weak success signal when the search quietly missed the current policy or included another customer's document."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Consider an illustrative support assistant that answers questions about a product's setup guides and internal runbooks. PostgreSQL can hold the document metadata, permissions, ingestion state, and searchable chunks together. The design below is an architectural proposal for that kind of application, rather than a claim about a particular production deployment."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep document identity separate from searchable chunks"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "A document needs a stable identity even as its text changes. Give each imported version a source identifier, a content hash, a revision, and a lifecycle state. A chunk should point back to that version and retain enough location information to recover the surrounding passage. A search result without that lineage is difficult to debug and impossible to cite precisely."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Publish ingestion results as a complete version. Parse and validate the source, build its chunks and embeddings, then switch the active revision only after the new set is ready. Otherwise a failed import can leave half of a policy available while the previous version has already disappeared. Deletion also needs a path: retire the source, exclude its chunks, and expire cached answers that depend on it."
+                }
+              ]
+            },
+            {
+              "type": "bulletList",
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "documents: stable source identity, owner, and current revision."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "document_versions: source hash, effective date, ingestion status, and canonical URL."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "chunks: version reference, section label, text, embedding, and permission metadata."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "retrieval_runs: request identifier, selected chunk identifiers, and configuration version; avoid retaining private text by default."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Apply access rules before evidence reaches the model"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Resolve the user and tenant from an authenticated server session. Do not trust a tenant identifier supplied in the prompt or request body. Retrieval must enforce the same access rules as the document reader, including document-level restrictions inside a tenant. A tenant predicate alone is insufficient when some documents are private to a team."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Row-level security can add a database boundary, provided the runtime role is actually subject to it. Table owners and roles with bypass privileges need particular attention. Set any session-derived context within the transaction that runs the query, especially with transaction pooling. A prompt telling the model to ignore unauthorized text cannot repair an earlier disclosure."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "This illustrative query assumes a pgvector embedding column and an access table maintained by trusted application code. All parameters come from the server's authorization and embedding steps; $1 is the query vector, $2 the tenant, and $3 the verified user. The deployed schema and embedding dimension must be defined separately."
+                }
+              ]
+            },
+            {
+              "type": "codeBlock",
+              "attrs": {
+                "language": "sql"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "SELECT c.id, c.document_version_id, c.section, c.body,\n       c.embedding <=> $1::vector AS distance\nFROM chunks AS c\nJOIN document_versions AS v ON v.id = c.document_version_id\nWHERE v.status = 'active'\n  AND c.tenant_id = $2\n  AND EXISTS (\n    SELECT 1 FROM document_access AS a\n    WHERE a.document_id = v.document_id AND a.user_id = $3\n  )\nORDER BY c.embedding <=> $1::vector\nLIMIT 8;"
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Choose search behavior from the questions"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Semantic similarity is helpful for paraphrases; lexical search is useful for exact error codes, product identifiers, and names. A practical starting point is to evaluate both paths on the same question set and combine their ranked results when that improves retrieval. Avoid adding raw lexical scores to vector distances because their scales mean different things."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "pgvector's documentation distinguishes exact search from approximate indexes. With an approximate index, selective filtering can reduce the number of returned neighbors. Measure recall after applying real tenant and document restrictions. Compare with an exact-search baseline before tuning scan settings or introducing partitions. An index that looks fast on an unrestricted benchmark may behave differently for a small tenant."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Make citations a server-owned mapping"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Assign short evidence identifiers to the retrieved passages, such as source-1 and source-2. Ask the model to associate claims with these identifiers. The application then resolves them to the actual document revision, section, and authorized destination. Never let a generated URL become a trusted citation just because it looks plausible."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Validate that every returned evidence identifier belongs to the retrieved set. That catches invented references, but it does not prove that a passage supports a claim. Review support separately. When the evidence is incomplete, the product should explain what it can establish and ask a narrower question or decline the unsupported part."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Evaluate retrieval and generation independently"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Build cases with a question, the user's access context, and expected supporting documents. Include stale versions, ambiguous product names, deleted documents, exact identifiers, and questions whose answer should be unavailable. First check whether retrieval found authorized evidence. Then judge whether the answer used it correctly."
+                }
+              ]
+            },
+            {
+              "type": "bulletList",
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Retrieval: supporting-document recall, irrelevant context, and access isolation."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Generation: supported claims, correct citations, and appropriate uncertainty."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Operations: ingestion delay, time to first useful response, end-to-end latency, and cost per request."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "My starting design would favor a small, auditable retrieval pipeline over an elaborate agent loop. Keep identity, evidence selection, and citation resolution in ordinary application code. Add reranking or query rewriting only when the evaluation set exposes a problem they can solve."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Continue reading"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Turn retrieval failures into release tests",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/blog/en/llm-evaluation-regression-tests-ci",
+                        "target": "_blank",
+                        "rel": "noreferrer"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Primary sources"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "pgvector: distance operators, filtering, indexes, and multitenancy",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://github.com/pgvector/pgvector",
+                        "target": "_blank",
+                        "rel": "noreferrer"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "PostgreSQL: row security policies and role behavior",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://www.postgresql.org/docs/current/ddl-rowsecurity.html",
+                        "target": "_blank",
+                        "rel": "noreferrer"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "key": "evals",
+    "coverImageUrl": "https://h1lvhovxchgkpuum.public.blob.vercel-storage.com/blog/1792943834871-evals-cover-ad64gRRFYscVfGF2R1vy2fEFQ0a2BT.webp",
+    "featured": false,
+    "tags": [
+      "AI",
+      "evaluation",
+      "testing",
+      "developer-tools",
+      "reliability"
+    ],
+    "translations": [
+      {
+        "locale": "en",
+        "title": "LLM Evaluation as a Release Gate: From Good Demos to Regression Tests",
+        "slug": "llm-evaluation-regression-tests-ci",
+        "excerpt": "Build an evaluation process that catches AI regressions before release: representative datasets, deterministic checks, calibrated reviewers, and explicit quality budgets.",
+        "seoTitle": "LLM Evaluation: Datasets, Regression Tests, and CI Gates",
+        "seoDescription": "Build useful AI regression tests with realistic datasets, deterministic checks, calibrated judges, paired comparisons, and explicit release criteria.",
+        "coverImageAlt": "A glowing sample tile measured against a precision frame on a dark testing bench.",
+        "status": "published",
+        "publishedAt": "2026-10-25T15:58:27.333Z",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "A prompt change can improve the example on your screen and quietly damage ten other tasks. A different model may sound more polished while returning the wrong category, overlooking a permission rule, or calling a tool unnecessarily. The release question is therefore concrete: which behaviors improved, which regressed, and what evidence justifies shipping?"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Evaluation works best when it becomes an ordinary engineering artifact. Inputs, expected behavior, configuration, and results should be reviewable alongside a change. The examples here describe a proposed workflow for a support assistant; their thresholds and test cases are illustrative, not measured results from this portfolio."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Start with the product contract"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Write down what a successful task means before choosing a scoring library. For a support assistant, that may include finding the relevant policy, answering only from accessible material, citing the right revision, and requesting clarification when the account or product is ambiguous. A single rating for helpfulness hides too many different failure modes."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Separate release-blocking constraints from preferences. Returning another tenant's document should fail the case even if the prose is excellent. A slightly awkward sentence might be acceptable. This distinction keeps an average score from compensating for a boundary violation."
+                }
+              ]
+            },
+            {
+              "type": "bulletList",
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Hard checks: valid structure, authorized identifiers, allowed tools, and no unintended writes."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Task checks: correct resolution, necessary evidence, and correct handling of missing information."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Experience checks: readable explanation, useful next step, and a reasonable response budget."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Build a dataset that can disagree with the demo"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Collect representative requests and known failures, with sensitive fields removed or replaced. Preserve the shape of difficult cases: contradictory documents, empty retrieval results, unusual identifiers, multilingual input, and long conversations. Synthetic cases help test boundaries, but a dataset consisting only of tidy synthetic prompts can overstate readiness."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Each case needs an identifier, input, access context, expected constraints, and a short explanation of why it exists. Some tasks have one correct label; others have several acceptable answers. For open-ended work, specify required facts and prohibited behavior instead of matching an entire paragraph word for word."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Version the dataset and reserve a held-out portion. Repeatedly rewriting a prompt against the same visible cases can turn evaluation into another form of overfitting. Keep a history of why cases were added, and distinguish a product requirement change from a model regression."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Use deterministic checks wherever possible"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Do not spend a model call deciding whether JSON parses or a citation identifier exists. Validate those properties in code. A model-based reviewer is more useful for questions such as whether an explanation is supported by a passage, where exact string matching is too brittle."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "The following TypeScript example is intentionally a small application-owned contract. It does not call an evaluation provider. It checks that a proposed answer references only evidence the server actually supplied and that an insufficient-evidence outcome contains no citations. A real system still needs a separate factual-support check."
+                }
+              ]
+            },
+            {
+              "type": "codeBlock",
+              "attrs": {
+                "language": "typescript"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "type Answer = {\n  status: \"answered\" | \"insufficient_evidence\";\n  citations: string[];\n};\n\nexport function checkEvidence(answer: Answer, allowed: Set<string>) {\n  const citationsAllowed = answer.citations.every(id => allowed.has(id));\n  const outcomeConsistent = answer.status === \"answered\"\n    ? answer.citations.length > 0\n    : answer.citations.length === 0;\n  return { citationsAllowed, outcomeConsistent };\n}"
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Calibrate model-based reviewers"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Give reviewers a narrow rubric with examples of success and failure. If the criterion is factual support, supply the evidence and ask for a judgment about support, not writing style. A reviewer that never sees the source cannot reliably distinguish a correct answer from a plausible one."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Have a person label a sample and inspect disagreements. Pin the reviewer configuration and record its version. Treat its score as a measurement with uncertainty, particularly when the candidate and reviewer share similar biases. Run occasional blind comparisons with answer order swapped to look for position effects."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Compare the same cases under controlled conditions"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Run the baseline and candidate against the same dataset revision, evidence snapshot, and tool fixtures. Keep unrelated settings fixed. When a case changes, inspect its trace before deciding whether the prompt, retrieval, tool response, or reviewer caused the difference. Repeating important cases helps reveal unstable behavior that one pass would miss."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Langfuse provides datasets and experiment runs that can organize this comparison. The release policy remains the team's responsibility: a tool can record scores, but it cannot decide which product mistakes are acceptable. Persist the candidate configuration and the baseline reference with the result so someone else can reproduce the decision."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Turn results into a practical CI policy"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep the pull-request suite small enough to run routinely. Execute the full evaluation before a significant model, prompt, retrieval, or tool change. Use test doubles for writes and unstable external services; an evaluation must not send real customer emails or create real purchases."
+                }
+              ]
+            },
+            {
+              "type": "bulletList",
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Block on hard-check failures such as unauthorized evidence or forbidden tool calls."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Review task-quality regressions per category rather than relying only on the overall mean."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Track latency, token usage, and reviewer cost alongside quality."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Require a written exception when a release intentionally changes the product contract."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Offline evaluation should continue into production monitoring. Sample failures, review uncertain cases, and add confirmed issues to the dataset without leaking personal data. The most useful suite grows from real mistakes while retaining enough held-out cases to challenge the next candidate."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "The goal is a release decision someone can defend: this change was tested against these cases, preserved these boundaries, improved these tasks, and accepted these known limitations. That is a stronger foundation than a screenshot of one convincing answer."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Continue reading"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Trace the failures behind your evaluation scores",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/blog/en/open-source-agent-observability-opentelemetry-langfuse",
+                        "target": "_blank",
+                        "rel": "noreferrer"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Primary sources"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Langfuse: datasets and expected outputs",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://langfuse.com/docs/evaluation/experiments/datasets",
+                        "target": "_blank",
+                        "rel": "noreferrer"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Langfuse: running experiments in CI/CD",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://langfuse.com/docs/evaluation/experiments/experiments-ci-cd",
+                        "target": "_blank",
+                        "rel": "noreferrer"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "key": "structured",
+    "coverImageUrl": "https://h1lvhovxchgkpuum.public.blob.vercel-storage.com/blog/1792943851319-structured-cover-tUDmcxyKVurhqj5MShq4KZPooLNApX.webp",
+    "featured": false,
+    "tags": [
+      "AI",
+      "TypeScript",
+      "architecture",
+      "security",
+      "llm"
+    ],
+    "translations": [
+      {
+        "locale": "en",
+        "title": "Structured LLM Outputs: Schemas, Validation, and Safe Application Boundaries",
+        "slug": "structured-llm-outputs-schemas-validation",
+        "excerpt": "Move AI output into application logic safely: small schemas, explicit uncertainty, runtime validation, semantic checks, and server-owned authorization before any action.",
+        "seoTitle": "Structured LLM Outputs: Schemas and Runtime Validation",
+        "seoDescription": "Design structured AI outputs with small schemas, runtime validation, explicit uncertainty, semantic checks, and server-owned permissions before actions.",
+        "coverImageAlt": "Luminous particles entering a transparent mold and emerging as an ordered grid of glass blocks.",
+        "status": "published",
+        "publishedAt": "2026-10-25T15:58:26.558Z",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "When software consumes an AI response, a convincing paragraph is rarely the right interface. The application needs a bounded result it can inspect: a category, extracted fields, evidence references, or a proposed next action. Structured output makes that interface easier to validate, but it does not turn a prediction into an authorized decision."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Imagine a support tool that proposes which team should receive a ticket. A response can satisfy a JSON schema and still select the wrong team. It can also name a real account that the current operator cannot access. These are separate problems, and a robust integration gives each one an explicit check."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Design the smallest useful contract"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Start from the decision the surrounding software needs to make. If the application only needs a route and a reason, avoid asking for a large object full of speculative metadata. Every field adds another thing to interpret, store, and keep consistent. Constrain stable categories with enums and give explanatory text a clear size bound."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Model missing information directly. A nullable field should mean something specific, such as not present in the supplied evidence. If the system needs clarification, represent that outcome explicitly instead of forcing the model to choose a department. A schema that has no room for uncertainty can produce well-formed guesses."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Provider-native structured output can constrain generation to supported schemas. Check the provider's current feature support and schema subset before adopting a complex contract. Keep the application schema versioned and test it with the exact provider configuration you deploy."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Validate at the application boundary"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "TypeScript types disappear at runtime. Casting an unknown response to a type does not check it. Parse the completed response with a runtime schema before using it. Keep transport errors, refusals, truncated generation, invalid structure, and successful results as distinct outcomes; they need different product responses."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "This example uses Zod to validate an application-owned routing proposal after the provider adapter has produced a completed JSON value. The adapter itself must handle HTTP failures and provider-specific stop conditions. The object remains a proposal until the application applies its policy."
+                }
+              ]
+            },
+            {
+              "type": "codeBlock",
+              "attrs": {
+                "language": "typescript"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "import { z } from \"zod\";\n\nconst RoutingProposal = z.object({\n  schemaVersion: z.literal(1),\n  outcome: z.enum([\"route\", \"needs_clarification\"]),\n  department: z.enum([\"billing\", \"technical\", \"sales\"]).nullable(),\n  reason: z.string().min(1).max(400),\n}).strict().superRefine((value, context) => {\n  const hasDepartment = value.department !== null;\n  if ((value.outcome === \"route\") !== hasDepartment) {\n    context.addIssue({\n      code: \"custom\",\n      message: \"Only routing outcomes may select a department.\",\n    });\n  }\n});\n\nexport function parseProposal(value: unknown) {\n  return RoutingProposal.safeParse(value);\n}"
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Separate structure from meaning and authority"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "There are three boundaries. Structural validation asks whether the value follows the contract. Semantic validation asks whether it is consistent with the task and available evidence. Authorization asks whether the authenticated actor is permitted to perform the resulting operation. Passing the first boundary proves nothing about the other two."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "For extraction, semantic checks may include whether a referenced document exists, whether an amount appears in the source, and whether a date is supported. For routing, they may include whether the selected department handles that product. Resolve identifiers against trusted application data instead of trusting model-generated labels."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep tenant identity, actor identity, permission scopes, and protected state on the server. If a model proposes an account identifier, the server must still look it up within the actor's allowed scope. Never accept an isAdmin flag or a permission list from a generated object as evidence of access."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Make failure a normal part of the contract"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Anthropic's structured-output documentation calls out cases such as refusal and output truncation. Design the provider adapter to inspect completion conditions before assuming that the payload is a usable object. A response that stopped halfway through is not a successful result merely because some fields were received."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Bound repair attempts. Retrying the same invalid request indefinitely hides a contract mismatch and increases cost. A small retry budget may be appropriate for a transient failure, while an unsupported schema needs a configuration fix. After the budget is exhausted, surface a useful failure state or send the item for review."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Do not feed unlimited raw validation errors and private data back into a repair prompt. Return only the minimal structural feedback required. Record failure categories and schema versions so you can distinguish a model-quality problem from a broken integration without logging full customer content."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep side effects behind ordinary application policy"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Treat a generated action as an instruction candidate. The application should validate its resource scope, compare it with current state, and require confirmation when the product's policy calls for it. For important writes, use an idempotency key and record the accepted operation so a retry cannot duplicate the effect."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "For example, a ticket-routing proposal could become a preview showing the selected department and explanation. The server commits the reassignment only after verifying that the ticket is still eligible and the operator can modify it. The model never receives the authority to redefine that rule."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Test the contract beyond the happy path"
+                }
+              ]
+            },
+            {
+              "type": "bulletList",
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Missing, unknown, extra, and contradictory fields."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Refusal, timeout, interruption, and provider response changes."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Valid identifiers outside the current tenant or permission scope."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Structurally correct answers unsupported by the source."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Duplicate requests and stale state at the time of a write."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "I would adopt structured output early for any AI result that enters application logic. The benefit comes from making the interface inspectable. The remaining engineering work is still familiar: validate input, verify meaning, enforce permissions, control writes, and expose a recoverable failure path."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Continue reading"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Design bounded agent tools and stopping conditions",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/blog/en/reliable-ai-agents-state-tools-guardrails",
+                        "target": "_blank",
+                        "rel": "noreferrer"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Primary sources"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Anthropic: structured outputs, schema support, and invalid-output cases",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs",
+                        "target": "_blank",
+                        "rel": "noreferrer"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Zod: parsing unknown values and handling validation failures",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://zod.dev/basics",
+                        "target": "_blank",
+                        "rel": "noreferrer"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "key": "streaming",
+    "coverImageUrl": "https://h1lvhovxchgkpuum.public.blob.vercel-storage.com/blog/1792943875008-streaming-cover-NeV6DKXoBRygudGmWGS81WBtNmUWdy.webp",
+    "featured": false,
+    "tags": [
+      "AI",
+      "React",
+      "UX",
+      "architecture",
+      "reliability"
+    ],
+    "translations": [
+      {
+        "locale": "en",
+        "title": "Streaming AI Interfaces: Cancellation, Recovery, and Honest Progress",
+        "slug": "streaming-ai-interfaces-cancellation-recovery",
+        "excerpt": "A streaming response needs more than a typing effect. Design explicit states, useful stop and retry behavior, durable message identity, and accessible progress feedback.",
+        "seoTitle": "Streaming AI Interfaces: Cancellation and Recovery",
+        "seoDescription": "Build streaming AI interfaces with explicit states, cancellation, durable message IDs, safe retries, accessible progress, and recoverable partial answers.",
+        "coverImageAlt": "Warm light ribbons flowing across a dark glass interface in distinct progressive segments.",
+        "status": "published",
+        "publishedAt": "2026-10-25T15:58:25.834Z",
+        "content": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Streaming makes an AI product feel faster because people can start reading before generation finishes. It also reveals new failure modes: a partial answer can look final, a retry can duplicate work, and a stop button can disappear while a server-side operation is still running. The interface needs a clear account of what has happened and what remains uncertain."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Consider an illustrative research assistant that retrieves documents and drafts an answer. Its user does not need a live view of every internal event. They do need to know whether the request was accepted, whether useful work is progressing, and whether the displayed answer completed successfully."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Define states before adding the typing effect"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Separate the request lifecycle from the message content. A useful application model includes idle, submitted, retrieving, streaming, completed, cancelled, and failed states. These are proposed product states; map them to the transport and SDK events available in your implementation rather than assuming the SDK exposes each one directly."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "The AI SDK's chat interface documents submitted, streaming, ready, and error states. Those provide a starting point, while server-owned events can explain additional work such as retrieval. Avoid deriving status from whether the assistant's text happens to be empty: a valid request may spend time searching before any answer tokens arrive."
+                }
+              ]
+            },
+            {
+              "type": "bulletList",
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Submitted: confirm that the request has been accepted and keep a stop action available."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Retrieving: describe the current step only when an actual event supports it."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Streaming: display partial text with a clear in-progress status."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Completed: mark the response as finished and enable final-answer actions."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Cancelled or failed: retain useful partial text and explain its incomplete state."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Give messages and runs stable identities"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Use separate identifiers for the conversation, user message, generation run, and assistant response. A user message may have several generation attempts. If those attempts share only a text value, reconnects and retries become difficult to reconcile. Persist the relationship so the UI can display which answer came from which attempt."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "The following TypeScript type describes an application-level persistence contract, not an AI SDK event format. It deliberately allows a failed or cancelled run to retain partial content. Completing the transport and completing the application task should not be conflated."
+                }
+              ]
+            },
+            {
+              "type": "codeBlock",
+              "attrs": {
+                "language": "typescript"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "type GenerationRun = {\n  id: string;\n  conversationId: string;\n  userMessageId: string;\n  assistantMessageId: string;\n  status: \"submitted\" | \"streaming\" | \"completed\" | \"cancelled\" | \"failed\";\n  partialText: string;\n  lastSequence: number;\n  errorCode: \"timeout\" | \"provider_error\" | \"connection_lost\" | null;\n};"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Sequence numbers become useful when your own event protocol supports replay: the client can ignore duplicate events and request progress after its last acknowledged event. Do not promise resumability unless the server retains the necessary state and the transport actually supports it. Reconnecting to a page is different from resuming a generation."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Make cancellation honest"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Stopping the browser's fetch is only one part of cancellation. Propagate the signal through the request handler and provider adapter where supported. If the request has already enqueued background work, cancellation needs an explicit server-side mechanism. A disconnected client does not prove that every downstream task stopped."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep any partial answer visible and label it as interrupted. The user should be able to copy it or start another attempt without mistaking it for a complete result. If a tool has already committed a write, do not imply that stopping generation undid that operation. Show the recorded outcome of the write separately."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Distinguish retrying from resuming"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Retry starts a new attempt. Resume continues a known attempt from retained state. Give these actions different semantics even if the UI uses simple language. Blindly resending the whole conversation after a connection failure can trigger another tool call or create a second assistant message while the first run still exists."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before starting a replacement attempt, ask the server for the known run's status. If the run completed, load its stored result. If it failed, create a new run linked to the original user message. Protect any tool writes with idempotency and check whether they already happened before retrying them."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "The AI SDK persistence guide demonstrates storing and loading chat messages, but explicitly leaves production concerns such as authorization to the application. Conversation access must be checked on every read and write. A guessed conversation identifier must never grant access to another person's messages."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Expose useful progress without inventing certainty"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Show progress labels tied to observable events: searching documents, reading selected sources, or drafting the answer. Avoid fabricated percentages when there is no measurable amount of remaining work. A plain explanation of the current step is more useful than a progress bar that stalls at the same number on every request."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep controls stable as content grows. A stop button should remain easy to reach; a retry button should appear where the failure occurred. Auto-scroll only while the reader is near the latest message. Once they scroll up to inspect a source, preserve their position and offer a jump-to-latest control."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Treat accessibility and performance as part of correctness"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Do not announce every token through a live region. Announce meaningful status changes and make the completed answer easy to navigate with headings and links. Preserve keyboard focus when a message updates, label icon controls, and avoid a blinking cursor animation for users who prefer reduced motion."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Batch rendering when needed so long streams do not force expensive rich-text parsing on every tiny chunk. Keep incomplete code fences and links from breaking the layout. Validate the final content before enabling actions that assume a complete structured result. Measure time to first useful content as well as total completion time."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Verify the uncomfortable paths"
+                }
+              ]
+            },
+            {
+              "type": "bulletList",
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Disconnect before the first token and halfway through a response."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Stop during retrieval, generation, and a separately recorded tool operation."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Reload while a run is active and inspect whether the stored state agrees with the UI."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Retry after a timeout without duplicating an accepted write."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Read a long answer on a narrow screen with keyboard navigation and reduced motion."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "A good streaming interface makes unfinished work understandable. Readers can tell what is provisional, stop work deliberately, recover from interruptions, and trust the final state. The visual effect matters, but the real product is the state model behind it."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Continue reading"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep structured results behind a validation boundary",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/blog/en/structured-llm-outputs-schemas-validation",
+                        "target": "_blank",
+                        "rel": "noreferrer"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 2
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Primary sources"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "AI SDK UI: chat status, cancellation, regeneration, and rendering updates",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://ai-sdk.dev/docs/ai-sdk-ui/chatbot",
+                        "target": "_blank",
+                        "rel": "noreferrer"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "AI SDK UI: chat message persistence and application responsibilities",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-message-persistence",
+                        "target": "_blank",
+                        "rel": "noreferrer"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+]
