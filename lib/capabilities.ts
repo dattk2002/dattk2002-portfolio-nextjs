@@ -37,6 +37,8 @@ export const deliveryPipeline = [
 ] as const;
 
 export const technologyMarquee = [
+  "Three.js",
+  "Fastify",
   "Python",
   "FastAPI",
   "SQLAlchemy",
