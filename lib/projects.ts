@@ -1,5 +1,6 @@
 export type ProjectSlug =
   | "bravodemy"
+  | "oathfront"
   | "panda"
   | "tapmood"
   | "habistride"
@@ -71,6 +72,49 @@ export const projects: readonly Project[] = [
     liveUrls: [{ label: "Bravodemy", href: "https://bravodemy.com" }],
     repositoryUrls: [{ label: "Product repository", href: "https://github.com/tkhieu/AIMicroLearningPlatform" }],
     featured: true,
+  },
+  {
+    slug: "oathfront",
+    name: "OathFront",
+    period: "Oct 2026 – Present",
+    context: "Independent product",
+    summary:
+      "A browser-based PvE tactical card game with five-lane battles, deck building, and interactive Three.js battlefields. Currently in active development.",
+    ownership:
+      "Solo creator responsible for the entire product: game design, interface and artwork pipeline, Three.js rendering, deterministic rules and bots, backend APIs, persistence, testing, and deployment.",
+    technologies: [
+      "Three.js", "Next.js", "React", "TypeScript", "GSAP", "Fastify",
+      "PostgreSQL", "Drizzle ORM", "Neon", "Vercel", "Docker", "Vitest", "Playwright",
+    ],
+    outcomes: [
+      "Built four Three.js battlefields with camera-projected controls, lighting, textured cards, and an authored Moonroot courtyard with high/low-detail GLB assets.",
+      "Implemented direct card dragging onto legal targets alongside tap and keyboard controls, reduced motion, and a playable fallback when WebGL is unavailable.",
+      "Created a deterministic TypeScript rules engine and view-limited bots, with server-validated actions, revision checks, command receipts, and resumable PostgreSQL match state.",
+      "Connected hero selection, deck building, tutorials, and skirmishes to a versioned catalog of 20 playable heroes and 72 cards, including 12 earnable event units.",
+    ],
+    challenge:
+      "Make a dimensional card battlefield readable and interactive across desktop and phone screens while keeping rules, hidden information, and recoverable match state authoritative on the server.",
+    approach:
+      "Separate the pure rules engine and bot from the Next.js presentation layer. A shared Three.js camera projection aligns rendered cards with semantic controls and drag targets, while GSAP presents visible game events. Fastify validates commands and persists checkpoints and receipts in PostgreSQL, allowing the client to recover without replaying an uncertain action.",
+    architecture: [
+      "Next.js and React client with semantic match controls and a lazy-loaded Three.js renderer",
+      "Four 3D arenas, GLB asset loading, quality presets, and WebGL recovery with a playable fallback",
+      "GSAP event presentation with pause, skip, cleanup, and reduced-motion support",
+      "Pure TypeScript rules engine, deterministic bots, and versioned content packages",
+      "Fastify API with server-side legality checks, revision control, and idempotent command receipts",
+      "Neon PostgreSQL persistence with Drizzle, durable match checkpoints, and action journals",
+      "Vercel-hosted web/API profile and a separate Docker Compose self-hosting profile",
+      "Vitest engine and integration suites plus Playwright interaction and responsive checks",
+    ],
+    gallery: [
+      { src: "/images/projects/oathfront-main.webp", alt: "OathFront homepage with the Five Lanes, One Oath headline and illustrated hero roster", width: 1440, height: 900 },
+      { src: "/images/projects/oathfront-battlefield.webp", alt: "OathFront Three.js Moonroot courtyard battlefield with five lanes, hero HUDs, and a fanned card hand", width: 1440, height: 900 },
+      { src: "/images/projects/oathfront-mobile.webp", alt: "OathFront portrait mobile battle interface with five lanes, hand cards, and accessible match controls", width: 375, height: 812 },
+    ],
+    accent: "violet",
+    liveUrls: [{ label: "OathFront", href: "https://oathfront.vercel.app/" }],
+    repositoryUrls: [{ label: "Game repository", href: "https://github.com/dattk2002/oath-front-tcg" }],
+    featured: false,
   },
   {
     slug: "panda",
