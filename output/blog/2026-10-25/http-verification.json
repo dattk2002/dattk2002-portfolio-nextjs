@@ -1,0 +1,59 @@
+[
+  {
+    "slug": "structured-llm-outputs-schemas-validation",
+    "status": 200,
+    "body": true,
+    "cover": true,
+    "canonical": "https://dattk.dev/blog/en/structured-llm-outputs-schemas-validation",
+    "canonicalPathCorrect": true
+  },
+  {
+    "slug": "llm-evaluation-regression-tests-ci",
+    "status": 200,
+    "body": true,
+    "cover": true,
+    "canonical": "https://dattk.dev/blog/en/llm-evaluation-regression-tests-ci",
+    "canonicalPathCorrect": true
+  },
+  {
+    "slug": "rag-postgresql-retrieval-permissions-citations",
+    "status": 200,
+    "body": true,
+    "cover": true,
+    "canonical": "https://dattk.dev/blog/en/rag-postgresql-retrieval-permissions-citations",
+    "canonicalPathCorrect": true
+  },
+  {
+    "slug": "streaming-ai-interfaces-cancellation-recovery",
+    "status": 200,
+    "body": true,
+    "cover": true,
+    "canonical": "https://dattk.dev/blog/en/streaming-ai-interfaces-cancellation-recovery",
+    "canonicalPathCorrect": true
+  },
+  {
+    "path": "/blog",
+    "status": 200,
+    "newArticlesFound": 4,
+    "cache": "MISS"
+  },
+  {
+    "path": "/blog?locale=en",
+    "status": 200,
+    "newArticlesFound": 4,
+    "cache": "MISS"
+  },
+  {
+    "path": "/blog/rss.xml",
+    "status": 200,
+    "newArticlesFound": 4,
+    "cache": "HIT"
+  },
+  {
+    "path": "/sitemap.xml",
+    "status": 200,
+    "newArticlesFound": 0,
+    "cache": "HIT",
+    "note": "Production sitemap still serves a cached response without the four new routes."
+  }
+]

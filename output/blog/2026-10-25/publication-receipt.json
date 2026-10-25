@@ -1,0 +1,31 @@
+{
+  "publishedAt": "2026-10-25T15:58:32.048Z",
+  "publishedCount": 10,
+  "existingUnchanged": 8,
+  "inserted": [
+    {
+      "id": "eef87b28-704b-4fb1-b95a-cf3768c0c576",
+      "key": "rag",
+      "title": "RAG with PostgreSQL: Retrieval, Permissions, and Answers You Can Verify",
+      "url": "https://www.dattk.dev/blog/en/rag-postgresql-retrieval-permissions-citations"
+    },
+    {
+      "id": "473c369c-9a63-4d84-87b4-89640e10f543",
+      "key": "evals",
+      "title": "LLM Evaluation as a Release Gate: From Good Demos to Regression Tests",
+      "url": "https://www.dattk.dev/blog/en/llm-evaluation-regression-tests-ci"
+    },
+    {
+      "id": "8855606d-3d94-47e2-8347-752d18036ac0",
+      "key": "structured",
+      "title": "Structured LLM Outputs: Schemas, Validation, and Safe Application Boundaries",
+      "url": "https://www.dattk.dev/blog/en/structured-llm-outputs-schemas-validation"
+    },
+    {
+      "id": "90d2d2fc-592b-43e0-ad9a-231fb6e4c8fb",
+      "key": "streaming",
+      "title": "Streaming AI Interfaces: Cancellation, Recovery, and Honest Progress",
+      "url": "https://www.dattk.dev/blog/en/streaming-ai-interfaces-cancellation-recovery"
+    }
+  ]
+}

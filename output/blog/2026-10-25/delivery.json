@@ -1,0 +1,43 @@
+{
+  "imageTool": "Built-in image_gen",
+  "articlesFile": "output/blog/2026-10-25/articles.json",
+  "publicationReceipt": "output/blog/2026-10-25/publication-receipt.json",
+  "covers": [
+    {
+      "key": "rag",
+      "savedPath": "public/images/blog/rag-cover.webp",
+      "publicUrl": "https://h1lvhovxchgkpuum.public.blob.vercel-storage.com/blog/1792943674296-rag-cover-HdxntBYlc95Go1ja757L8E9eVk955p.webp",
+      "prompt": "Use case: stylized-concept. Asset type: professional engineering blog cover, landscape 16:9. A translucent architectural archive of glass document slabs feeding into a luminous cylindrical database, with only a few selected amber-lit pages passing through a narrow brass gate. Visual metaphor for permission-aware retrieval augmented generation. Premium editorial 3D still life, dark charcoal #090b0c background, subtly illuminated steel blue edges and lime #c7f36b accents with restrained amber highlights, realistic glass and brushed metal, carefully composed negative space, quiet cinematic studio lighting, excellent thumbnail legibility, sophisticated architectural photography feeling. No text, no letters, no numbers, no logos, no watermarks. Generate one image only."
+    },
+    {
+      "key": "evals",
+      "savedPath": "public/images/blog/evals-cover.webp",
+      "publicUrl": "https://h1lvhovxchgkpuum.public.blob.vercel-storage.com/blog/1792943834871-evals-cover-ad64gRRFYscVfGF2R1vy2fEFQ0a2BT.webp",
+      "prompt": "Use case: stylized-concept. Asset type: professional engineering blog cover, landscape 16:9. An elegant precision testing bench: rows of translucent sample tiles on a matte obsidian table, one warm amber tile held against a calibrated measuring frame. Abstract visual metaphor for AI evaluation and regression testing. Premium editorial 3D still life, dark charcoal #090b0c background, subtly illuminated steel blue edges and lime #c7f36b accents with restrained amber highlights, realistic glass and brushed metal, carefully composed negative space, quiet cinematic studio lighting, excellent thumbnail legibility, sophisticated architectural photography feeling. No text, no letters, no numbers, no logos, no watermarks. Generate one image only."
+    },
+    {
+      "key": "structured",
+      "savedPath": "public/images/blog/structured-cover.webp",
+      "publicUrl": "https://h1lvhovxchgkpuum.public.blob.vercel-storage.com/blog/1792943851319-structured-cover-tUDmcxyKVurhqj5MShq4KZPooLNApX.webp",
+      "prompt": "Use case: stylized-concept. Asset type: professional engineering blog cover, landscape 16:9. A flowing cloud of tiny luminous particles entering a precise transparent geometric mold and emerging as a small perfectly ordered grid of glass blocks. Abstract visual metaphor for structured AI outputs and schema validation. Premium editorial 3D still life, dark charcoal #090b0c background, subtly illuminated steel blue edges and lime #c7f36b accents with restrained amber highlights, realistic glass and brushed metal, carefully composed negative space, quiet cinematic studio lighting, excellent thumbnail legibility, sophisticated architectural photography feeling. No text, no letters, no numbers, no logos, no watermarks. Generate one image only."
+    },
+    {
+      "key": "streaming",
+      "savedPath": "public/images/blog/streaming-cover.webp",
+      "publicUrl": "https://h1lvhovxchgkpuum.public.blob.vercel-storage.com/blog/1792943875008-streaming-cover-NeV6DKXoBRygudGmWGS81WBtNmUWdy.webp",
+      "prompt": "Use case: stylized-concept. Asset type: professional engineering blog cover, landscape 16:9. Fine warm amber light ribbons flowing across a sculptural dark glass interface panel, with three distinct progressive segments and a single crisp paused segment. Abstract visual metaphor for streaming AI interfaces, progress and recovery. Premium editorial 3D still life, dark charcoal #090b0c background, subtly illuminated steel blue edges and lime #c7f36b accents with restrained amber highlights, realistic glass and brushed metal, carefully composed negative space, quiet cinematic studio lighting, excellent thumbnail legibility, sophisticated architectural photography feeling. No text, no letters, no numbers, no logos, no watermarks. Generate one image only."
+    }
+  ],
+  "browserChecks": {
+    "articleCount": 10,
+    "widthsChecked": [
+      390,
+      768,
+      1680
+    ],
+    "horizontalOverflow": false,
+    "consoleErrors": [],
+    "articleRoutesOpened": 4
+  },
+  "applicationCodeChanged": false
+}
