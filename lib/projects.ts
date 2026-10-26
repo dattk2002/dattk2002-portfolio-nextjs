@@ -66,7 +66,7 @@ export const projects: readonly Project[] = [
       "GitHub Actions CI with Pytest, Vitest, Playwright, accessibility, and responsive checks",
     ],
     gallery: [
-      { src: "/images/projects/bravodemy-main.webp", alt: "Bravodemy AI microlearning landing page", width: 1440, height: 900 },
+      { src: "/images/projects/bravodemy-main.webp", alt: "Bravodemy AI microlearning homepage with globe illustration and a guided lesson preview", width: 1665, height: 903 },
     ],
     accent: "blue",
     liveUrls: [{ label: "Bravodemy", href: "https://bravodemy.com" }],
