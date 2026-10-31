@@ -21,13 +21,13 @@ async function readPdf(response: Response) {
   return pdf;
 }
 
-function downloadResponse(pdf: ArrayBuffer, source: "google-docs" | "static-fallback") {
+function pdfResponse(pdf: ArrayBuffer, source: "google-docs" | "static-fallback", preview: boolean) {
   return new Response(pdf, {
     headers: {
       "Cache-Control": source === "google-docs"
         ? "public, s-maxage=300, stale-while-revalidate=86400"
         : "public, s-maxage=60",
-      "Content-Disposition": `attachment; filename="${DOWNLOAD_FILENAME}"`,
+      "Content-Disposition": `${preview ? "inline" : "attachment"}; filename="${DOWNLOAD_FILENAME}"`,
       "Content-Length": String(pdf.byteLength),
       "Content-Type": "application/pdf",
       "X-CV-Source": source,
@@ -36,18 +36,20 @@ function downloadResponse(pdf: ArrayBuffer, source: "google-docs" | "static-fall
 }
 
 export async function GET(request: Request) {
+  const preview = new URL(request.url).searchParams.get("preview") === "true";
+
   try {
     const response = await fetch(GOOGLE_DOC_EXPORT_URL, {
       next: { revalidate: 300 },
       signal: AbortSignal.timeout(8_000),
     });
 
-    return downloadResponse(await readPdf(response), "google-docs");
+    return pdfResponse(await readPdf(response), "google-docs", preview);
   } catch {
     try {
       const fallbackUrl = new URL(STATIC_FALLBACK_PATH, request.url);
       const response = await fetch(fallbackUrl, { cache: "no-store" });
-      return downloadResponse(await readPdf(response), "static-fallback");
+      return pdfResponse(await readPdf(response), "static-fallback", preview);
     } catch {
       return new Response("CV is temporarily unavailable.", {
         status: 503,
