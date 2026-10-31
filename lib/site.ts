@@ -41,6 +41,7 @@ export const siteConfig = {
   linkedin: "https://www.linkedin.com/in/kimdat0705/",
   portraitPath: "/images/tran-kim-dat-portrait-2026.webp",
   cvPath: "/api/cv",
+  cvPreviewPath: "/api/cv?preview=true",
   cvDownloadName: "CV-Tran Kim Dat-Full-stack Engineer.pdf",
   url: resolveSiteUrl(),
 } as const;
