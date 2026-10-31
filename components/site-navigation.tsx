@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import * as Dialog from "@radix-ui/react-dialog";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Download, Menu, X } from "lucide-react";
+import { Download, Eye, Menu, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { BrandMark } from "@/components/brand-mark";
@@ -59,7 +59,12 @@ export function SiteNavigation() {
           ))}
         </nav>
 
-        <div className="hidden lg:block">
+        <div className="hidden items-center gap-2 lg:flex">
+          <Button size="sm" variant="ghost" asChild>
+            <a href={siteConfig.cvPreviewPath} target="_blank" rel="noreferrer">
+              Preview CV <Eye aria-hidden="true" /><span className="sr-only"> (opens in a new tab)</span>
+            </a>
+          </Button>
           <Button size="sm" variant="outline" asChild>
             <a href={siteConfig.cvPath} download={siteConfig.cvDownloadName}>
               Download CV <Download aria-hidden="true" />
@@ -86,7 +91,7 @@ export function SiteNavigation() {
             </Dialog.Overlay>
             <Dialog.Content asChild>
               <motion.div
-                className="fixed inset-0 z-[60] flex flex-col bg-background px-5 py-5 outline-none"
+                className="fixed inset-0 z-[60] flex flex-col overflow-y-auto bg-background px-5 py-5 outline-none"
                 initial={reduceMotion ? { opacity: 1 } : { opacity: 0, clipPath: "inset(0 0 100% 0)" }}
                 animate={{ opacity: 1, clipPath: "inset(0 0 0% 0)" }}
                 exit={reduceMotion ? { opacity: 0 } : { opacity: 0, clipPath: "inset(0 0 100% 0)" }}
@@ -112,6 +117,9 @@ export function SiteNavigation() {
                     </motion.div>
                   ))}
                 </nav>
+                <Button size="lg" variant="outline" className="mb-3" asChild>
+                  <a href={siteConfig.cvPreviewPath} target="_blank" rel="noreferrer">Preview CV <Eye aria-hidden="true" /><span className="sr-only"> (opens in a new tab)</span></a>
+                </Button>
                 <Button size="lg" asChild>
                   <a href={siteConfig.cvPath} download={siteConfig.cvDownloadName}>Download CV <Download aria-hidden="true" /></a>
                 </Button>

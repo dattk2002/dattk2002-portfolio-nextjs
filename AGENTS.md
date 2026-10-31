@@ -78,7 +78,7 @@ The homepage currently represents nine milestones and twelve total projects (ele
 - `/blog/rss.xml`: RSS feed for published article translations.
 - `/admin` redirects to `/admin/sign-in`; `/admin/sign-in` opens GitHub OAuth in a new tab, and `/admin/blog/**` is the protected blog workspace. Authorization is restricted exclusively to the configured immutable GitHub account ID.
 - `/api/auth/[...path]`: Neon Auth handler. `/api/blog/upload` issues authenticated client-upload tokens for Vercel Blob images.
-- `/api/cv`: attempts a Google Docs PDF export with an 8-second timeout and size/signature validation, then falls back to `public/documents/CV-Tran Kim Dat-Full-stack Engineer.pdf`; returns 503 if both fail.
+- `/api/cv`: downloads the CV; `?preview=true` serves the same PDF inline for browser reading in a new tab. Both attempt a Google Docs PDF export with an 8-second timeout, 5-minute revalidation, and size/signature validation, then fall back to `public/documents/CV-Tran Kim Dat-Full-stack Engineer.pdf`; returns 503 if both fail. The bundled fallback must be updated manually.
 - `/api/github-stats`: fetches contribution history, calculates total/current/longest streaks in the Asia/Bangkok time zone, caches success for one hour, and degrades to a 503 JSON response.
 - `app/actions/contact.ts`: contact Server Action with Zod validation, a honeypot, header-injection sanitization, optional Upstash rate limiting, and a Resend batch containing the owner notification plus visitor confirmation.
 - `/opengraph-image` and `/projects/[slug]/opengraph-image`: generated 1200×630 social images. Project images are statically generated from canonical project slugs alongside the case studies.

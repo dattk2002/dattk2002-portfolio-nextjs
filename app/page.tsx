@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ArrowDownRight, ArrowUpRight, Download, Mail, Phone } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, Download, Eye, Mail, Phone } from "lucide-react";
 
 import { ContactForm } from "@/components/contact-form";
 import { ExperienceTimeline } from "@/components/experience-timeline";
@@ -77,9 +77,10 @@ export default function HomePage() {
                 {siteConfig.summary}
               </p>
             </MotionReveal>
-            <MotionReveal delay={0.22} className="mt-8 flex flex-col gap-3 sm:flex-row md:mt-9">
+            <MotionReveal delay={0.22} className="mt-8 flex flex-col flex-wrap gap-3 sm:flex-row md:mt-9">
               <Button size="lg" asChild><SectionLink href="#work">View selected work <ArrowDownRight aria-hidden="true" /></SectionLink></Button>
               <Button size="lg" variant="outline" asChild><a href={siteConfig.cvPath} download={siteConfig.cvDownloadName}>Download CV <Download aria-hidden="true" /></a></Button>
+              <Button size="lg" variant="outline" asChild><a href={siteConfig.cvPreviewPath} target="_blank" rel="noreferrer">Preview CV <Eye aria-hidden="true" /><span className="sr-only"> (opens in a new tab)</span></a></Button>
             </MotionReveal>
             <p className="mt-7 font-mono text-[9px] uppercase tracking-[0.15em] text-faint">Open to full-stack opportunities · Remote, Da Nang, or Ho Chi Minh City</p>
           </div>
@@ -191,6 +192,7 @@ export default function HomePage() {
               <a href={siteConfig.linkedin} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center justify-between border-b border-black/25">LinkedIn <ArrowUpRight className="size-4" aria-hidden="true" /></a>
               <a href={siteConfig.github} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center justify-between border-b border-black/25">GitHub <ArrowUpRight className="size-4" aria-hidden="true" /></a>
               <a href={siteConfig.cvPath} download={siteConfig.cvDownloadName} className="inline-flex min-h-11 items-center justify-between border-b border-black/25">Download CV <Download className="size-4" aria-hidden="true" /></a>
+              <a href={siteConfig.cvPreviewPath} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center justify-between border-b border-black/25">Preview CV <Eye className="size-4" aria-hidden="true" /><span className="sr-only"> (opens in a new tab)</span></a>
             </div>
           </div>
           <div className="md:col-span-1 lg:col-span-7"><ContactForm /></div>
