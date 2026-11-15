@@ -5,6 +5,7 @@ import { and, asc, desc, eq, inArray, lte } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 
 import type { BlogLocale } from "@/lib/blog/types";
+import { presentBlogPost } from "@/lib/blog/presentation";
 import { db } from "@/lib/db";
 import {
   blogPosts,
@@ -85,7 +86,7 @@ function restorePublishedAt(post: PublishedBlogPost): PublishedBlogPost {
 
 export async function getPublishedBlogPosts(locale?: BlogLocale) {
   const posts = await (locale ? getPublishedPostsByLocaleCached[locale]() : getAllPublishedPostsCached());
-  return posts.map(restorePublishedAt);
+  return posts.map((post) => presentBlogPost(restorePublishedAt(post)));
 }
 
 export const getPublishedBlogPost = cache(async (locale: BlogLocale, slug: string) => {
@@ -116,12 +117,12 @@ export const getPublishedBlogPost = cache(async (locale: BlogLocale, slug: strin
       .where(and(publicTranslationCondition(), eq(blogPostTranslations.postId, row.post.id))),
   ]);
 
-  return {
+  return presentBlogPost({
     ...row.post,
     ...row.translation,
     tags: tags.get(row.post.id) ?? [],
     alternates: alternateRows,
-  };
+  });
 });
 
 export async function getAdminBlogPosts() {

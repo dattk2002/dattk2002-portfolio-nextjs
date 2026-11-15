@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   description: "Practical notes on building, testing, and shipping full-stack products.",
   alternates: { canonical: "/blog", types: { "application/rss+xml": "/blog/rss.xml" } },
   openGraph: {
-    title: "Blog — Tran Kim Dat",
+    title: "Blog - Tran Kim Dat",
     description: "Practical notes on building, testing, and shipping full-stack products.",
     url: "/blog",
   },

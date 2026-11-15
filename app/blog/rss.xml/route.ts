@@ -17,7 +17,7 @@ export async function GET() {
     const url = new URL(`/blog/${post.locale}/${post.slug}`, siteConfig.url).toString();
     return `<item><title>${escapeXml(post.title)}</title><link>${escapeXml(url)}</link><guid isPermaLink="true">${escapeXml(url)}</guid><description>${escapeXml(post.excerpt)}</description><language>${post.locale}</language><pubDate>${post.publishedAt?.toUTCString() ?? new Date().toUTCString()}</pubDate></item>`;
   }).join("");
-  const xml = `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Tran Kim Dat — Blog</title><link>${escapeXml(new URL("/blog", siteConfig.url).toString())}</link><description>Practical notes on building, testing, and shipping full-stack products.</description><language>en</language><lastBuildDate>${new Date().toUTCString()}</lastBuildDate>${items}</channel></rss>`;
+  const xml = `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Tran Kim Dat - Blog</title><link>${escapeXml(new URL("/blog", siteConfig.url).toString())}</link><description>Practical notes on building, testing, and shipping full-stack products.</description><language>en</language><lastBuildDate>${new Date().toUTCString()}</lastBuildDate>${items}</channel></rss>`;
 
   return new Response(xml, {
     headers: {
