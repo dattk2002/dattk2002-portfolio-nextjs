@@ -52,7 +52,7 @@ async function isRateLimited(identity: string) {
 
 export async function sendContactMessage(_previousState: ContactState, formData: FormData): Promise<ContactState> {
   const honeypot = String(formData.get("company") ?? "");
-  if (honeypot) return { status: "success", message: "Thanks — your message has been sent." };
+  if (honeypot) return { status: "success", message: "Thanks - your message has been sent." };
 
   const parsed = contactSchema.safeParse({
     name: formData.get("name"),
@@ -118,5 +118,5 @@ export async function sendContactMessage(_previousState: ContactState, formData:
     return { status: "error", message: "The message could not be sent. Please try again or email me directly." };
   }
 
-  return { status: "success", message: "Thanks — your message has been sent, and a confirmation is on its way to your inbox." };
+  return { status: "success", message: "Thanks - your message has been sent, and a confirmation is on its way to your inbox." };
 }

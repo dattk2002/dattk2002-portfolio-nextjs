@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
     description: project.summary,
     alternates: { canonical: `/projects/${project.slug}` },
     openGraph: {
-      title: `${project.name} — ${siteConfig.name}`,
+      title: `${project.name} - ${siteConfig.name}`,
       description: project.summary,
       url: `/projects/${project.slug}`,
       type: "article",
