@@ -1,5 +1,7 @@
 export type ProjectSlug =
   | "bravodemy"
+  | "huntingalice"
+  | "mystical-orb"
   | "oathfront"
   | "panda"
   | "tapmood"
@@ -69,6 +71,102 @@ export const projects: readonly Project[] = [
     liveUrls: [{ label: "Bravodemy", href: "https://bravodemy.com" }],
     repositoryUrls: [{ label: "Product repository", href: "https://github.com/tkhieu/AIMicroLearningPlatform" }],
     featured: true,
+  },
+  {
+    slug: "huntingalice",
+    name: "HuntingAlice",
+    period: "2026",
+    context: "Freelance engagement",
+    summary: "An AI-powered B2B prospecting platform for company research, campaign setup, and evidence-backed prospect review.",
+    ownership: "Developed frontend and backend workflows for onboarding, company and competitor research, campaign setup, and prospect review as a freelance full-stack engineer.",
+    technologies: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "NestJS",
+      "PostgreSQL",
+      "Inngest",
+      "REST API",
+      "WebSocket",
+      "Validated contracts"
+    ],
+    outcomes: [
+      "Built onboarding, company/competitor research, campaign setup, and prospect-review interfaces in Next.js, React, and TypeScript.",
+      "Integrated REST APIs and WebSocket updates through shared, validated contracts to show research progress and reusable results.",
+      "Implemented idempotent campaign saves in NestJS/PostgreSQL and integrated Inngest background workflows for research and discovery.",
+      "Kept contact data out of durable workflow outputs and applied suppression checks to lead results and events."
+    ],
+    challenge: "Make long-running company research and campaign setup understandable while avoiding duplicate saves and keeping contact data out of durable workflow outputs.",
+    approach: "Connected product interfaces to shared validated API contracts and WebSocket progress updates. Idempotent campaign persistence supports repeated save requests, Inngest coordinates research/discovery work, and suppression checks apply to lead results and events.",
+    architecture: [
+      "Next.js/React/TypeScript onboarding, research, campaign, and prospect-review interfaces",
+      "REST APIs and WebSocket progress updates with shared validated contracts",
+      "NestJS/PostgreSQL idempotent campaign persistence",
+      "Inngest background workflows for research and discovery",
+      "Contact-data boundaries in durable outputs and suppression checks on results/events"
+    ],
+    gallery: [
+      {
+        src: "/images/projects/huntingalice-main.webp",
+        alt: "HuntingAlice public sign-in page for the B2B research and prospecting workspace",
+        width: 1440,
+        height: 900
+      }
+    ],
+    accent: "blue",
+    liveUrls: [
+      {
+        label: "HuntingAlice",
+        href: "https://beta.huntingalice.com"
+      }
+    ],
+    featured: false
+  },
+  {
+    slug: "mystical-orb",
+    name: "Mystical Orb",
+    period: "2026",
+    context: "Freelance engagement",
+    summary: "A bilingual Tarot reading experience with question entry, card draws, results, and optional shared readings.",
+    ownership: "Built the Next.js/React/TypeScript frontend for reading journeys, session continuity, marketing pages, shared readings, language switching, and consent controls.",
+    technologies: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Vietnamese/English",
+      "Web Share API",
+      "Clipboard API"
+    ],
+    outcomes: [
+      "Built question-entry, card-draw, and result interfaces with session continuity across sign-in and refresh.",
+      "Developed marketing and shared-reading pages with native sharing, clipboard fallback, and optional question disclosure.",
+      "Implemented Vietnamese/English switching and consent controls for analytics and marketing tracking."
+    ],
+    challenge: "Keep a reading journey continuous across authentication and refresh while giving users control over language, tracking consent, and disclosure when sharing.",
+    approach: "Built the reading interfaces around continuity between question entry, card draw, and results. Shared-reading pages provide native or clipboard sharing with optional question disclosure, while bilingual controls and consent choices remain part of the frontend experience.",
+    architecture: [
+      "Next.js/React and TypeScript frontend for reading and marketing pages",
+      "Session continuity across sign-in and refresh",
+      "Shared-reading pages with native sharing and clipboard fallback",
+      "Optional question disclosure in shared readings",
+      "Vietnamese/English switching and analytics/marketing consent controls"
+    ],
+    gallery: [
+      {
+        src: "/images/projects/mystical-orb-main.webp",
+        alt: "Mystical Orb public homepage introducing its Tarot reading experience",
+        width: 1440,
+        height: 900
+      }
+    ],
+    accent: "violet",
+    liveUrls: [
+      {
+        label: "Mystical Orb",
+        href: "https://mysticalorb.com"
+      }
+    ],
+    featured: false
   },
   {
     slug: "oathfront",
