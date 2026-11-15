@@ -42,6 +42,6 @@ export const siteConfig = {
   portraitPath: "/images/tran-kim-dat-portrait-2026.webp",
   cvPath: "/api/cv",
   cvPreviewPath: "/api/cv?preview=true",
-  cvDownloadName: "CV-Tran Kim Dat-Full-stack Engineer.pdf",
+  cvDownloadName: "CV - Tran Kim Dat - Software Engineer.pdf",
   url: resolveSiteUrl(),
 } as const;
