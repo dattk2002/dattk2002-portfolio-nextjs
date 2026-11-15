@@ -4,6 +4,7 @@ import { ArrowDownRight, ArrowUpRight, Download, Eye, Mail, Phone } from "lucide
 import { ContactForm } from "@/components/contact-form";
 import { ExperienceTimeline } from "@/components/experience-timeline";
 import { GithubStats } from "@/components/github-stats";
+import { HeroDeveloper } from "@/components/hero-developer";
 import { MotionReveal } from "@/components/motion-reveal";
 import { ProjectShowcase } from "@/components/project-showcase";
 import { SectionLink } from "@/components/section-link";
@@ -22,6 +23,10 @@ const certifications = [
   { title: "Academic English: Writing Specialization", meta: "Coursera · Feb 8, 2023" },
   { title: "User Experience Research and Design", meta: "Coursera · Nov 20, 2023" },
 ] as const;
+
+function HeroCodeMark({ closing = false }: { closing?: boolean }) {
+  return <span aria-hidden="true" className={`inline-block align-baseline text-[1em] text-accent ${closing ? "ml-[0.08em]" : "mr-[0.08em]"}`}>{closing ? "</>" : "<>"}</span>;
+}
 
 function PositioningSection({ className = "" }: { className?: string }) {
   return (
@@ -58,17 +63,14 @@ export default function HomePage() {
             </MotionReveal>
             <MotionReveal delay={0.08}>
               <h1 className="mt-7 max-w-6xl font-display font-medium tracking-[-0.07em] text-balance md:mt-8">
-                <span className="block text-[clamp(2.35rem,10.5vw,3rem)] leading-[0.9] uppercase md:hidden">I build digital<br />products from<br />interface to<br />infrastructure.</span>
+                <span className="block text-[clamp(1.75rem,8.5vw,3rem)] leading-[0.9] uppercase md:hidden"><HeroCodeMark />I build digital<br />products from<br />interface to<br /><span className="whitespace-nowrap">infrastructure.<HeroCodeMark closing /></span></span>
                 <span className="hidden text-[clamp(2.35rem,4.4vw,2.8rem)] leading-[0.88] uppercase md:block lg:hidden">
-                  <span className="block">I build digital</span>
+                  <span className="block"><HeroCodeMark />I build digital</span>
                   <span className="block">products from interface</span>
-                  <span className="block">to infrastructure.</span>
+                  <span className="block">to infrastructure.<HeroCodeMark closing /></span>
                 </span>
                 <span className="hidden text-[clamp(3.4rem,5.3vw,5.25rem)] leading-[0.88] uppercase lg:block">
-                  I build digital products
-                  <span className="mx-[0.12em] inline-block h-[0.52em] w-[0.95em] overflow-hidden rounded-full align-[0.04em] ring-1 ring-white/15">
-                    <Image src={siteConfig.portraitPath} alt="" width={160} height={88} quality={90} loading="eager" className="h-full w-full object-cover object-[center_54%]" />
-                  </span><br />from interface to infrastructure.
+                  <HeroCodeMark />I build digital products<HeroDeveloper /><br />from interface to infrastructure.<HeroCodeMark closing />
                 </span>
               </h1>
             </MotionReveal>
