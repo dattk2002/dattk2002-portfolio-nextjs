@@ -1,8 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "regions": [
-    "sin1"
-  ],
+  "regions": ["sin1"],
+  "installCommand": "corepack yarn install --immutable",
+  "buildCommand": "corepack yarn build",
   "crons": [
     {
       "path": "/api/cron/github-stats",
