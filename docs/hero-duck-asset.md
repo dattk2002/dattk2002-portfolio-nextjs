@@ -1,0 +1,11 @@
+# Hero duck asset
+
+Generated with the built-in `image_gen` tool, then resized to 512 × 512 transparent WebP using Sharp. Final asset: `public/images/hero/duck.webp` (about 21 KB). The eye whites are part of the image; the pupils are separate decorative elements animated with GSAP in `components/hero-duck.tsx`.
+
+## Initial prompt
+
+Use case: illustration-story. Asset type: a single tiny decorative rubber-duck mascot for an inline oval in a dark software-engineer portfolio headline. Primary request: create ONE charming rubber duck, head and upper body visible, in a curious three-quarter pose with its beak facing LEFT toward the headline. Style: polished softly shaded rubber toy illustration, simple rounded silhouette, large head, compact body, one or two clear charcoal eyes, small amber beak, friendly and playful without clothing or props. Palette: lime green body #c7f36b with soft ivory highlights, dark charcoal eyes #090b0c and restrained warm amber beak. Composition: centered isolated duck, complete silhouette with ample transparent margin for a small nod/tilt animation; fills about 75 percent of a square canvas. Crisp large features that remain recognizable at 40px tall. Scene/backdrop: genuinely transparent background, transparent alpha everywhere outside the duck, no floor, no scenery. Soft studio lighting, matte rubber material, subtle dimensional shading. No text, letters, code, symbols, badges, frames, watermarks, accessories, extra characters, or repeated ducks.
+
+## Eye edit prompt
+
+Edit the supplied isolated lime rubber duck for a real interactive web mascot. Preserve exactly the same duck, rubber-toy shading, lime/amber palette, curious left-facing three-quarter pose, silhouette, square dimensions and composition, transparent background, beak, body and lighting. ONLY change the TWO eye surfaces: replace both dark charcoal eye ovals and their highlights with clean warm ivory-white EMPTY eye sockets of the SAME oval shapes, sizes, tilt and locations. The white sockets must have no pupils, no dark centers, no iris and no dots: black pupils will be overlaid and animated in the webpage. Keep the eye whites smooth and legible with a very subtle edge shadow. Do not change anything else. One duck only, no text or props; genuinely transparent alpha outside duck.
