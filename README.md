@@ -12,16 +12,16 @@ The site is organized around real project evidence. Each selected work item conn
 
 ## What I built
 
-- **Responsive editorial interface** — a custom dark visual system with fluid typography, asymmetric layouts, optimized WebP artwork, and layouts designed for phone, tablet, and desktop breakpoints.
+- **Responsive editorial interface** - a custom dark visual system with fluid typography, asymmetric layouts, optimized WebP artwork, and layouts designed for phone, tablet, and desktop breakpoints.
 - **Data-driven project portfolio** - thirteen case studies share typed content models and statically generated routes, keeping project details consistent across the homepage, experience timeline, and detail pages.
-- **Gesture-based exploration** — the Selected Work carousel supports touch dragging, mouse dragging, card selection, and arrow-key navigation. The featured project surface can also be swiped directly on mobile.
-- **Interactive professional timeline** — expandable project details, drag-to-scroll behavior, inertial movement, and automatic positioning expose deeper experience without turning the page into a long static résumé.
+- **Gesture-based exploration** - the Selected Work carousel supports touch dragging, mouse dragging, card selection, and arrow-key navigation. The featured project surface can also be swiped directly on mobile.
+- **Interactive professional timeline** - expandable project details, drag-to-scroll behavior, inertial movement, and automatic positioning expose deeper experience without turning the page into a long static résumé.
 - **Scheduled GitHub activity** - a daily authenticated Vercel Cron job calculates contribution totals and streaks in Asia/Bangkok and stores the last successful snapshot in Neon, independently of browser visits. Public reads show the sync time and flag delayed updates.
-- **Two-way contact workflow** — a validated server action sends the enquiry to me and a confirmation to the visitor through Resend. It includes Zod validation, subject sanitization, a honeypot, reply routing, and optional Upstash rate limiting.
+- **Two-way contact workflow** - a validated server action sends the enquiry to me and a confirmation to the visitor through Resend. It includes Zod validation, subject sanitization, a honeypot, reply routing, and optional Upstash rate limiting.
 - **Bundled CV delivery** - Download and Preview serve the same approved General PDF through `/api/cv`, as an attachment or inline document. The file is validated and bundled with the server route, with no external export dependency; replacing it requires a new build/deployment.
-- **Search and sharing support** — canonical metadata, generated Open Graph artwork, `robots.txt`, and a project-aware sitemap are produced through Next.js conventions.
-- **Localized publishing workspace** — a protected GitHub sign-in opens a Notion-inspired editor for English and Vietnamese articles, drafts, scheduled publishing, tags, SEO fields, cover images, and privacy-enhanced YouTube embeds.
-- **Database-backed blog** — Neon Postgres and Drizzle persist structured editor JSON, localized URLs, publication state, and tags. Public article pages, RSS, sitemap entries, and cache invalidation stay inside the same Next.js deployment.
+- **Search and sharing support** - canonical metadata, generated Open Graph artwork, `robots.txt`, and a project-aware sitemap are produced through Next.js conventions.
+- **Localized publishing workspace** - a protected GitHub sign-in opens a Notion-inspired editor for English and Vietnamese articles, drafts, scheduled publishing, tags, SEO fields, cover images, and privacy-enhanced YouTube embeds.
+- **Database-backed blog** - Neon Postgres and Drizzle persist structured editor JSON, localized URLs, publication state, and tags. Public article pages, RSS, sitemap entries, and cache invalidation stay inside the same Next.js deployment.
 
 ## Selected work experience
 
@@ -138,19 +138,19 @@ corepack yarn build
 
 ## Main routes
 
-- `/` — portfolio home and project overview
-- `/projects/[slug]` — statically generated project case studies
-- `/blog` — published articles with locale filtering and visible tags
-- `/blog/[locale]/[slug]` — localized article detail
-- `/blog/rss.xml` — published article feed
-- `/admin` — entry point that redirects to the owner sign-in
-- `/admin/sign-in` — GitHub sign-in for the blog owner; authorization opens in a new tab
-- `/admin/blog` — protected article management and editor
+- `/` - portfolio home and project overview
+- `/projects/[slug]` - statically generated project case studies
+- `/blog` - published articles with locale filtering and visible tags
+- `/blog/[locale]/[slug]` - localized article detail
+- `/blog/rss.xml` - published article feed
+- `/admin` - entry point that redirects to the owner sign-in
+- `/admin/sign-in` - GitHub sign-in for the blog owner; authorization opens in a new tab
+- `/admin/blog` - protected article management and editor
 - `/api/cv` - approved bundled CV, downloaded or previewed inline
 - `/api/github-stats` - reads the stored contribution/streak snapshot, sync times, and delayed status; does not contact GitHub
 - `/api/cron/github-stats` - authenticated daily background sync into Neon
-- `/opengraph-image` — generated social sharing image
-- `/sitemap.xml` and `/robots.txt` — search-engine discovery
+- `/opengraph-image` - generated social sharing image
+- `/sitemap.xml` and `/robots.txt` - search-engine discovery
 
 ## Project structure
 
