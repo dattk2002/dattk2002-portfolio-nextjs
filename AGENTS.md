@@ -101,6 +101,7 @@ The project is a single Next.js App Router application deployed to Vercel. Conte
 | Career timeline and the non-case-study LMS record | `lib/experience.ts` |
 | Delivery pipeline and technology marquee | `lib/capabilities.ts` |
 | Homepage composition and education/certifications | `app/page.tsx` |
+| Decorative hero developer and bounded cursor gaze | `components/hero-developer.tsx`, `lib/hero-gaze.ts`, `public/images/hero/developer.webp`; sits inline after “I build digital products” in the desktop headline; GSAP nod/gaze runs only for fine pointers without reduced motion; image provenance in `docs/hero-developer-asset.md` |
 | Global metadata, fonts, language, viewport | `app/layout.tsx` |
 | Design tokens, global motion/accessibility/print behavior | `app/globals.css` |
 | Case-study rendering and static params | `app/projects/[slug]/page.tsx` |
