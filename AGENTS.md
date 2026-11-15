@@ -79,7 +79,9 @@ The homepage currently represents nine milestones and twelve total projects (ele
 - `/admin` redirects to `/admin/sign-in`; `/admin/sign-in` opens GitHub OAuth in a new tab, and `/admin/blog/**` is the protected blog workspace. Authorization is restricted exclusively to the configured immutable GitHub account ID.
 - `/api/auth/[...path]`: Neon Auth handler. `/api/blog/upload` issues authenticated client-upload tokens for Vercel Blob images.
 - `/api/cv`: downloads the CV; `?preview=true` serves the same PDF inline for browser reading in a new tab. Both attempt a Google Docs PDF export with an 8-second timeout, 5-minute revalidation, and size/signature validation, then fall back to `public/documents/CV-Tran Kim Dat-Full-stack Engineer.pdf`; returns 503 if both fail. The bundled fallback must be updated manually.
-- `/api/github-stats`: fetches contribution history, calculates total/current/longest streaks in the Asia/Bangkok time zone, caches success for one hour, and degrades to a 503 JSON response.
+- `/api/github-stats`: reads the last successful GitHub snapshot from Neon without triggering a source sync. Returns total/current/longest streaks, `syncedAt`, `nextSyncAt`, and `stale`; no response caching. A snapshot is marked stale one hour after its next scheduled run, allowing Vercel Hobby's invocation window. The client uses `?v=3`, reads again at the scheduled time or on overdue visibility/focus, retries failed/overdue reads after one minute, and labels delayed syncs. No snapshot or a database failure returns an uncached 503.
+- `/api/cron/github-stats`: Vercel Cron runs `0 0 * * *` (daily around 07:00 Vietnam, within 07:00–08:00 on Hobby), independently of browser visits. Requires an exact `Authorization: Bearer <CRON_SECRET>` match, fetches and validates fresh contribution history with up to three bounded attempts, calculates streaks in Asia/Bangkok, and atomically upserts the snapshot in Neon. Errors preserve the last successful snapshot. Apply the versioned migration, set the Production `CRON_SECRET`, deploy, and run the cron once to initialize; subsequent runs are automatic.
+- Review pending migrations before a release: `0001_add_resilient_document_delivery_article` publishes blog content. For a GitHub-only rollout, apply the idempotent `0002_github_activity_snapshots.sql` as a scoped migration without advancing past or marking the pending article migration as applied. The full Drizzle journal can still run later.
 - `app/actions/contact.ts`: contact Server Action with Zod validation, a honeypot, header-injection sanitization, optional Upstash rate limiting, and a Resend batch containing the owner notification plus visitor confirmation.
 - `/opengraph-image` and `/projects/[slug]/opengraph-image`: generated 1200×630 social images. Project images are statically generated from canonical project slugs alongside the case studies.
 - `/sitemap.xml` and `/robots.txt`: generated through Next.js metadata conventions.
@@ -104,7 +106,7 @@ The project is a single Next.js App Router application deployed to Vercel. Conte
 | Project media treatment | `components/project-artwork.tsx` |
 | Contact client state | `components/contact-form.tsx` |
 | Contact validation, abuse protection, and email | `app/actions/contact.ts` |
-| Live GitHub activity | `components/github-stats.tsx`, `app/api/github-stats/route.ts` |
+| Scheduled GitHub activity | `lib/github-activity.ts`, `lib/github-activity-store.ts`, `app/api/cron/github-stats/route.ts`, `app/api/github-stats/route.ts`, `components/github-stats.tsx`, `vercel.json` |
 | Dynamic CV delivery | `app/api/cv/route.ts` |
 | Blog schema and migrations | `lib/db/schema.ts`, `drizzle/` |
 | Blog queries, validation, and structured content types | `lib/blog/data.ts`, `lib/blog/validation.ts`, `lib/blog/types.ts` |
@@ -134,6 +136,8 @@ Do not create competing arrays, contact constants, project facts, or design toke
 - Yarn 4.9.2 via Corepack; Node.js 24.x
 
 Dependencies use several `latest` ranges. Never rely on remembered framework behavior. Once dependencies are installed, inspect the relevant guide under `node_modules/next/dist/docs/` before changing Next.js code. If `node_modules` is absent, install with `corepack yarn install` only when the task authorizes normal dependency setup.
+
+Vercel install/build commands are pinned in `vercel.json` to `corepack yarn install --immutable` and `corepack yarn build`, so cloud builds use the repository's Yarn 4.9.2 package manager and lockfile. `.vercelignore` excludes environment files, local credentials, generated caches, and local output artifacts from CLI uploads.
 
 ## Existing visual system
 
@@ -178,7 +182,7 @@ When changing design, extend existing CSS variables and component patterns befor
 ## Security and privacy boundaries
 
 - Never commit `.env.local`, API keys, tokens, or real secret values. `.env.example` contains names and safe placeholders only.
-- Server-only variables: `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `NEON_AUTH_BASE_URL`, `NEON_AUTH_COOKIE_SECRET`, `ADMIN_GITHUB_ACCOUNT_ID`, `BLOB_READ_WRITE_TOKEN`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `CONTACT_TO_EMAIL`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `CONTACT_RATE_LIMIT_MAX`, and `CONTACT_RATE_LIMIT_WINDOW_SECONDS`.
+- Server-only variables: `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `CRON_SECRET`, `NEON_AUTH_BASE_URL`, `NEON_AUTH_COOKIE_SECRET`, `ADMIN_GITHUB_ACCOUNT_ID`, `BLOB_READ_WRITE_TOKEN`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `CONTACT_TO_EMAIL`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `CONTACT_RATE_LIMIT_MAX`, and `CONTACT_RATE_LIMIT_WINDOW_SECONDS`.
 - Public configuration: `NEXT_PUBLIC_SITE_URL`; production should use `https://www.dattk.dev`.
 - Treat all editor JSON as untrusted input: validate supported nodes on write and render nodes through the explicit component allowlist rather than injecting stored HTML.
 - Protect every admin mutation and upload route with `requireAdmin`; proxy redirects are navigation UX, not the authorization boundary.

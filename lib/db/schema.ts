@@ -1,6 +1,7 @@
 import {
   boolean,
   index,
+  integer,
   jsonb,
   pgEnum,
   pgTable,
@@ -15,6 +16,15 @@ import type { BlogDocument } from "@/lib/blog/types";
 
 export const blogLocaleEnum = pgEnum("blog_locale", ["en", "vi"]);
 export const blogPostStatusEnum = pgEnum("blog_post_status", ["draft", "published"]);
+
+export const githubActivitySnapshots = pgTable("github_activity_snapshots", {
+  username: text("username").primaryKey(),
+  totalContributions: integer("total_contributions").notNull(),
+  currentStreak: integer("current_streak").notNull(),
+  longestStreak: integer("longest_streak").notNull(),
+  syncedAt: timestamp("synced_at", { withTimezone: true }).notNull(),
+  nextSyncAt: timestamp("next_sync_at", { withTimezone: true }).notNull(),
+});
 
 export const blogPosts = pgTable(
   "blog_posts",

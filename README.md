@@ -98,6 +98,7 @@ Open `http://localhost:3000`.
 | `NEXT_PUBLIC_SITE_URL` | Canonical origin used for metadata, sitemap, robots, and Open Graph URLs | Public config |
 | `DATABASE_URL` | Pooled Neon Postgres connection used by the application | Secret, server only |
 | `DATABASE_URL_UNPOOLED` | Direct Neon connection used by Drizzle migrations | Secret, local/CI only |
+| `CRON_SECRET` | Authenticates the daily GitHub activity cron job | Secret, server only |
 | `NEON_AUTH_BASE_URL` | Neon Auth project endpoint | Server config |
 | `NEON_AUTH_COOKIE_SECRET` | Encrypts and signs authentication cookies | Secret, server only |
 | `ADMIN_GITHUB_ACCOUNT_ID` | Immutable GitHub account ID allowed into the blog admin | Server config |
@@ -110,9 +111,22 @@ Open `http://localhost:3000`.
 
 For production, set `NEXT_PUBLIC_SITE_URL=https://www.dattk.dev`. Keep real credentials in `.env.local` and Vercel Environment Variables; never commit them.
 
+### Daily GitHub sync
+
+`vercel.json` schedules `/api/cron/github-stats` at `0 0 * * *`: daily at 00:00 UTC / 07:00 Vietnam. Cron runs without any browser or page visit. On Hobby, Vercel may invoke it within the 07:00–08:00 window.
+
+Before enabling the new code in production:
+
+1. Review pending migrations before running `corepack yarn db:migrate` against the intended database with `DATABASE_URL_UNPOOLED`. For a GitHub-only rollout, apply `drizzle/0002_github_activity_snapshots.sql` through a scoped migration so pending blog-content migrations are not published incidentally. This schema migration is idempotent, allowing the full journal to run later.
+2. Set a random `CRON_SECRET` of at least 16 characters in Vercel's Production environment, then deploy. Vercel sends it as a Bearer authorization header.
+3. Run the job once from Vercel's Cron Jobs dashboard to initialize the snapshot, then confirm a 200 response and the sync time in `/api/github-stats?v=3`. Until the first successful run, public activity shows unavailable.
+
+The scheduler retries upstream requests up to three times within a run. A failed run preserves the last good snapshot; public reads flag it as delayed after the following scheduled run's one-hour invocation window. Vercel does not automatically retry a failed invocation: inspect its logs and rerun it from the dashboard if needed. Preview and local environments do not execute the production schedule. See [Vercel cron management](https://vercel.com/docs/schedules/cron-jobs/manage-cron-jobs).
+
 ## Quality checks
 
 ```bash
+corepack yarn test
 corepack yarn typecheck
 corepack yarn lint
 corepack yarn build
@@ -129,7 +143,8 @@ corepack yarn build
 - `/admin/sign-in` — GitHub sign-in for the blog owner; authorization opens in a new tab
 - `/admin/blog` — protected article management and editor
 - `/api/cv` — current CV exported as PDF
-- `/api/github-stats` — cached contribution and streak summary
+- `/api/github-stats` — reads the stored contribution/streak snapshot, sync times, and delayed status; does not contact GitHub
+- `/api/cron/github-stats` — authenticated daily background sync into Neon
 - `/opengraph-image` — generated social sharing image
 - `/sitemap.xml` and `/robots.txt` — search-engine discovery
 
