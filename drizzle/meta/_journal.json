@@ -15,6 +15,13 @@
       "when": 1791910400046,
       "tag": "0001_add_resilient_document_delivery_article",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794316384016,
+      "tag": "0002_github_activity_snapshots",
+      "breakpoints": true
     }
   ]
 }
