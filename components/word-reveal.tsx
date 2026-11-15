@@ -11,7 +11,7 @@ function RevealWord({ children, progress, range }: { children: string; progress:
 export function WordReveal() {
   const target = useRef<HTMLParagraphElement>(null);
   const { scrollYProgress } = useScroll({ target, offset: ["start 0.84", "end 0.42"] });
-  const copy = "I connect interface quality with API design, data architecture, real-time systems, automated testing, and production delivery—so products move forward as one coherent system.";
+  const copy = "My work spans web and mobile interfaces, backend APIs, authentication, data models, automated testing, and deployment.";
   const words = copy.split(" ");
 
   return (

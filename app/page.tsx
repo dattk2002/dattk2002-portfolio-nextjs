@@ -16,7 +16,7 @@ import { deliveryPipeline } from "@/lib/capabilities";
 import { siteConfig } from "@/lib/site";
 
 const certifications = [
-  { title: "EF SET English Certificate", meta: "78/100 · C2 Proficient" },
+  { title: "EF SET English Certificate", meta: "78/100 · C2 Proficient · 2022" },
   { title: "Computer Communications Specialization", meta: "Coursera · Oct 2, 2021" },
   { title: "Software Development Lifecycle Specialization", meta: "Coursera · Jun 3, 2022" },
   { title: "Academic English: Writing Specialization", meta: "Coursera · Feb 8, 2023" },
@@ -32,7 +32,7 @@ function PositioningSection({ className = "" }: { className?: string }) {
           <WordReveal />
         </div>
         <div className="grid border-t border-background/20 sm:grid-cols-2 lg:grid-cols-1">
-          {["Architecture → Figma handoff", "Frontend → backend integration", "Testing → containerization", "Deployment → production delivery"].map((item) => (
+          {["Web & mobile interfaces", "Backend APIs & integrations", "Authentication & data models", "Automated checks & deployment"].map((item) => (
             <p key={item} className="border-b border-background/20 py-4 font-mono text-[10px] uppercase leading-5 tracking-[0.12em] text-background/65">{item}</p>
           ))}
         </div>
@@ -124,7 +124,7 @@ export default function HomePage() {
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-steel">How I ship products</p>
               <h2 className="mt-4 max-w-3xl font-display text-[clamp(2.8rem,5.6vw,4.8rem)] leading-[0.92] tracking-[-0.06em]">Delivery pipeline.</h2>
             </div>
-            <p className="max-w-lg self-end text-sm leading-6 text-muted lg:col-span-5 lg:justify-self-end lg:text-base lg:leading-7">Five connected stages, each grounded in measurable work from shipped products—not a generic list of technologies.</p>
+            <p className="max-w-lg self-end text-sm leading-6 text-muted lg:col-span-5 lg:justify-self-end lg:text-base lg:leading-7">Examples of implementation, testing, and deployment work from client and freelance projects.</p>
           </MotionReveal>
 
           <div className="relative grid border-y border-border md:grid-cols-5">
@@ -152,7 +152,7 @@ export default function HomePage() {
           <MotionReveal className="lg:sticky lg:top-32 lg:col-span-4 lg:self-start">
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-steel">Professional experience</p>
             <h2 className="mt-4 max-w-lg font-display text-[clamp(2.8rem,5vw,4.5rem)] leading-[0.92] tracking-[-0.06em]">Production work,<br />clearly owned.</h2>
-            <p className="mt-6 max-w-sm text-sm leading-6 text-muted lg:text-base lg:leading-7">Frontend leadership, full-stack delivery, and independent product ownership across interface, application logic, data, and production systems.</p>
+            <p className="mt-6 max-w-sm text-sm leading-6 text-muted lg:text-base lg:leading-7">Contributions across web and mobile applications, backend APIs, data models, automated testing, and deployment.</p>
             <p className="mt-5 max-w-sm font-mono text-[9px] uppercase leading-5 tracking-[0.13em] text-faint">Open a project to explore its scope, ownership, outcomes, and technology stack.</p>
           </MotionReveal>
           <ExperienceTimeline />
@@ -165,7 +165,7 @@ export default function HomePage() {
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-steel">Education</p>
             <h2 className="mt-5 font-display text-4xl tracking-[-0.055em] md:text-5xl">FPT University</h2>
             <p className="mt-4 text-lg text-background/65">Bachelor’s Degree in Software Engineering</p>
-            <div className="mt-8 border-t border-background/20 pt-4 font-mono text-[9px] uppercase leading-5 tracking-[0.14em] text-background/55">Sep 2021 – Sep 2025 · Graduated · GPA 8.1/10 · 3.24/4</div>
+            <div className="mt-8 border-t border-background/20 pt-4 font-mono text-[9px] uppercase leading-5 tracking-[0.14em] text-background/55">Oct 2020 – Sep 2024 · Graduated</div>
           </MotionReveal>
           <MotionReveal delay={0.08}>
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-steel">Certifications</p>
