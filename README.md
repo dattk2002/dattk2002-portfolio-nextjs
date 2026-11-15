@@ -1,4 +1,4 @@
-# Tran Kim Dat — Full-stack Developer Portfolio
+# Tran Kim Dat - Software Engineer Portfolio
 
 [View the live portfolio](https://www.dattk.dev) · [Download the latest CV](https://www.dattk.dev/api/cv) · [LinkedIn](https://www.linkedin.com/in/kimdat0705/) · [GitHub](https://github.com/dattk2002)
 
@@ -13,12 +13,12 @@ The site is organized around real project evidence. Each selected work item conn
 ## What I built
 
 - **Responsive editorial interface** — a custom dark visual system with fluid typography, asymmetric layouts, optimized WebP artwork, and layouts designed for phone, tablet, and desktop breakpoints.
-- **Data-driven project portfolio** — eleven case studies share typed content models and statically generated routes, keeping project details consistent across the homepage, experience timeline, and detail pages.
+- **Data-driven project portfolio** - thirteen case studies share typed content models and statically generated routes, keeping project details consistent across the homepage, experience timeline, and detail pages.
 - **Gesture-based exploration** — the Selected Work carousel supports touch dragging, mouse dragging, card selection, and arrow-key navigation. The featured project surface can also be swiped directly on mobile.
 - **Interactive professional timeline** — expandable project details, drag-to-scroll behavior, inertial movement, and automatic positioning expose deeper experience without turning the page into a long static résumé.
-- **Live GitHub activity** — a server endpoint calculates contribution totals and streaks in the Asia/Bangkok timezone, with bounded requests, graceful failure states, and CDN-friendly caching.
+- **Scheduled GitHub activity** - a daily authenticated Vercel Cron job calculates contribution totals and streaks in Asia/Bangkok and stores the last successful snapshot in Neon, independently of browser visits. Public reads show the sync time and flag delayed updates.
 - **Two-way contact workflow** — a validated server action sends the enquiry to me and a confirmation to the visitor through Resend. It includes Zod validation, subject sanitization, a honeypot, reply routing, and optional Upstash rate limiting.
-- **Always-current CV delivery** — `/api/cv` exports the source Google Doc as PDF and uses a local PDF as a fallback, so the download can stay current without rebuilding the portfolio for every CV edit.
+- **Bundled CV delivery** - Download and Preview serve the same approved General PDF through `/api/cv`, as an attachment or inline document. The file is validated and bundled with the server route, with no external export dependency; replacing it requires a new build/deployment.
 - **Search and sharing support** — canonical metadata, generated Open Graph artwork, `robots.txt`, and a project-aware sitemap are produced through Next.js conventions.
 - **Localized publishing workspace** — a protected GitHub sign-in opens a Notion-inspired editor for English and Vietnamese articles, drafts, scheduled publishing, tags, SEO fields, cover images, and privacy-enhanced YouTube embeds.
 - **Database-backed blog** — Neon Postgres and Drizzle persist structured editor JSON, localized URLs, publication state, and tags. Public article pages, RSS, sitemap entries, and cache invalidation stay inside the same Next.js deployment.
@@ -31,7 +31,11 @@ The portfolio currently documents work across Three.js, Fastify, Flutter, ASP.NE
 
 OathFront adds solo game-development ownership: a browser-based PvE card game in active development, with four Three.js battlefields, direct card dragging, a deterministic TypeScript engine and bots, and server-authoritative match persistence. Its homepage is the primary project image; desktop and mobile gameplay captures show the 3D battle interface.
 
-Panda adds restaurant POS and F&B management experience from Dan Solutions: 13 contributed API endpoints, four web-app screens, domain-bound reservation sessions for forms used across multiple restaurants, and tenant-aware permissions and switching supported alongside a senior engineer. Its gallery uses official product screenshots of the iPad POS and kitchen display; the ownership record describes my web-app contributions.
+Panda POS & Manager adds reservation/preorder forms, partial payments, invoice reprinting, revenue reporting, and NestJS/TypeORM finance and administrative APIs from DAN SOLUTIONS. Its ownership record distinguishes backend contributions in 2024 from frontend work in 2026. Gallery images are official iPad POS and kitchen-display product captures, not screenshots of authored web-app screens.
+
+Freelance work from June 2026 includes Bravodemy, HuntingAlice, and Mystical Orb. Bravodemy separates frontend/backend-foundation ownership from a collaborator’s core lesson generation. HuntingAlice covers full-stack B2B research/campaign workflows; Mystical Orb covers bilingual reading and sharing interfaces. The two new case studies use public sign-in/homepage captures. Their year-only labels describe contribution year, not unconfirmed project start/end dates.
+
+DAN SOLUTIONS is one continuous December 2023–May 2026 tenure, with separate intern and engineer role periods. FPT Software remains a distinct December 2022–April 2023 internship. FPT University is October 2020–September 2024, and the NgoaiNguNgay capstone is May–September 2024.
 
 ## How the portfolio works
 
@@ -142,9 +146,9 @@ corepack yarn build
 - `/admin` — entry point that redirects to the owner sign-in
 - `/admin/sign-in` — GitHub sign-in for the blog owner; authorization opens in a new tab
 - `/admin/blog` — protected article management and editor
-- `/api/cv` — approved bundled CV, downloaded or previewed inline
-- `/api/github-stats` — reads the stored contribution/streak snapshot, sync times, and delayed status; does not contact GitHub
-- `/api/cron/github-stats` — authenticated daily background sync into Neon
+- `/api/cv` - approved bundled CV, downloaded or previewed inline
+- `/api/github-stats` - reads the stored contribution/streak snapshot, sync times, and delayed status; does not contact GitHub
+- `/api/cron/github-stats` - authenticated daily background sync into Neon
 - `/opengraph-image` — generated social sharing image
 - `/sitemap.xml` and `/robots.txt` — search-engine discovery
 

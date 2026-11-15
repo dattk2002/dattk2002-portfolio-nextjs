@@ -28,11 +28,11 @@ function resolveSiteUrl() {
 
 export const siteConfig = {
   name: "Tran Kim Dat",
-  role: "Full-stack Engineer",
+  role: "Software Engineer",
   description:
-    "Full-stack engineer building production web, cross-platform mobile, and source-grounded AI learning products from interface to infrastructure.",
+    "Software engineer building production web, cross-platform mobile, and AI-powered products from interface to infrastructure.",
   summary:
-    "Full-stack Engineer with 3+ years delivering production web and cross-platform mobile applications. I build source-grounded AI learning workflows, REST APIs, authentication, and real-time systems, and own delivery through automated testing, Docker, CI/CD, and cloud deployment.",
+    "Software Engineer with nearly 3 years of experience building production web and cross-platform mobile products. I work across frontend interfaces, backend APIs, authentication, PostgreSQL data models, and AI-powered workflows, using AI-assisted development alongside code review and automated testing.",
   location: "Da Nang City / Ho Chi Minh City, Vietnam",
   email: "kimdat0705@gmail.com",
   phoneDisplay: "+84 98 356 4074",

@@ -1,5 +1,7 @@
 export type ProjectSlug =
   | "bravodemy"
+  | "huntingalice"
+  | "mystical-orb"
   | "oathfront"
   | "panda"
   | "tapmood"
@@ -15,7 +17,7 @@ export type Project = {
   slug: ProjectSlug;
   name: string;
   period: string;
-  context: "Independent product" | "Capstone product" | "Client production";
+  context: "Independent product" | "Capstone product" | "Client production" | "Freelance engagement";
   summary: string;
   ownership: string;
   technologies: readonly string[];
@@ -35,11 +37,10 @@ export const projects: readonly Project[] = [
     slug: "bravodemy",
     name: "Bravodemy",
     period: "Aug 2026 – Present",
-    context: "Independent product",
+    context: "Freelance engagement",
     summary:
       "An AI microlearning platform that turns natural-language goals into source-grounded syllabi and lesson cores, followed by 5–10 minute lessons, practice, spaced review, and progress tracking.",
-    ownership:
-      "Owned most of the architecture and end-to-end delivery across AI research and generation, the bilingual Next.js client, FastAPI services, data models, automated quality checks, and cloud deployment.",
+    ownership: "Built the entire bilingual Next.js frontend and the FastAPI backend foundation, data layer, authentication, payments, research integrations, and release tooling. Collaborated with the developer responsible for core lesson generation.",
     technologies: [
       "Next.js 16", "React 19", "TypeScript", "Python", "FastAPI", "SQLAlchemy",
       "PostgreSQL", "Redis", "Gemini grounded search", "Exa", "Tavily", "Langfuse",
@@ -47,23 +48,21 @@ export const projects: readonly Project[] = [
       "Neon", "GitHub Actions", "Pytest", "Vitest", "Playwright",
     ],
     outcomes: [
-      "Built 107 FastAPI endpoints and 35 SQLAlchemy models across generation, learning, authentication, admin, privacy, and entitlements.",
-      "Integrated Gemini grounded search, Exa, and Tavily for source context, with Langfuse tracing for AI generation workflows.",
-      "Verified 192 backend tests at 85.11% coverage and 151 frontend tests.",
-      "Established CI for PostgreSQL 16, builds, accessibility, and responsive journeys across Chromium, Firefox, and WebKit.",
-      "Delivered a bilingual UI with light/dark themes and WCAG 2.2 AA checks.",
+      "Delivered bilingual onboarding, learning paths, lesson and practice interfaces, and progress views in Next.js, React, and TypeScript.",
+      "Developed learner-account and application-state models with SQLAlchemy/PostgreSQL, email and Google authentication, and rotating sessions.",
+      "Implemented Polar checkout and signed webhooks for purchases, entitlements, and refunds.",
+      "Integrated Exa, Gemini, and Tavily for source research, with Redis caching, rate limiting, and locks; collaborated on the learning product with the core lesson-generation developer.",
+      "Set up Docker deployments on Render, Neon database connections, and GitHub Actions checks with Pytest, Vitest, and Playwright.",
     ],
-    challenge:
-      "Translate open-ended learning goals into research-backed content across technical and non-technical domains while keeping generation observable, practice grading deterministic, and access secure.",
-    approach:
-      "Research providers supply source context before syllabus and lesson-core generation, and Langfuse traces the AI workflows. Python/SQL grading supports deterministic practice, while secure cookies, Polar entitlements, and Redis caching, rate limits, and distributed locks support the learning journey.",
+    challenge: "Connect onboarding, source research, learning, practice, and purchases into a coherent bilingual product while keeping account state, sessions, and entitlements reliable.",
+    approach: "Delivered the frontend across the learner journey and established backend foundations for accounts and application state. Research integrations supply source context, signed Polar webhooks manage access, and Redis supports caching and coordination. Core lesson generation was handled by another developer, with automated checks and containerized releases supporting collaboration.",
     architecture: [
-      "Bilingual Next.js 16 and React 19 UI with Tailwind CSS, Radix UI, Recharts, and GSAP",
-      "FastAPI with 107 endpoints, 35 SQLAlchemy models, and deterministic Python/SQL grading",
-      "Gemini grounded search, Exa, and Tavily research with Langfuse workflow tracing",
-      "Neon PostgreSQL pooled runtime and direct migration connections, plus fail-open Redis caching",
-      "Independent UI/API services on Render Singapore with health-gated auto-deploys",
-      "GitHub Actions CI with Pytest, Vitest, Playwright, accessibility, and responsive checks",
+      "Bilingual Next.js and React frontend for onboarding, learning, practice, and progress",
+      "FastAPI foundations with SQLAlchemy and Neon PostgreSQL for learner accounts and application state",
+      "Email/Google authentication and rotating sessions",
+      "Polar checkout and signed purchase, entitlement, and refund webhooks",
+      "Exa, Gemini, and Tavily research integrations; Redis caching, rate limits, and locks",
+      "Docker on Render with GitHub Actions, Pytest, Vitest, and Playwright",
     ],
     gallery: [
       { src: "/images/projects/bravodemy-main.webp", alt: "Bravodemy AI microlearning homepage with globe illustration and a guided lesson preview", width: 1665, height: 903 },
@@ -72,6 +71,102 @@ export const projects: readonly Project[] = [
     liveUrls: [{ label: "Bravodemy", href: "https://bravodemy.com" }],
     repositoryUrls: [{ label: "Product repository", href: "https://github.com/tkhieu/AIMicroLearningPlatform" }],
     featured: true,
+  },
+  {
+    slug: "huntingalice",
+    name: "HuntingAlice",
+    period: "2026",
+    context: "Freelance engagement",
+    summary: "An AI-powered B2B prospecting platform for company research, campaign setup, and evidence-backed prospect review.",
+    ownership: "Developed frontend and backend workflows for onboarding, company and competitor research, campaign setup, and prospect review as a freelance full-stack engineer.",
+    technologies: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "NestJS",
+      "PostgreSQL",
+      "Inngest",
+      "REST API",
+      "WebSocket",
+      "Validated contracts"
+    ],
+    outcomes: [
+      "Built onboarding, company/competitor research, campaign setup, and prospect-review interfaces in Next.js, React, and TypeScript.",
+      "Integrated REST APIs and WebSocket updates through shared, validated contracts to show research progress and reusable results.",
+      "Implemented idempotent campaign saves in NestJS/PostgreSQL and integrated Inngest background workflows for research and discovery.",
+      "Kept contact data out of durable workflow outputs and applied suppression checks to lead results and events."
+    ],
+    challenge: "Make long-running company research and campaign setup understandable while avoiding duplicate saves and keeping contact data out of durable workflow outputs.",
+    approach: "Connected product interfaces to shared validated API contracts and WebSocket progress updates. Idempotent campaign persistence supports repeated save requests, Inngest coordinates research/discovery work, and suppression checks apply to lead results and events.",
+    architecture: [
+      "Next.js/React/TypeScript onboarding, research, campaign, and prospect-review interfaces",
+      "REST APIs and WebSocket progress updates with shared validated contracts",
+      "NestJS/PostgreSQL idempotent campaign persistence",
+      "Inngest background workflows for research and discovery",
+      "Contact-data boundaries in durable outputs and suppression checks on results/events"
+    ],
+    gallery: [
+      {
+        src: "/images/projects/huntingalice-main.webp",
+        alt: "HuntingAlice public sign-in page for the B2B research and prospecting workspace",
+        width: 1440,
+        height: 900
+      }
+    ],
+    accent: "blue",
+    liveUrls: [
+      {
+        label: "HuntingAlice",
+        href: "https://beta.huntingalice.com"
+      }
+    ],
+    featured: false
+  },
+  {
+    slug: "mystical-orb",
+    name: "Mystical Orb",
+    period: "2026",
+    context: "Freelance engagement",
+    summary: "A bilingual Tarot reading experience with question entry, card draws, results, and optional shared readings.",
+    ownership: "Built the Next.js/React/TypeScript frontend for reading journeys, session continuity, marketing pages, shared readings, language switching, and consent controls.",
+    technologies: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Vietnamese/English",
+      "Web Share API",
+      "Clipboard API"
+    ],
+    outcomes: [
+      "Built question-entry, card-draw, and result interfaces with session continuity across sign-in and refresh.",
+      "Developed marketing and shared-reading pages with native sharing, clipboard fallback, and optional question disclosure.",
+      "Implemented Vietnamese/English switching and consent controls for analytics and marketing tracking."
+    ],
+    challenge: "Keep a reading journey continuous across authentication and refresh while giving users control over language, tracking consent, and disclosure when sharing.",
+    approach: "Built the reading interfaces around continuity between question entry, card draw, and results. Shared-reading pages provide native or clipboard sharing with optional question disclosure, while bilingual controls and consent choices remain part of the frontend experience.",
+    architecture: [
+      "Next.js/React and TypeScript frontend for reading and marketing pages",
+      "Session continuity across sign-in and refresh",
+      "Shared-reading pages with native sharing and clipboard fallback",
+      "Optional question disclosure in shared readings",
+      "Vietnamese/English switching and analytics/marketing consent controls"
+    ],
+    gallery: [
+      {
+        src: "/images/projects/mystical-orb-main.webp",
+        alt: "Mystical Orb public homepage introducing its Tarot reading experience",
+        width: 1440,
+        height: 900
+      }
+    ],
+    accent: "violet",
+    liveUrls: [
+      {
+        label: "Mystical Orb",
+        href: "https://mysticalorb.com"
+      }
+    ],
+    featured: false
   },
   {
     slug: "oathfront",
@@ -118,32 +213,41 @@ export const projects: readonly Project[] = [
   },
   {
     slug: "panda",
-    name: "Panda",
-    period: "Feb 2026 – May 2026",
+    name: "Panda POS & Manager",
+    period: "2024 & 2026",
     context: "Client production",
     summary:
       "A multi-tenant POS and F&B management platform connecting restaurant ordering, reservations, kitchen operations, billing, and payments.",
-    ownership:
-      "Worked as a Full-stack Engineer at Dan Solutions in a five-person team, extending the existing web app across frontend screens and backend APIs. Owned receipt printing, takeaway ordering, advance reservations, and payment modules.",
-    technologies: ["React", "TypeScript", "Vite", "Ant Design", "PostgreSQL", "Strapi", "REST API"],
-    outcomes: [
-      "Implemented 13 API endpoints and four React/TypeScript screens: receipt printing, reservation forms, reservation lists, and payments. Delivered these features into the existing production application.",
-      "Built multi-tenant reservation forms with sessions bound to restaurant domains, allowing the same form flow to serve multiple restaurants. Connected booking submissions to backend services and administrative reservation lists, and extended takeaway ordering, bill splitting, payments, and kitchen-screen workflows.",
-      "Supported a senior engineer on tenant-aware permissions and tenant switching in a PostgreSQL architecture with separate databases and schemas, connecting users to their authorized restaurant environments.",
-      "Refactored reservation and receipt forms from development into main through code review, contributed CI configuration updates, and resolved production bugs reported by Czech restaurant customers.",
+    ownership: "Contributed React/TypeScript reservation, payment, printing, reporting, and administration workflows, plus NestJS/TypeORM finance and management APIs at DAN SOLUTIONS. Backend contributions in 2024 and frontend work in 2026 belong to the same product.",
+    technologies: [
+      "React",
+      "TypeScript",
+      "Vite",
+      "Ant Design",
+      "NestJS",
+      "TypeORM",
+      "PostgreSQL",
+      "REST API",
+      "Swagger",
+      "reCAPTCHA",
     ],
-    challenge:
-      "Extend a live restaurant platform where bookings, orders, kitchen screens, and billing need to work together, while preserving permissions and tenant context across separate restaurant environments.",
-    approach:
-      "Delivered the assigned modules across the React administration app and backend APIs. The reservation form used sessions tied to restaurant domains, allowing reuse across tenants while booking submissions fed the administrative reservation list. Receipt, split-bill, payment, and kitchen changes connected operational workflows. Tenant permissions and switching were implemented alongside a senior engineer, with code review and customer bug fixes supporting release.",
+    outcomes: [
+      "Built online reservations with menu preorders, multilingual forms, reCAPTCHA, confirmation flows, and tenant-specific booking settings.",
+      "Implemented item-level partial payments and invoice reprinting with grouped line items and post-checkout printing.",
+      "Developed revenue reports with date-range filters, hourly charts, and Excel exports.",
+      "Fixed filtering and pagination across inventory, supplier, customer, and admin screens, and memoized POS order rows.",
+      "Developed validated, Swagger-documented APIs for receipts, payroll, partners, debts, and assets; added income/expense/debt reports, date-range queries, and cash-balance reconciliation.",
+      "Added batch monthly staff-attendance creation, partner API pagination/search/filtering, and authenticated access to receivable-debt records.",
+    ],
+    challenge: "Support restaurant booking, checkout, and administrative finance workflows with consistent validation, filtering, and access boundaries in an existing production product.",
+    approach: "Extended the existing React application and NestJS/TypeORM services with tenant-specific reservation settings, item-level payment handling, and grouped invoice printing. Added searchable administrative APIs and date-based financial reports, with validated DTOs, documented contracts, and authenticated debt access.",
     architecture: [
-      "React and TypeScript web administration app built with Vite and Ant Design",
-      "13 contributed API endpoints connecting reservations, ordering, billing, and payments",
-      "PostgreSQL multi-tenant foundation with separate databases and schemas",
-      "Multi-tenant reservation forms with sessions bound to restaurant domains",
-      "Tenant-aware permissions and switching developed alongside a senior engineer",
-      "Existing Strapi headless CMS maintained by the senior engineer",
-      "Code-review and CI contributions supporting development-to-main releases",
+      "React/TypeScript web application with Vite and Ant Design",
+      "Multilingual reservation forms with preorders, reCAPTCHA, and tenant-specific settings",
+      "Item-level partial payments and grouped invoice reprinting",
+      "NestJS/TypeORM APIs with validated DTOs and Swagger documentation",
+      "PostgreSQL-backed receipts, payroll, partners, debts, assets, and financial reports",
+      "Date-range revenue queries, hourly charts, Excel exports, and administrative filtering",
     ],
     gallery: [
       { src: "/images/projects/panda-pos.webp", alt: "Panda iPad POS menu, order, and payment interface published on the product website", width: 1600, height: 1112 },
@@ -159,27 +263,37 @@ export const projects: readonly Project[] = [
   {
     slug: "fastcare",
     name: "Fastcare",
-    period: "Dec 2023 – Aug 2024",
+    period: "Dec 2023 – Mar 2024",
     context: "Client production",
     summary:
       "A multi-category repair-booking and commerce platform spanning customer journeys, content, accessories, and operational administration.",
-    ownership:
-      "Owned frontend delivery from component design through production deployment, then complemented the customer platform with PHP Laravel admin workflows.",
-    technologies: ["Next.js", "TypeScript", "Ant Design", "shadcn/ui", "PHP", "Laravel"],
-    outcomes: [
-      "Delivered Fastcare UI v2 across more than 20 screens.",
-      "Standardized API integration and component patterns across the frontend.",
-      "Created shared loading, empty, and error states for booking and catalog journeys.",
+    ownership: "Contributed Next.js/TypeScript customer interfaces during the DAN SOLUTIONS internship: promotions, repair booking, shared navigation, responsive layouts, and Sentry instrumentation.",
+    technologies: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "React Hook Form",
+      "Zod",
+      "REST API",
+      "reCAPTCHA",
+      "Sentry",
     ],
-    challenge:
-      "Keep repair discovery and booking understandable across many device categories while supporting content, accessories, and day-to-day operational management.",
-    approach:
-      "Reusable component systems and consistent API-state patterns made customer journeys predictable. A dedicated Laravel admin surface supported content and operational workflows behind the public product.",
+    outcomes: [
+      "Built a responsive promotion page with API-backed product/service listings and load-more navigation.",
+      "Implemented repair booking with React Hook Form/Zod validation, store and appointment selection, API submission, and confirmation views; added client-side reCAPTCHA widgets and submission gating to booking/comment forms.",
+      "Refactored multilevel service navigation into a shared homepage/header mega menu with API-driven categories and reusable TypeScript interfaces; updated responsive layouts and typography across product, service, blog, promotion, and static pages.",
+      "Added Sentry error reporting and tracing across Next.js client/server/edge configurations, plus client-side session replay and browser profiling.",
+    ],
+    challenge: "Keep repair discovery and booking understandable across service categories and screen sizes while making form states and production failures easier to inspect.",
+    approach: "Used shared navigation and typed API data to connect service discovery to validated booking and confirmation flows. Responsive Tailwind layouts support the customer pages, client-side reCAPTCHA gates form submission, and Sentry captures errors and performance traces across the Next.js runtime surfaces.",
     architecture: [
-      "Next.js and TypeScript customer experience",
-      "Ant Design and shadcn/ui component systems",
-      "API-backed booking, catalog, and content journeys",
-      "PHP Laravel administration workflows",
+      "Next.js/React customer interfaces with TypeScript and Tailwind CSS",
+      "API-backed promotion, product, and service listings with load-more navigation",
+      "React Hook Form and Zod booking validation with store/appointment selection",
+      "Client-side reCAPTCHA widgets and submission gating for booking/comment forms",
+      "Shared API-driven homepage/header mega menu",
+      "Sentry client/server/edge error reporting and tracing, session replay, and browser profiling",
     ],
     gallery: [
       { src: "/images/projects/fastcare-main.webp", alt: "Fastcare desktop repair and accessory homepage", width: 1440, height: 900 },
@@ -236,7 +350,7 @@ export const projects: readonly Project[] = [
   {
     slug: "ngoaingungay",
     name: "NgoaiNguNgay",
-    period: "May 2025 – Sep 2025",
+    period: "May 2024 – Sep 2024",
     context: "Capstone product",
     summary:
       "A role-aware language-learning and tutor-booking platform with real-time one-to-one messaging and scheduling workflows.",
@@ -356,23 +470,29 @@ export const projects: readonly Project[] = [
     context: "Client production",
     summary:
       "A production travel platform for discovering guided cycling tours, renting bikes, and exploring destination-led editorial content.",
-    ownership:
-      "Led frontend architecture and delivered the tour browsing, rental, and blog modules to production within two months.",
-    technologies: ["React", "TypeScript", "Ant Design", "REST API", "Responsive Web"],
-    outcomes: [
-      "Shipped three core product modules to production within two months.",
-      "Built reusable layouts, forms, and data-display components.",
-      "Integrated responsive, API-driven booking and content flows.",
+    ownership: "Developed bilingual CMS localization, configurable content blocks, locale-aware article previews, and reusable responsive components at DAN SOLUTIONS.",
+    technologies: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "REST API",
+      "CMS localization",
+      "Responsive Web",
     ],
-    challenge:
-      "Present media-rich travel stories and structured tour data without losing clarity across browsing, rental, and booking journeys.",
-    approach:
-      "A reusable React component foundation aligned forms, content, and data states while responsive layouts kept the core exploration journeys coherent across desktop and mobile.",
+    outcomes: [
+      "Developed English/Vietnamese CMS page-localization workflows with locale validation, slug checks, and localized content blocks.",
+      "Added configurable FAQ/contact blocks for editor-managed questions, answers, and links.",
+      "Integrated locale-aware latest-article retrieval and blog previews using Next.js image/link components.",
+      "Refactored reusable footers and improved responsive navigation, custom-tour sections, and blog-image layouts.",
+    ],
+    challenge: "Let editors manage bilingual travel content while keeping locale-specific pages, navigation, and article previews consistent across screen sizes.",
+    approach: "Validated locales and slugs in CMS workflows, exposed FAQ/contact content through configurable blocks, and retrieved recent articles for the active locale. Shared footer components and responsive navigation and image layouts keep localized pages coherent.",
     architecture: [
-      "React and TypeScript frontend",
-      "Ant Design component foundation",
-      "API-driven tours, rentals, and editorial content",
-      "Responsive booking and discovery flows",
+      "Next.js/React and TypeScript interfaces",
+      "English/Vietnamese CMS page localization with locale and slug validation",
+      "Configurable FAQ and contact content blocks",
+      "Locale-aware latest-article retrieval and Next.js image/link previews",
+      "Reusable footers and responsive navigation, tour sections, and blog images",
     ],
     gallery: [
       { src: "/images/projects/caocao-adventures-main.webp", alt: "Caocao Adventures desktop cycling tour homepage", width: 1440, height: 900 },
@@ -391,31 +511,34 @@ export const projects: readonly Project[] = [
     context: "Client production",
     summary:
       "A shared publishing foundation for corporate, media, and admin experiences across multiple business verticals.",
-    ownership:
-      "Owned delivery from Figma handoff through production, building reusable public-site modules, administration experiences, and CMS-backed editorial workflows.",
+    ownership: "Built API-backed CMS modules, permission-aware administration and editorial workflows, Puck page-builder blocks, product integrations, and server-rendered public navigation at DAN SOLUTIONS.",
     technologies: [
       "Next.js App Router",
+      "React",
       "TypeScript",
       "Tailwind CSS",
       "Strapi",
-      "Express",
+      "Zustand",
+      "Puck",
       "REST API",
-      "Swagger",
     ],
     outcomes: [
-      "Delivered ten production features across public websites and admin dashboards.",
-      "Supported five business verticals through reusable content patterns.",
-      "Designed and configured more than 12 Strapi content schemas.",
+      "Built CMS modules for customers, campaigns, subscribers, contact submissions, and recruitment candidates, with validated forms, searchable tables, pagination, duplication, and bulk actions.",
+      "Implemented role-management screens and shared Zustand permission state for navigation, action visibility, and access-denied guards.",
+      "Created responsive Puck blocks for timelines, team profiles, carousels, notifications, registration, services, and FAQs.",
+      "Integrated EAN-selected TamdaExpress products into TamdaFoods with prices, stock, pack sizes, product links, and loading/error states.",
+      "Refactored Tamda Media/TamdaOne headers and footers into Next.js server components that load locale-specific CMS menus, banners, and settings while retaining interactive navigation.",
+      "Implemented editorial submission, approval, rejection, publishing, and scheduling, including own-post access, rejection reasons, and review timestamps.",
     ],
-    challenge:
-      "Give editors autonomy across distinct corporate and media products while keeping layouts, APIs, and administrative workflows maintainable.",
-    approach:
-      "Reusable App Router modules consumed structured Strapi content through documented APIs. Shared layout and administration patterns reduced duplication while preserving the needs of each vertical.",
+    challenge: "Give editors and administrators usable, permission-aware workflows across related brands while sharing page-building and locale-specific navigation foundations.",
+    approach: "Connected validated administrative forms and searchable tables to CMS APIs, shared permission state through Zustand, and built configurable Puck blocks for public pages. Server components load locale-specific navigation data, while editorial actions preserve access rules, rejection context, and review history.",
     architecture: [
-      "Next.js App Router public experiences",
-      "TypeScript and Tailwind CSS interface system",
-      "Strapi CMS with 12+ structured content schemas",
-      "Express middleware and Swagger-documented REST APIs",
+      "Next.js App Router public sites with server-rendered CMS headers and footers",
+      "React/TypeScript administrative modules with validated forms and searchable, paginated tables",
+      "Shared Zustand permission state for navigation, actions, and access-denied guards",
+      "Responsive Puck page-builder blocks",
+      "EAN-selected product integration across TamdaExpress and TamdaFoods",
+      "Permission-aware editorial approval, rejection, publishing, and scheduling",
     ],
     gallery: [
       { src: "/images/projects/tamda-group-main.webp", alt: "Tamda Group corporate desktop homepage", width: 1440, height: 900 },
@@ -436,27 +559,39 @@ export const projects: readonly Project[] = [
   {
     slug: "vncaps",
     name: "VNCaps",
-    period: "Dec 2023 – Aug 2024",
+    period: "May 2024 – Aug 2024",
     context: "Client production",
     summary:
       "A cross-platform school-management dashboard for student, teacher, and administrator workflows.",
-    ownership:
-      "Architected the role-aware application across more than 15 screens, including timetable rendering and push-notification delivery.",
-    technologies: ["React Native", "Expo", "TypeScript", "Expo Notifications", "Role-based access"],
-    outcomes: [
-      "Delivered more than 15 role-aware application screens.",
-      "Supported student, teacher, and administrator workflows.",
-      "Integrated push alerts and dynamic timetable rendering.",
+    ownership: "Contributed Expo/React Native upgrades, school assessment and reporting interfaces, React administration workflows, and photo/API compatibility fixes at DAN SOLUTIONS.",
+    technologies: [
+      "React Native",
+      "Expo",
+      "React",
+      "TypeScript",
+      "REST API",
+      "FlatList",
+      "Node.js",
+      "Sharp",
+      "Docker",
+      "MongoDB",
+      "Mongoose",
     ],
-    challenge:
-      "Make schedules, progress, and school updates usable across three roles without turning the application into separate, inconsistent products.",
-    approach:
-      "A shared cross-platform component model adapted navigation and content by role. Dynamic timetable rendering and Expo Notifications kept time-sensitive school information visible.",
+    outcomes: [
+      "Upgraded Expo SDK 47 to 49 and React Native 0.70.8 to 0.72.10, updating platform dependencies and adapting navigation and legacy components.",
+      "Implemented swimming/music assessment reports with student-specific APIs, skill ratings, lesson objectives, comments, and pagination; extended daily/monthly report calendars to browse six months of prior data.",
+      "Built React admin workflows for selective and bulk swimming/music skill entry, duplicate filtering, removal controls, and empty-state dialogs.",
+      "Refactored photo galleries with FlatList and Expo-compatible images; adapted photo APIs and thumbnail processing for legacy Node.js with Docker/Sharp alignment, string-method fixes, and MongoDB connection handling via Mongoose.",
+    ],
+    challenge: "Maintain a cross-platform school product through framework upgrades while extending assessment/report workflows and preserving photo compatibility with an older backend runtime.",
+    approach: "Updated Expo, React Native, dependencies, and navigation together, then extended student-specific reports and historical calendars. Added administrative bulk-entry and duplicate-handling states, and aligned gallery rendering and thumbnail APIs with the supported Expo and Node.js environments.",
     architecture: [
-      "React Native and Expo client",
-      "TypeScript application modules",
-      "Role-based student, teacher, and administrator surfaces",
-      "Expo Notifications and dynamic timetable flows",
+      "Expo 49 and React Native 0.72.10 client, upgraded from Expo 47 and React Native 0.70.8",
+      "Student-specific assessment/report APIs, ratings, objectives, comments, and pagination",
+      "Daily/monthly report calendars with six months of browsing history",
+      "React administration for individual and bulk skill entry",
+      "FlatList galleries and Expo-compatible image components",
+      "Legacy Node.js photo APIs with Docker/Sharp and MongoDB/Mongoose compatibility fixes",
     ],
     gallery: [
       { src: "/images/projects/vncaps-home.webp", alt: "VNCaps parent home dashboard with school modules", width: 237, height: 512 },

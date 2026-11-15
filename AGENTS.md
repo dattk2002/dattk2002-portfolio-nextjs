@@ -30,10 +30,10 @@ The desired impression is capable, intentional, technically credible, and produc
 ## Owner profile and public identity
 
 - Name: Tran Kim Dat
-- Role: Full-stack Engineer
+- Role: Software Engineer (full-stack web/mobile focus)
 - Location: Da Nang City / Ho Chi Minh City, Vietnam
-- Experience claim currently used in the hero: 3+ years
-- Education: FPT University, Bachelor's Degree in Software Engineering, Sep 2021–Sep 2025, graduated, GPA 8.1/10 (3.24/4)
+- Experience claim currently used in the hero: nearly 3 years (CV wording as of Nov 2026)
+- Education: FPT University, Bachelor's Degree in Software Engineering, Oct 2020–Sep 2024, graduated. GPA is private and must not appear in public Education copy or the public Download/Preview PDF.
 - Availability: full-stack opportunities; remote, Da Nang, or Ho Chi Minh City
 - Canonical production origin: `https://www.dattk.dev`
 - Apex domain: `https://dattk.dev`, expected to resolve to the canonical `www` deployment
@@ -44,9 +44,11 @@ The desired impression is capable, intentional, technically credible, and produc
 
 ## Brand narrative and content principles
 
+The homepage experience introduction describes technical contributions without naming employers or engagement types such as freelance. Organizations, roles, and dates remain in the timeline records.
+
 The core positioning line is: “I build digital products from interface to infrastructure.” The supporting narrative is end-to-end product ownership: architecture, interface, API and data, quality, then deployment. Preserve that through-line when changing copy or information architecture.
 
-Writing is English, concise, specific, and evidence-led. Use active voice. Explain the product problem, ownership, approach, and observable result. Avoid vague claims such as “cutting-edge,” “world-class,” “passionate,” or “expert” unless supplied and justified by the user. Keep claims consistent across the homepage, project case studies, experience timeline, metadata, README, and CV-facing text.
+Writing is English, concise, specific, and evidence-led. The owner explicitly requires objective, balanced presentation: describe confirmed work and its project context; distinguish implementation from collaboration. Present delivery examples as project contributions rather than asserting a universal personal process or unverified outcomes. Use active voice. Explain the product problem, ownership, approach, and observable result. Avoid vague claims such as “cutting-edge,” “world-class,” “passionate,” or “expert” unless supplied and justified by the user. Keep claims consistent across the homepage, project case studies, experience timeline, metadata, README, and CV-facing text.
 
 ## Current portfolio inventory
 
@@ -54,20 +56,22 @@ The canonical case-study records live in `lib/projects.ts`; the following table 
 
 | Project | Context / period | Core ownership and evidence |
 | --- | --- | --- |
-| Bravodemy | Independent, Aug 2026–Present | AI microlearning; Gemini grounded search, Exa/Tavily, Langfuse; 107 FastAPI endpoints, 35 SQLAlchemy models; 192 backend tests at 85.11% coverage and 151 frontend tests; Next.js UI, Render Singapore, Neon, Redis, and CI. This is the initial showcase and only `featured: true` project. |
+| Bravodemy | Freelance, Aug 2026–Present | Entire bilingual Next.js frontend; FastAPI/SQLAlchemy/PostgreSQL foundations, email/Google auth and rotating sessions, Polar checkout/webhooks, Exa/Gemini/Tavily research, Redis, Docker/Render/Neon and CI. Core lesson generation belongs to a collaborator. Initial showcase and only `featured: true` project. |
+| HuntingAlice | Freelance contributions, 2026 | Full-stack Next.js/React onboarding, company/competitor research, campaign/prospect interfaces; validated REST/WebSocket contracts, NestJS/PostgreSQL idempotent saves, Inngest, contact-data boundaries and suppression checks. Public sign-in capture; no unconfirmed month range. |
+| Mystical Orb | Freelance contributions, 2026 | Next.js/React reading flow with sign-in/refresh continuity; marketing/shared-reading pages, native/clipboard sharing and optional question disclosure; EN/VI and consent controls. Frontend ownership only; public homepage capture. |
 | OathFront | Independent, Oct 2026–Present | Solo ownership of an actively developed PvE card game; four Three.js arenas, direct card dragging and semantic controls, deterministic TypeScript engine/bots, Fastify, Neon PostgreSQL/Drizzle, and Vercel. Homepage capture is the primary image; desktop/mobile Moonroot gameplay captures illustrate the renderer. |
-| Panda | Client production, Feb–May 2026 | Full-stack Engineer in a five-person Dan Solutions team; 13 API endpoints and 4 React/TypeScript web-app screens; owned domain-bound reservation sessions for forms reused across restaurant tenants, plus receipt printing, takeaway, split bills, payments, and kitchen workflows. Supported senior-led PostgreSQL tenant permissions/switching; Strapi CMS was senior-owned. Gallery images are official iPad POS/KDS product captures, not evidence of authored web-app screens. |
-| Fastcare | Client production, Dec 2023–Aug 2024 | Frontend ownership plus Laravel admin workflows; 20+ screens; booking, catalog, and content flows. |
+| Panda POS & Manager | Client production, contributions in 2024 & 2026 | React/TypeScript reservations/preorders, partial payments, invoice reprinting, reports/Excel, filtering/pagination; NestJS/TypeORM receipts, payroll, partners, debts, assets and finance reports; attendance and authenticated debt access. Backend work in 2024 must not be presented as first completed in 2026. Gallery uses official product captures. |
+| Fastcare | Client production, internship contributions Dec 2023–Mar 2024 | Next.js promotions, validated booking/reCAPTCHA, shared API-driven mega menu, responsive pages, and Sentry reporting/tracing/replay/profiling. The displayed period scopes the internship contribution, not a claim about the entire product’s lifetime. |
 | HabiStride | Independent, May–Jun 2026 | Next.js + NestJS + PostgreSQL habit product; 24 REST handlers, 7 controllers, 10 TypeORM entities, daily Asia/Bangkok snapshots. |
-| NgoaiNguNgay | Capstone, May–Sep 2025 | Role-aware React/Vite language learning, tutoring, booking, and SignalR messaging; 16 routes and 79 component files. |
+| NgoaiNguNgay | Capstone, May–Sep 2024 | User corrected the year on Nov 14, 2026. Role-aware React/Vite learning, tutoring/booking and SignalR messaging; 16 routes and 79 component files. |
 | Trivia Quiz | Independent, Apr–May 2026 | Next.js + MongoDB session-based quiz; server-side answer validation, duplicate-score protection, and 1-hour TTL cleanup. |
 | TapMood | Independent, Jun–Jul 2026 | Flutter + ASP.NET Core social product; 117 REST mappings, resumable verified uploads up to 250 MB, 92 automated tests, real-time and worker-backed flows. |
-| Caocao Adventures | Client production, Nov 2025–Jan 2026 | React travel discovery, rental, and booking experience; three core modules delivered to production in two months. |
-| TamdaCMS / TamdaOne | Client production, Oct 2025–May 2026 | Next.js/Strapi multi-brand publishing foundation; 10 production features, 5 verticals, and 12+ content schemas. |
-| VNCaps | Client production, Dec 2023–Aug 2024 | React Native/Expo role-aware school application; 15+ screens, timetable rendering, and push notifications. |
+| Caocao Adventures | Client production, Nov 2025–Jan 2026 | EN/VI CMS localization and locale/slug validation, configurable FAQ/contact blocks, locale-aware article previews, reusable footers and responsive navigation/tour/blog layouts. |
+| TamdaCMS / TamdaOne | Client production, Oct 2025–May 2026 | API-backed CMS modules; validated/searchable/paginated forms/tables and bulk actions; Zustand permissions; Puck blocks; EAN product integration; server-rendered CMS navigation; editorial approval/rejection/publishing/scheduling. |
+| VNCaps | Client production, May–Aug 2024 | Expo 47→49, React Native 0.70.8→0.72.10; assessment reports, six-month calendars, React administration, FlatList/photo API and legacy Node/Docker/Sharp/Mongoose compatibility. |
 | LMS FSoft Education Management | FPT Software internship, Feb–Apr 2023 | Angular frontend work in a six-person team; class list/detail and seven calendar/class states. This item exists only as a detailed experience record, not a `/projects/[slug]` case study. |
 
-The homepage currently represents nine milestones and twelve total projects (eleven case studies plus the internship LMS). If records are added or removed, update derived UI labels rather than leaving hard-coded counts stale.
+The homepage currently represents eight milestones and fourteen total projects (thirteen case studies plus the internship LMS). Freelance begins Jun 2026; DAN SOLUTIONS is continuous Dec 2023–May 2026 with Software Engineer Mar 2024–May 2026 and Software Engineer Intern Dec 2023–Mar 2024. FPT Software remains a separate Dec 2022–Apr 2023 internship (LMS Feb–Apr 2023). Role periods and their project lists live together in `Experience.groups`: Software Engineer owns Panda/Tamda/Caocao/VNCaps; Software Engineer Intern owns Fastcare only. Render each role beside its own projects under the single employer milestone, with the internship group after the engineer group. Do not stack all roles in the employer header. Project periods remain distinct from role periods. HuntingAlice/Mystical Orb use contribution year only because individual start/end dates are unconfirmed. If records are added or removed, update derived UI labels rather than leaving hard-coded counts stale.
 
 ## Information architecture and routes
 
