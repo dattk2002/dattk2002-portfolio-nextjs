@@ -40,7 +40,7 @@ The desired impression is capable, intentional, technically credible, and produc
 - GitHub: `https://github.com/dattk2002`
 - LinkedIn: `https://www.linkedin.com/in/kimdat0705/`
 - Public contact email and phone are centralized in `lib/site.ts`; do not duplicate or silently change them elsewhere.
-- The source Google Doc for the CV and the bundled PDF fallback are implementation details of `app/api/cv/route.ts`; do not expose the document ID in new UI or documentation.
+- The approved two-page General CV without GPA is bundled at `public/documents/CV - Tran Kim Dat - Software Engineer.pdf`. Download and Preview serve this same file without a Google Docs export. Replace it manually when the user supplies a new approved PDF.
 
 ## Brand narrative and content principles
 
@@ -78,7 +78,7 @@ The homepage currently represents nine milestones and twelve total projects (ele
 - `/blog/rss.xml`: RSS feed for published article translations.
 - `/admin` redirects to `/admin/sign-in`; `/admin/sign-in` opens GitHub OAuth in a new tab, and `/admin/blog/**` is the protected blog workspace. Authorization is restricted exclusively to the configured immutable GitHub account ID.
 - `/api/auth/[...path]`: Neon Auth handler. `/api/blog/upload` issues authenticated client-upload tokens for Vercel Blob images.
-- `/api/cv`: downloads the CV; `?preview=true` serves the same PDF inline for browser reading in a new tab. Both attempt a Google Docs PDF export with an 8-second timeout, 5-minute revalidation, and size/signature validation, then fall back to `public/documents/CV-Tran Kim Dat-Full-stack Engineer.pdf`; returns 503 if both fail. The bundled fallback must be updated manually.
+- `/api/cv`: downloads the CV as `CV - Tran Kim Dat - Software Engineer.pdf`; `?preview=true` serves the same PDF inline with the same suggested filename for browser reading in a new tab. Both read the approved bundled General PDF directly using the Node runtime, validate its signature and maximum 10 MiB size, and return the exact same bytes with `X-CV-Source: bundled-pdf`. Successful responses require revalidation; missing/invalid/unreadable files return an uncached generic 503. `next.config.ts` explicitly traces the PDF into this server route. Replace the bundled file manually and rebuild/deploy for updates.
 - `/api/github-stats`: reads the last successful GitHub snapshot from Neon without triggering a source sync. Returns total/current/longest streaks, `syncedAt`, `nextSyncAt`, and `stale`; no response caching. A snapshot is marked stale one hour after its next scheduled run, allowing Vercel Hobby's invocation window. The client uses `?v=3`, reads again at the scheduled time or on overdue visibility/focus, retries failed/overdue reads after one minute, and labels delayed syncs. No snapshot or a database failure returns an uncached 503.
 - `/api/cron/github-stats`: Vercel Cron runs `0 0 * * *` (daily around 07:00 Vietnam, within 07:00–08:00 on Hobby), independently of browser visits. Requires an exact `Authorization: Bearer <CRON_SECRET>` match, fetches and validates fresh contribution history with up to three bounded attempts, calculates streaks in Asia/Bangkok, and atomically upserts the snapshot in Neon. Errors preserve the last successful snapshot. Apply the versioned migration, set the Production `CRON_SECRET`, deploy, and run the cron once to initialize; subsequent runs are automatic.
 - Review pending migrations before a release: `0001_add_resilient_document_delivery_article` publishes blog content. For a GitHub-only rollout, apply the idempotent `0002_github_activity_snapshots.sql` as a scoped migration without advancing past or marking the pending article migration as applied. The full Drizzle journal can still run later.
@@ -107,7 +107,7 @@ The project is a single Next.js App Router application deployed to Vercel. Conte
 | Contact client state | `components/contact-form.tsx` |
 | Contact validation, abuse protection, and email | `app/actions/contact.ts` |
 | Scheduled GitHub activity | `lib/github-activity.ts`, `lib/github-activity-store.ts`, `app/api/cron/github-stats/route.ts`, `app/api/github-stats/route.ts`, `components/github-stats.tsx`, `vercel.json` |
-| Dynamic CV delivery | `app/api/cv/route.ts` |
+| Bundled CV delivery | `app/api/cv/route.ts` |
 | Blog schema and migrations | `lib/db/schema.ts`, `drizzle/` |
 | Blog queries, validation, and structured content types | `lib/blog/data.ts`, `lib/blog/validation.ts`, `lib/blog/types.ts` |
 | Public blog index and article rendering | `app/blog/`, `components/blog-card.tsx`, `components/blog-content.tsx` |
