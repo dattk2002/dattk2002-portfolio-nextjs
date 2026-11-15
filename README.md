@@ -41,7 +41,7 @@ flowchart LR
     CDN --> Pages[Next.js pages and static assets]
     CDN --> Functions[Dynamic routes and Server Actions]
     Functions --> GitHub[GitHub activity data]
-    Functions --> Docs[Google Docs CV export]
+    Functions --> PDF[Bundled General CV PDF]
     Functions --> Resend[Resend email delivery]
     Functions --> Neon[(Neon Postgres)]
     Functions --> Auth[Neon Auth + GitHub OAuth]
@@ -74,7 +74,7 @@ The CDN is not described here as a blanket cache for every request: static outpu
 | Styling | Tailwind CSS, shadcn/ui conventions, Geist and Outfit |
 | Motion | Framer Motion, GSAP, Embla Carousel, Embla Auto Scroll |
 | Forms and email | React Server Actions, Zod, Resend |
-| Content | Typed portfolio data, Tiptap blog editor, Google Docs CV export |
+| Content | Typed portfolio data, Tiptap blog editor, bundled General CV PDF |
 | Blog data and auth | Neon Postgres, Drizzle ORM, Neon Auth, GitHub OAuth |
 | Blog media | Vercel Blob client uploads |
 | Media and SEO | `next/image`, generated Open Graph images, sitemap, robots |
@@ -142,7 +142,7 @@ corepack yarn build
 - `/admin` — entry point that redirects to the owner sign-in
 - `/admin/sign-in` — GitHub sign-in for the blog owner; authorization opens in a new tab
 - `/admin/blog` — protected article management and editor
-- `/api/cv` — current CV exported as PDF
+- `/api/cv` — approved bundled CV, downloaded or previewed inline
 - `/api/github-stats` — reads the stored contribution/streak snapshot, sync times, and delayed status; does not contact GitHub
 - `/api/cron/github-stats` — authenticated daily background sync into Neon
 - `/opengraph-image` — generated social sharing image
@@ -156,7 +156,7 @@ components/           Interface, navigation, motion, carousel, and form componen
 drizzle/              Versioned Neon Postgres migrations
 lib/                  Portfolio content, database, blog, and authorization modules
 public/images/        Optimized portraits, project artwork, and README screenshots
-public/documents/     Static CV fallback
+public/documents/     Approved General CV PDF
 ```
 
 ## Deployment
