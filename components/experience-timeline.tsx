@@ -260,7 +260,7 @@ export function ExperienceTimeline() {
   return (
     <div className="min-w-0 lg:col-span-8">
       <div className="mb-4 flex items-center justify-between gap-4 font-mono text-[9px] uppercase tracking-[0.14em] text-faint">
-        <span>{experiences.length} milestones <span aria-hidden="true">·</span> {experiences.reduce((total, experience) => total + experience.projects.length, 0)} projects</span>
+        <span>{experiences.length} milestones <span aria-hidden="true">·</span> {experiences.reduce((total, experience) => total + experience.groups.reduce((count, group) => count + group.projects.length, 0), 0)} projects</span>
         <span className="hidden items-center gap-2 lg:flex"><MoveVertical className="size-3.5" aria-hidden="true" /> Scroll or drag</span>
       </div>
 
@@ -330,27 +330,44 @@ export function ExperienceTimeline() {
           {experiences.map((experience, index) => (
             <section key={`${experience.organization}-${experience.period}`} className="relative border-t border-border py-8 first:pt-7 md:py-11">
               <span className="absolute top-9 -left-8 size-2 rounded-full bg-accent ring-8 ring-background md:top-12 lg:-left-12" aria-hidden="true" />
-              <div className="grid gap-5 md:grid-cols-[10rem_minmax(0,1fr)]">
-                <div className="font-mono text-[9px] uppercase leading-5 tracking-[0.15em] text-faint">
-                  <p className="text-steel">{experience.organization}</p>
-                  <p>{experience.period}</p>
-                  <p className="mt-2 text-faint/70">{String(index + 1).padStart(2, "0")}</p>
+              {experience.groups.map((group, groupIndex) => (
+                <div
+                  key={group.role?.title ?? "projects"}
+                  role={group.role ? "group" : undefined}
+                  aria-label={group.role?.title}
+                  className={`grid gap-5 md:grid-cols-[10rem_minmax(0,1fr)] ${groupIndex > 0 ? "mt-6 border-t border-border pt-6" : ""}`}
+                >
+                  <div className="font-mono text-[9px] uppercase leading-5 tracking-[0.15em] text-faint">
+                    {groupIndex === 0 ? (
+                      <>
+                        <p className="text-steel">{experience.organization}</p>
+                        <p>{experience.period}</p>
+                      </>
+                    ) : null}
+                    {group.role ? (
+                      <dl className={`${groupIndex === 0 ? "mt-4 " : ""}border-l border-border pl-3 normal-case tracking-normal`}>
+                        <dt className="text-xs leading-5 text-muted">{group.role.title}</dt>
+                        <dd className="text-[10px] leading-5 text-faint">{group.role.period}</dd>
+                      </dl>
+                    ) : null}
+                    {groupIndex === 0 ? <p className="mt-2 text-faint/70">{String(index + 1).padStart(2, "0")}</p> : null}
+                  </div>
+                  <div className="min-w-0">
+                    {group.projects.map(resolveProject).map((project) => (
+                      <ProjectAccordion
+                        key={project.id}
+                        project={project}
+                        expanded={openProjectId === project.id}
+                        onToggle={() => setOpenProjectId((current) => current === project.id ? null : project.id)}
+                        triggerRef={(node) => {
+                          if (node) triggerRefs.current.set(project.id, node);
+                          else triggerRefs.current.delete(project.id);
+                        }}
+                      />
+                    ))}
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  {experience.projects.map(resolveProject).map((project) => (
-                    <ProjectAccordion
-                      key={project.id}
-                      project={project}
-                      expanded={openProjectId === project.id}
-                      onToggle={() => setOpenProjectId((current) => current === project.id ? null : project.id)}
-                      triggerRef={(node) => {
-                        if (node) triggerRefs.current.set(project.id, node);
-                        else triggerRefs.current.delete(project.id);
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
+              ))}
             </section>
           ))}
         </div>
