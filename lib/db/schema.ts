@@ -1,5 +1,8 @@
+import { sql } from "drizzle-orm";
 import {
   boolean,
+  check,
+  date,
   index,
   integer,
   jsonb,
@@ -92,3 +95,43 @@ export const blogPostTags = pgTable(
     index("blog_post_tags_tag_idx").on(table.tagId),
   ],
 );
+
+export const analyticsEvents = pgTable("analytics_events", {
+  id: uuid("id").primaryKey(),
+  day: date("day").notNull(),
+  visitor: text("visitor"),
+  kind: text("kind").notNull(),
+  path: text("path").notNull(),
+  referrer: text("referrer").notNull(),
+  device: text("device").notNull(),
+  browser: text("browser").notNull(),
+  country: text("country").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+}, table => [
+  index("analytics_events_day_idx").on(table.day),
+  index("analytics_events_visitor_time_idx").on(table.visitor, table.createdAt),
+  check("analytics_events_kind_check", sql`${table.kind} IN ('pageview', 'cv_click', 'github_click', 'contact_click')`),
+]);
+
+export const analyticsBudgets = pgTable("analytics_budgets", {
+  day: date("day").primaryKey(),
+  events: integer("events").notNull(),
+});
+
+export const analyticsJobs = pgTable("analytics_jobs", {
+  name: text("name").primaryKey(),
+  startedAt: timestamp("started_at", { withTimezone: true }).notNull(),
+});
+
+export const githubTrafficDaily = pgTable("github_traffic_daily", {
+  repo: text("repo").notNull(), day: date("day").notNull(),
+  views: integer("views").notNull(), visitors: integer("visitors").notNull(),
+  clones: integer("clones").notNull(), cloners: integer("cloners").notNull(),
+}, table => [primaryKey({ columns: [table.repo, table.day] })]);
+
+export const githubTrafficSyncs = pgTable("github_traffic_syncs", {
+  repo: text("repo").primaryKey(),
+  syncedAt: timestamp("synced_at", { withTimezone: true }),
+  attemptedAt: timestamp("attempted_at", { withTimezone: true }).notNull(),
+  failed: boolean("failed").notNull(),
+});
