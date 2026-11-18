@@ -127,6 +127,10 @@ Before enabling the new code in production:
 
 The scheduler retries upstream requests up to three times within a run. A failed run preserves the last good snapshot; public reads flag it as delayed after the following scheduled run's one-hour invocation window. Vercel does not automatically retry a failed invocation: inspect its logs and rerun it from the dashboard if needed. Preview and local environments do not execute the production schedule. See [Vercel cron management](https://vercel.com/docs/schedules/cron-jobs/manage-cron-jobs).
 
+## Analytics
+
+Anonymous website metrics, CSV export and daily GitHub repository traffic are available in `/admin/analytics`. Collection is opt-in, uses the existing database and no paid analytics dependency, and resets the website day at midnight Vietnam time without erasing history. See [analytics setup, quotas and privacy](docs/analytics.md) before enabling it or applying the scoped analytics migration.
+
 ## Quality checks
 
 ```bash
@@ -146,6 +150,8 @@ corepack yarn build
 - `/admin` - entry point that redirects to the owner sign-in
 - `/admin/sign-in` - GitHub sign-in for the blog owner; authorization opens in a new tab
 - `/admin/blog` - protected article management and editor
+- `/admin/analytics` - protected anonymous website and repository traffic metrics with CSV export
+- `/privacy` - analytics disclosure and browser opt-out signals
 - `/api/cv` - approved bundled CV, downloaded or previewed inline
 - `/api/github-stats` - reads the stored contribution/streak snapshot, sync times, and delayed status; does not contact GitHub
 - `/api/cron/github-stats` - authenticated daily background sync into Neon
@@ -174,4 +180,4 @@ public/documents/     Approved General CV PDF
 7. Verify `dattk.dev` in Resend and use a sending-only API key restricted to that domain.
 8. Run `corepack yarn db:migrate` against the target database, deploy, then verify GitHub admin sign-in, image upload, draft/publish behavior, localized article URLs, RSS, sitemap, CV download, project routes, GitHub activity, and both contact emails.
 
-No cookie banner is required unless analytics, advertising, or other non-essential tracking is added later.
+Optional website analytics use no cookies or browser storage, honor DNT/GPC, and are disclosed on `/privacy`. Reassess privacy and consent behavior before adding other tracking.

@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Outfit } from "next/font/google";
 
 import { siteConfig } from "@/lib/site";
+import { AnalyticsTracker } from "@/components/analytics-tracker";
+import { Suspense } from "react";
 
 import "./globals.css";
 
@@ -72,7 +74,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       data-scroll-behavior="smooth"
       className={`${outfit.variable} ${geist.variable} ${geistMono.variable}`}
     >
-      <body>{children}</body>
+      <body>{children}<Suspense fallback={null}><AnalyticsTracker /></Suspense></body>
     </html>
   );
 }

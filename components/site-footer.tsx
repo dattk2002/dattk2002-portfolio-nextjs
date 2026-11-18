@@ -14,6 +14,7 @@ export function SiteFooter() {
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-muted">
           <Link href="/blog" className="hover:text-foreground">Blog</Link>
           <Link href="/blog/rss.xml" className="hover:text-foreground">RSS</Link>
+          <Link href="/privacy" className="inline-flex min-h-11 items-center hover:text-foreground">Privacy</Link>
           <a href={siteConfig.github} target="_blank" rel="noreferrer" className="hover:text-foreground">GitHub</a>
           <a href={siteConfig.linkedin} target="_blank" rel="noreferrer" className="hover:text-foreground">LinkedIn</a>
           <a href={`mailto:${siteConfig.email}`} className="hover:text-foreground">Email</a>

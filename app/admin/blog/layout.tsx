@@ -16,7 +16,7 @@ export default async function AdminBlogLayout({ children }: { children: React.Re
       <header className="border-b border-border bg-surface/90 px-5 py-3 backdrop-blur-xl sm:px-8 lg:px-12">
         <div className="mx-auto flex max-w-[100rem] items-center justify-between gap-4">
           <Link href="/admin/blog" className="flex min-h-11 items-center gap-3" aria-label="Blog administration home"><BrandMark className="size-7 text-accent" /><span className="border-l border-border pl-3 font-mono text-[10px] uppercase tracking-[0.16em] text-muted">Blog studio</span></Link>
-          <div className="flex items-center gap-2"><span className="hidden text-xs text-faint sm:inline">{identity.email}</span><SignOutButton /></div>
+          <div className="flex items-center gap-2"><Link href="/admin/analytics" className="inline-flex min-h-11 items-center rounded-md px-3 text-sm text-muted hover:text-foreground">Analytics</Link><span className="hidden text-xs text-faint lg:inline">{identity.email}</span><SignOutButton /></div>
         </div>
       </header>
       {children}
