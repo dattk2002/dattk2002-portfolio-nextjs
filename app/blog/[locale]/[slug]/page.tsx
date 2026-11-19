@@ -99,7 +99,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     "@type": "BlogPosting",
     headline: post.title,
     description: post.excerpt,
-    image: post.coverImageUrl || undefined,
+    image: post.coverImageUrl ? new URL(post.coverImageUrl, siteConfig.url).toString() : undefined,
     datePublished: post.publishedAt?.toISOString(),
     dateModified: post.updatedAt.toISOString(),
     inLanguage: post.locale,
@@ -170,34 +170,46 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                   </div>
                 </div>
               </div>
-              <div className="group relative min-h-72 overflow-hidden border-t border-border bg-surface-raised sm:min-h-[30rem] lg:col-span-7 lg:min-h-[38rem] lg:border-t-0 lg:border-l">
-                {post.coverImageUrl ? (
-                  <Image
-                    src={post.coverImageUrl}
-                    alt={post.coverImageAlt}
-                    fill
-                    priority
-                    sizes="(max-width: 1023px) 100vw, 58vw"
-                    className="object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.02]"
-                  />
-                ) : (
+              <figure className="flex min-w-0 flex-col overflow-hidden border-t border-border bg-surface-raised lg:col-span-7 lg:border-t-0 lg:border-l">
+                <div className="relative min-h-72 flex-1 sm:min-h-[30rem] lg:min-h-[38rem]">
+                  {post.coverImageUrl ? (
+                    <Image
+                      src={post.coverImageUrl}
+                      alt={post.coverImageAlt}
+                      fill
+                      priority
+                      sizes="(max-width: 1023px) 100vw, 58vw"
+                      className="object-contain p-3 sm:p-5"
+                    />
+                  ) : (
+                    <div
+                      className="absolute inset-0 grid place-items-center"
+                      aria-hidden="true"
+                    >
+                      <span className="ambient-grid absolute inset-0 opacity-70" />
+                      <span className="absolute inset-10 border border-border sm:inset-16" />
+                      <BrandMark className="relative size-32 text-accent sm:size-48 xl:size-56" />
+                      <p className="absolute right-6 bottom-6 left-6 border-t border-border pt-4 font-mono text-[9px] uppercase tracking-[0.16em] text-steel sm:right-10 sm:bottom-10 sm:left-10">
+                        Interface to infrastructure
+                      </p>
+                    </div>
+                  )}
                   <div
-                    className="absolute inset-0 grid place-items-center"
+                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/30 via-transparent to-transparent"
                     aria-hidden="true"
-                  >
-                    <span className="ambient-grid absolute inset-0 opacity-70" />
-                    <span className="absolute inset-10 border border-border sm:inset-16" />
-                    <BrandMark className="relative size-32 text-accent sm:size-48 xl:size-56" />
-                    <p className="absolute right-6 bottom-6 left-6 border-t border-border pt-4 font-mono text-[9px] uppercase tracking-[0.16em] text-steel sm:right-10 sm:bottom-10 sm:left-10">
-                      Interface to infrastructure
-                    </p>
-                  </div>
-                )}
-                <div
-                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/30 via-transparent to-transparent"
-                  aria-hidden="true"
-                />
-              </div>
+                  />
+                </div>
+                {post.coverImageCredit ? (
+                  <figcaption className="border-t border-border px-5 py-4 text-xs leading-6 text-muted">
+                    {post.coverImageCredit.caption}{" "}
+                    Image: {post.coverImageCredit.publisher}.{" "}
+                    <a href={post.coverImageCredit.sourcePage} target="_blank" rel="noreferrer" className="underline underline-offset-4 hover:text-foreground">Original source</a>
+                    {post.coverImageCredit.licenseUrl ? (
+                      <> - <a href={post.coverImageCredit.licenseUrl} target="_blank" rel="noreferrer" className="underline underline-offset-4 hover:text-foreground">License</a></>
+                    ) : null}
+                  </figcaption>
+                ) : null}
+              </figure>
             </MotionReveal>
           </div>
         </header>
