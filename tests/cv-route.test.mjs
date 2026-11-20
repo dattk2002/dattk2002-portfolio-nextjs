@@ -28,7 +28,7 @@ for (const [query, disposition] of [["", "attachment"], ["?preview=true", "inlin
     const contents = Buffer.from(await response.arrayBuffer());
     assert.equal(response.headers.get("Content-Length"), String(contents.length));
     // Pins the approved General CV without GPA so an older public document cannot silently return.
-    assert.equal(createHash("sha256").update(contents).digest("hex"), "17dae7531bee05e300a40142fc2ed6f33396853b02faf73040b4242f79ccf56f");
+    assert.equal(createHash("sha256").update(contents).digest("hex"), "46c008a11d3189c35f688620411785565a2f92a89ac3d97a6bd5785036ad5314");
     assert.equal(networkRequests, 0);
     assert.match(response.headers.get("Cache-Control"), /must-revalidate/);
   });

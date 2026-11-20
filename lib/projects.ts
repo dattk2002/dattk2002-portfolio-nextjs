@@ -68,7 +68,7 @@ export const projects: readonly Project[] = [
       { src: "/images/projects/bravodemy-main.webp", alt: "Bravodemy AI microlearning homepage with globe illustration and a guided lesson preview", width: 1665, height: 903 },
     ],
     accent: "blue",
-    liveUrls: [{ label: "Bravodemy", href: "https://bravodemy.com" }],
+    liveUrls: [{ label: "Bravodemy", href: "https://main.bd-internal.dev" }],
     repositoryUrls: [{ label: "Product repository", href: "https://github.com/tkhieu/AIMicroLearningPlatform" }],
     featured: true,
   },
@@ -117,7 +117,7 @@ export const projects: readonly Project[] = [
     liveUrls: [
       {
         label: "HuntingAlice",
-        href: "https://beta.huntingalice.com"
+        href: "https://main.ha-internal.dev"
       }
     ],
     featured: false
