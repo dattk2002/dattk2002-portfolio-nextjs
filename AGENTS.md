@@ -111,7 +111,7 @@ The project is a single Next.js App Router application deployed to Vercel. Conte
 | Navigation and mobile dialog | `components/site-navigation.tsx` |
 | Work carousel | `components/project-showcase.tsx` — bounded featured panel, keyboard-focusable detail scroller, persistent action links; compact cards have a minimum height, non-shrinking descriptions, aligned two-line outcome previews, and visible focus on selected cards, with full outcomes in the featured panel |
 | Expandable/drag-scroll career timeline | `components/experience-timeline.tsx` |
-| Project media treatment | `components/project-artwork.tsx` |
+| Project media treatment | `components/project-artwork.tsx`; capture provenance in `docs/project-media.md` |
 | Contact client state | `components/contact-form.tsx` |
 | Contact validation, abuse protection, and email | `app/actions/contact.ts` |
 | Scheduled GitHub activity | `lib/github-activity.ts`, `lib/github-activity-store.ts`, `app/api/cron/github-stats/route.ts`, `app/api/github-stats/route.ts`, `components/github-stats.tsx`, `vercel.json` |
