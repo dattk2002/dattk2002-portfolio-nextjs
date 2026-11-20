@@ -5,16 +5,16 @@
 - Bravodemy: https://main.bd-internal.dev
 - HuntingAlice: https://main.ha-internal.dev
 
-## HuntingAlice login capture
+## HuntingAlice dashboard image
 
 - Asset: `public/images/projects/huntingalice-main.webp`
-- Requested source: https://main.ha-internal.dev
-- Final capture URL: https://main.ha-internal.dev/login?next=%2Fdashboard
-- Page title: `Log in | HuntingAlice`
-- Captured at: `2026-11-20T11:14:08.223Z`
-- Viewport and image dimensions: 1440 x 900 pixels, device scale factor 1.
-- Session: signed out, empty email/password fields. The illustrated prospect cards are part of the public login page, not authenticated workspace data.
-- Processing: captured directly in Chromium, with fonts loaded and reduced motion enabled; encoded as lossless WebP without cropping, compositing or generated replacement content.
-- SHA-256: `6b2984b9c638b28f30952e392afa04747d04b765f1937907b613fd5101a90a98`
+- Source: screenshot supplied by the owner in the conversation on 2026-11-21 (Vietnam date), replacing the earlier public login capture.
+- Product link: https://main.ha-internal.dev
+- Shown screen: signed-in HuntingAlice dashboard, including campaign navigation, company readiness and decision-maker review panels.
+- Original capture URL, timestamp, viewport and device scale factor: not supplied; the image was not recaptured by the agent.
+- Image dimensions: 1668 x 956 pixels.
+- Processing: encoded directly as lossless WebP, preserving the supplied frame and decoded RGBA pixels without cropping, retouching or generated content.
+- Original PNG SHA-256: `b1bf4e6e3204c09af127f3379d943f7c1fcd751c5a8d5ebd8c0b528740fec7d9`
+- WebP SHA-256: `5683434704d1309d2b6906b8a8553372cc0c2e3d7092bb07e25a3c4f9bd244ee`
 
 The first gallery image supplies the homepage project explorer and case-study hero, using the same intrinsic dimensions. The experience timeline resolves live project links from the same canonical project record. Preserve the full screenshot's aspect ratio and its descriptive alt text when replacing this asset.

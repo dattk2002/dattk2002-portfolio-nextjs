@@ -33,7 +33,7 @@ OathFront adds solo game-development ownership: a browser-based PvE card game in
 
 Panda POS & Manager adds reservation/preorder forms, partial payments, invoice reprinting, revenue reporting, and NestJS/TypeORM finance and administrative APIs from DAN SOLUTIONS. Its ownership record distinguishes backend contributions in 2024 from frontend work in 2026. Gallery images are official iPad POS and kitchen-display product captures, not screenshots of authored web-app screens.
 
-Freelance work from June 2026 includes Bravodemy, HuntingAlice, and Mystical Orb. Bravodemy separates frontend/backend-foundation ownership from a collaborator’s core lesson generation. HuntingAlice covers full-stack B2B research/campaign workflows; Mystical Orb covers bilingual reading and sharing interfaces. The two new case studies use public sign-in/homepage captures. Their year-only labels describe contribution year, not unconfirmed project start/end dates.
+Freelance work from June 2026 includes Bravodemy, HuntingAlice, and Mystical Orb. Bravodemy separates frontend/backend-foundation ownership from a collaborator’s core lesson generation. HuntingAlice covers full-stack B2B research/campaign workflows; Mystical Orb covers bilingual reading and sharing interfaces. HuntingAlice uses an owner-supplied dashboard capture; Mystical Orb uses a public homepage capture. Their year-only labels describe contribution year, not unconfirmed project start/end dates.
 
 DAN SOLUTIONS is one continuous December 2023–May 2026 tenure, with separate intern and engineer role periods. FPT Software remains a distinct December 2022–April 2023 internship. FPT University is October 2020–September 2024, and the NgoaiNguNgay capstone is May–September 2024.
 
