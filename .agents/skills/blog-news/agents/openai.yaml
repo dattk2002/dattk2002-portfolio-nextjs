@@ -1,0 +1,4 @@
+interface:
+  display_name: "Blog News"
+  short_description: "Draft fresh tech news with real sourced images"
+  default_prompt: "Use $blog-news to write 3 fresh technology, AI, or developer news articles with real sourced images for my portfolio blog."
