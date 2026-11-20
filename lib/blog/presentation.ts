@@ -1,4 +1,5 @@
 import type { BlogDocument, BlogEditorNode } from "@/lib/blog/types";
+import { presentBlogMedia, type BlogMediaCredit } from "@/lib/blog/media";
 
 type BlogPresentationPost = {
   title: string;
@@ -32,8 +33,9 @@ function presentNode(node: BlogEditorNode): BlogEditorNode {
   };
 }
 
-/** Apply the site's punctuation style after loading public content, without changing stored records. */
-export function presentBlogPost<T extends BlogPresentationPost>(post: T): T {
+/** Apply public media and punctuation presentation without changing stored editor records. */
+export function presentBlogPost<T extends BlogPresentationPost>(storedPost: T): T & { coverImageCredit?: BlogMediaCredit } {
+  const post = presentBlogMedia(storedPost);
   return {
     ...post,
     title: prose(post.title),

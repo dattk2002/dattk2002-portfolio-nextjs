@@ -1,0 +1,19 @@
+MCP Inspector documentation screenshot
+
+Creator: Model Context Protocol contributors.
+Original asset: https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/docs/images/inspector/web-monitor-sidebar.png
+Documentation source: https://modelcontextprotocol.io/docs/tools/inspector
+License evidence: https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/LICENSE
+Checked: 2026-11-20
+
+The active repository assigns documentation (excluding specifications) to
+Creative Commons Attribution 4.0 International (CC BY 4.0).
+License: https://creativecommons.org/licenses/by/4.0/
+Legal code: https://creativecommons.org/licenses/by/4.0/legalcode
+
+The bundled mcp-inspector.webp is resized and encoded as WebP. No image
+content is cropped or recreated. The public figure captions identify the
+creator, source, license and these changes. No endorsement is implied.
+
+The repository's separate code/specification licensing transition does not
+change the documentation-specific attribution stated above.
