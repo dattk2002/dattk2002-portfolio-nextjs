@@ -108,7 +108,7 @@ export const projects: readonly Project[] = [
     gallery: [
       {
         src: "/images/projects/huntingalice-main.webp",
-        alt: "HuntingAlice public sign-in page for the B2B research and prospecting workspace",
+        alt: "HuntingAlice login page with a green prospecting illustration and email/password sign-in form",
         width: 1440,
         height: 900
       }
