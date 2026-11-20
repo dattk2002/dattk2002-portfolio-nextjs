@@ -30,6 +30,8 @@ function sourceParagraph(media: SourcedMedia): BlogEditorNode {
     content: [
       { type: 'text', text: `Image: ${media.publisher}. ` },
       link('Original source', media.sourcePage),
+      { type: 'text', text: ' - ' },
+      link('Full-size image', media.src),
       ...(media.licenseUrl ? [
         { type: 'text', text: ' - ' }, link('License', media.licenseUrl),
       ] : []),

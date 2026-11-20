@@ -48,3 +48,11 @@ test('later owner-selected covers and unknown images keep their authored sources
   const original = post({coverImageUrl:'https://example.test/owner-photo.webp',coverImageAlt:'Owner photo',content:{type:'doc',content:[{type:'image',attrs:{src:'https://example.test/new.webp',alt:'New photo',title:'Owner caption'}}]}});
   assert.deepEqual(presentBlogPost(original),original);
 });
+
+
+test('readers can open sourced figures at full resolution and inspect the applicable MCP documentation license', () => {
+  const visible = presentBlogPost(post({coverImageUrl:null,content:{type:'doc',content:[{type:'image',attrs:{src:legacyInline,alt:'Old illustration'}}]}}));
+  const links=visible.content.content[1].content.filter(n=>n.marks?.some(m=>m.type==='link'));
+  assert(links.some(n=>n.text==='Full-size image'&&n.marks.some(m=>m.attrs.href==='/images/blog/sourced/mcp-inspector.webp')));
+  assert(links.some(n=>n.text==='License'&&n.marks.some(m=>m.attrs.href==='https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/LICENSE')));
+});

@@ -204,6 +204,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                     {post.coverImageCredit.caption}{" "}
                     Image: {post.coverImageCredit.publisher}.{" "}
                     <a href={post.coverImageCredit.sourcePage} target="_blank" rel="noreferrer" className="underline underline-offset-4 hover:text-foreground">Original source</a>
+                    {post.coverImageUrl ? (
+                      <> - <a href={post.coverImageUrl} target="_blank" rel="noreferrer" className="underline underline-offset-4 hover:text-foreground">Full-size image</a></>
+                    ) : null}
                     {post.coverImageCredit.licenseUrl ? (
                       <> - <a href={post.coverImageCredit.licenseUrl} target="_blank" rel="noreferrer" className="underline underline-offset-4 hover:text-foreground">License</a></>
                     ) : null}
