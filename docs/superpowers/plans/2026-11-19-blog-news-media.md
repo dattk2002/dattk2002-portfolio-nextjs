@@ -2,7 +2,7 @@
 
 **Goal:** Replace generated illustrations on the ten published blog posts and install `$blog-news N` for current technology, AI and developer news with real sourced images and newspaper-style composition.
 
-**Approved scope:** Preserve two existing drafts, article prose and unrelated work. The owner subsequently authorized small commits and a production deployment. Pushing and new article publication remain outside this request. Existing repository styling remains authoritative.
+**Approved scope:** Preserve two existing drafts, article prose and unrelated work. The owner subsequently authorized small commits and a production deployment, then separate branches and pull requests pushed and merged into main. New article publication remains outside this request. Existing repository styling remains authoritative.
 
 **Architecture:** Bundle optimized source assets and an explicit provenance manifest. Remap exact legacy image URLs in the existing public presentation layer after cached database reads. Keep editor data and later custom image choices unchanged. Add visible cover and inline source attribution. Keep a version-controlled skill in .agents/skills/blog-news and install an identical personal copy under ~/.codex/skills/blog-news.
 
