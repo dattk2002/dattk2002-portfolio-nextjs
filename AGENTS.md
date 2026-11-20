@@ -120,6 +120,7 @@ The project is a single Next.js App Router application deployed to Vercel. Conte
 | Blog schema and migrations | `lib/db/schema.ts`, `drizzle/` |
 | Blog queries, validation, and structured content types | `lib/blog/data.ts`, `lib/blog/validation.ts`, `lib/blog/types.ts` |
 | Public blog index and article rendering | `app/blog/`, `components/blog-card.tsx`, `components/blog-content.tsx` |
+| Sourced blog images and provenance | `lib/blog/media-sources.json`, `lib/blog/media.ts`, `public/images/blog/sourced/`, `docs/blog-news.md` - exact historical generated-image URLs are replaced in public presentation; stored editor records and later owner-selected images are preserved |
 | Blog administration and editor | `app/admin/blog/`, `components/admin/blog-post-editor.tsx`, `components/admin/notion-editor.tsx` |
 | Blog authentication and authorization | `lib/auth/`, `proxy.ts`, `app/api/auth/[...path]/route.ts` |
 | Blog image uploads | `app/api/blog/upload/route.ts`, `components/admin/image-upload-button.tsx` |
